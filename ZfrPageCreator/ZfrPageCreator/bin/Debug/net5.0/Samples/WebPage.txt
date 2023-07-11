@@ -1,0 +1,50 @@
+﻿import { Component, Injector, OnInit } from '@angular/core';
+import { BaseComponent } from '../base/base.component';
+import { FormField } from 'src/app/models/form/form.field';
+import { LookupService } from 'src/app/services/lookup.service';
+import { #Entity#ItemDto } from 'src/app/models/#EntityLower#.model';
+import { #Entity#Service } from 'src/app/services/#EntityLower#.service';
+import { LookupType } from 'src/app/enums/LookupType';
+import { StatusType } from 'src/app/enums/StatusType';
+
+@Component({
+  selector: 'genel-#EntityLower#',
+  templateUrl: './#EntityLower#.component.html',
+  styleUrls: ['./#EntityLower#.component.scss'],
+})
+export class #Entity#Component extends BaseComponent<#Entity#ItemDto> {
+  yerTipleri: any[];
+  constructor(private _#EntityCamelCase#Service: #Entity#Service, private _lookupService: LookupService, injector: Injector) {
+    super(injector, _#EntityCamelCase#Service);
+
+    //Set form fields
+    this.model = this.model || Object.assign({});
+  }
+
+  ngOnInit() {
+    this._lookupService.getAllAsCombo({ type: LookupType.YerTipleri }).toPromise().then(res => {
+      this.yerTipleri = res.value;
+
+      this.columnDefs = [
+        { header: 'Seviye Adı', field: 'adi', sortable: true, filter: true },
+        {
+          header: 'Yer Tipi', field: 'yerTipi', sortable: true, filter: true, cellRenderer: (data: any) => {
+            var item = this.yerTipleri.find(i => i.value == data.value);
+            return item ? item.name : '-';
+          }
+        },
+        ... this.getDefaultEylem()
+      ];
+
+      super.loadData();
+    });
+  }
+
+  getFormFields(): FormField[] {
+    var fields = [
+      new FormField({ type: "text", title: "Seviye Adı", required: true, maxLength: 100, name: "seviyeAdi", onFieldChange: (value: string) => { this.model.adi = value }, map: this.model.adi }),
+      new FormField({type: "select", title: "Yer Tipi", dataSource: this.yerTipleri, required: true, name: "yerTipi", onFieldChange: (value: number) => { this.model.yerTipi = value; }, map: this.model.yerTipi}),
+    ];
+    return fields;
+  }
+}

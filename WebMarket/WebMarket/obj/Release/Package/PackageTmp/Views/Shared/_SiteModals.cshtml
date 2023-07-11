@@ -1,0 +1,170 @@
+﻿@using Aware.Util
+@using Aware.View
+@using WebMarket.Helper;
+@using Resource = Resources.Resource
+@model WebMarket.Models.SiteHeaderModel
+
+<div class="modal fade login-modal" id="loginModal">
+    <div class="modal-dialog">
+        <div class="modal-body wrapper-box pr">
+            <button type="button" class="close pa" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="col-md-12 login-dialog">
+                <h2 class="modal-title mb20">@Resource.Account_LoginTitle</h2>
+                @using (Html.BeginForm("Login", "Account"))
+                {
+                    var fields = new FieldHelper(Enums.FieldDirection.Inline);
+                    fields.Text("Email", Resource.Email, string.Empty, "validate email-check",30);
+                    fields.Pasword("Password", Resource.Password, string.Empty, "validate",10);
+                    fields.CheckBox("RememberMe", Resource.Account_RememberMe, true);
+
+                    <div class="db">
+                        <span class="login-description">@Resource.Account_LoginMessage</span>
+                    </div>
+
+                    @Html.AntiForgeryToken()
+                    @Html.Partial("_FieldHelper", fields)
+                }
+
+                <div class="text-right field-row">
+                    <a href="javascript:void(0);" class="mr10 hover btn-forgot-password-dialog">@Resource.Account_ForgotPassword</a>
+                    @Html.ButtonFor(Resource.Account_LoginTitle, "btn-red btn-login", string.Empty)
+                </div>
+            </div>
+
+            <div class="col-md-12 forgot-password-dialog">
+                <h2 class="modal-title mb20">@Resource.Account_ForgotPassword</h2>
+                @using (Html.BeginForm("ForgotPassword", "Account"))
+                {
+                    var fields = new FieldHelper(Enums.FieldDirection.Inline);
+                    fields.Text("Email", Resource.Email, string.Empty, "validate email-check", 30);
+
+                    @Html.AntiForgeryToken()
+                    @Html.Partial("_FieldHelper", fields)
+                }
+
+                <div class="db text-right ml10">
+                    <a class="mr10 mt10 dib hover btn-login-dialog" href="javascript:void();">Giriş yap</a>
+                    @Html.ButtonFor(Resource.Send, "btn-red btn-forgot-password", string.Empty)
+                </div>
+            </div>
+
+            <div class="col-md-12 social-container">
+                <hr />
+                <a href="#" class="facebook-login" title="Facebook ile giriş yap">
+                    <img src="/Resource/img/App/facebook-login.png" alt="Facebook" />
+                </a>
+            </div>
+
+            <div class="pa register-info">
+                <span class="mt20">Henüz Üye Değilim</span>
+                <a class="btn-signup dib" href="@Url.Action("Register", "Account")">@Resource.Account_Register</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="message-dialog">
+    <h2 class="title">İşlem Başarılı</h2>
+    <img src="/resource/img/Icons/processing.gif" class="mt10 process">
+    <div class="md mt10 message-content">Ürün başarıyla sepete eklendi.</div>
+    <p>@Html.ButtonFor(Resource.OK, "md mt20 btn btn-red btn-close-dialog", string.Empty)</p>
+</div>
+
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <h2 class="mt20 mb10 title"><i class="fa fa-exclamation-circle"></i> <span>Lütfen Onaylayın</span></h2>
+            <p class="lead mb10 message msg"></p>
+
+            <div class="button-row">
+                @Html.ButtonFor(Resource.Yes, "md btn btn-red btn-yes", string.Empty)
+                @Html.ButtonFor(Resource.No, "ml10 md btn btn-black btn-no", string.Empty, "data-dismiss='modal'")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div onclick="return false;" class="PopupFade" id="progressPopupFade"></div>
+<div id="progressPopup" class="Popup">
+    <div class="wait-info">
+        <span class="message">@Resource.PleaseWait</span>
+        @Html.ImageFor("Icons", "bar-loading.gif")
+    </div>
+</div>
+
+<div class="modal fade product-view-modal product" tabindex="100" id="ProductViewModal">
+    <div class="modal-dialog">
+        <div class="modal-body wrapper-box free product-view" data-pid="0">
+            <button type="button" class="close pa" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="col-md-6 col-sm-6 gutter-0 mb20 image">
+                <img src="/resource/img/Icons/notfound.jpg" class="img-responsive" alt="" />
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <h1 class="name"></h1>
+                <p class="mb10 description"></p>
+                <div class="dbfl mt10 mb10 items"></div>
+                <div class="mb10 mt10 fl formatted-price">
+                    <span class="lp">0 TL</span>
+                    <span class="rp">0 TL/adet</span>
+                    <span class="ml10 list-price">0 TL/adet</span>
+                </div>
+
+                <div class="mb10 mt10 pnl-button quantity-row">
+                    <div class="quantity">
+                        @Html.QuantityBox("Quantity", "quantity-box", 1, Enums.MeasureUnits.Unit, string.Empty)
+                        <button type="submit" class="btn btn-green btn-add-to-basket">Sepete Ekle</button>
+                    </div>
+                    <button class="btn btn-warn btn-no-stock">Tükendi</button>
+                </div>
+
+                <div class="mb20 mt10 pnl-button">
+                    <span class="mr10 btn-favorite"><i class="fa fa-heart"></i> Favorilerime Ekle</span>
+
+                    @if (Model.AllowProductCompare)
+                    {
+                        <span class="btn-compare-product"><i class="fa fa-random"></i> Karşılaştır</span>
+                    }
+                </div>
+                <hr class="page-divider" />
+
+                <p class="lead text-center items-info"></p>
+                <p class="lead text-center">
+                    <a href="javascript:void(0);" class="btn btn-border" target="_blank">Ürün Detayına Git</a>
+                </p>
+            </div>
+
+            <div class="hidden-xs pa" style="bottom: 9px;">
+                <span style="font-size: 12px;"><i class="fa fa-info-circle"></i> Klavyenin sağ/sol tuşları ile ürünler arasında gezinebilirsiniz.</span>
+            </div>
+
+            <i class="pa fa fa-3x fa-chevron-left btn-preview prev" title="Önceki ürünü görüntüle"></i>
+            <i class="pa fa  fa-3x fa-chevron-right btn-preview next" title="Sonraki ürünü görüntüle"></i>
+            <input type="hidden" id="SelectedItemID" value="0" />
+        </div>
+    </div>
+</div>
+
+@if (Model.AllowProductCompare)
+{
+    <div class="modal fade" id="productCompareModal">
+        <div class="modal-dialog" style="width: 100%;max-width: 600px;">
+            <div class="modal-body wrapper-box">
+                <button type="button" class="close pa" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="mb10 modal-title">Ürün Karşılaştırma</h2>
+                <div class="db compare-list">
+                    <div id="compare-msg"></div>
+                    <div class="compared-product" data-pid="0"></div>
+                    <div class="compared-product" data-pid="0"></div>
+                    <div class="compared-product" data-pid="0"></div>
+                    <div class="compared-product" data-pid="0"></div>
+                </div>
+
+                <div class="dbfl" style="width:100%;">
+                    <hr />
+                    <a href="/urun-karsilastir" class="fr btn btn-green btn-compare-selected disabled">Karşılaştır</a>
+                    @Html.ButtonFor("Kapat", "fr mr10", string.Empty, "data-dismiss='modal'")
+                </div>
+            </div>
+        </div>
+    </div>
+}

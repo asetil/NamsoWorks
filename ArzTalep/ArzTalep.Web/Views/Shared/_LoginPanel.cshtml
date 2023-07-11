@@ -1,0 +1,61 @@
+﻿@model int
+<div class="login-panel col-md-@Model">
+    <div class="login-dialog">
+        <h2 class="modal-title mb10">Üye Girişi</h2>
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "plain-form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <p class="text-error login-message dn mb20"></p>
+
+            <div class="form-group">
+                <input type="text" class="form-control validate" id="username" name="username" placeholder="E-posta yada Telefon" maxlength="30">
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control validate" id="password" name="password" placeholder="Şifre" maxlength="20">
+            </div>
+
+            <div class="form-group form-check">
+                <input class="form-check-input" type="checkbox" value="true" id="remember" name="remember">
+                <label class="form-check-label" for="remember">
+                    Beni Hatırla
+                </label>
+            </div>
+
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-green btn-login">Giriş Yap</button>
+            </div>
+
+            <div class="form-group">
+                <a href="@Url.Action("Register", "Account")" class="fl nav-link btn-signup">Üye Ol</a>
+                <a href="javascript:void(0);" class="fr nav-link hover btn-forgot-password-dialog">Şifremi Unuttum</a>
+            </div>
+        }
+
+        <div class="dn social-container">
+            <hr />
+            <a href="javascript:void(0)" class="btn btn-facebook facebook-login"><i class="fa fa-facebook"></i> Facebook</a>
+            <a href="javascript:void(0)" class="ml10 btn btn-google google-login"><i class="fa fa-google-plus"></i> Google</a>
+        </div>
+    </div>
+
+    <div class="forgot-password-dialog text-center">
+        <h2 class="modal-title">Şifremi Unuttum</h2>
+        <p class="mt10 mb20 lead">Belirteceğiniz e-posta adresine şifre yenileme bağlantısı gönderilecektir.</p>
+
+        @using (Html.BeginForm("ForgotPassword", "Account", FormMethod.Post, new { @class = "plain-form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <input type="text" class="form-control validate" id="emailOrPhoneNumber" name="emailOrPhoneNumber" placeholder="E-posta yada Telefon" maxlength="30">
+            </div>
+        }
+
+            <div class="form-group db">
+                <a href="javascript:void(0);" class="mt10 fl nav-link hover btn-login-dialog">Üye Girişi</a>
+                <button type="button" class="fr btn btn-green btn-forgot-password">Şifremi Sıfırla</button>
+            </div>
+    </div>
+</div>

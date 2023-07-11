@@ -1,0 +1,58 @@
+﻿@using WebMarket.Admin.Helper
+@model IEnumerable<object>
+@{
+    ViewBag.Title = "Cache Yönetimi";
+    TempData["ActivePage"] = 29;
+    var count = Model != null ? Model.Count() : 0;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="visible-xs"></th>
+                                        <th>Cache Adı</th>
+                                        <th class="hidden-xs">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="visible-xs">
+                                                @Html.ButtonFor("", "btn-success btn-sm btn-clear-cache", "trash", "data-cache-key='" + item + "'")
+                                            </td>
+                                            <td class="td-name">@item.ToString()</td>
+                                            <td class="hidden-xs">
+                                                @Html.ButtonFor("Temizle", "btn-success btn-sm btn-clear-cache", "refresh", "data-cache-key='" + item + "'")
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Listelenecek Öğe Bulunamadı!</h4>
+                            <p class="description">Cachlenen öğeler buarada listelenecektir.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

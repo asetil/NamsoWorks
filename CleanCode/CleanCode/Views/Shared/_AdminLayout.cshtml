@@ -1,0 +1,88 @@
+﻿@using Aware.Util.Model;
+@using CleanCode.Helper
+
+@{
+    var activeMenu = ViewBag.ActiveMenu != null ? (int) ViewBag.ActiveMenu : 0;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Yönetim Paneli</title>
+    <link rel="shortcut icon" href="/res/img/favicon.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width" />
+
+    @Styles.Render(Constants.AdminCss)
+    @Scripts.Render(Constants.CommonScripts)
+    
+    @Html.Partial("_TrackScripts")
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700&amp;subset=latin-ext" rel="stylesheet">
+
+    @RenderSection("head", required: false)
+</head>
+<body>
+    <div class="container site-container">
+        <header>
+            <div class="col-md-12 mb20 mt20">
+                <div class="site-title col-md-6 col-sm-12 col-xs-12">
+                    <a href="/yonetim">
+                        <img src="/res/img/logo_admin.jpg" alt="osmansokuoglu.com Yönetim Paneli"/></a>
+                </div>
+                <div class="mb20 col-md-6  col-sm-12  col-xs-12">
+                    @Html.Action("LoginInfo", "User")
+                </div>
+            </div>
+            <div class="top-menu">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-default">
+                        <ul class="nav navbar-nav">
+                            <li class="@(activeMenu==1?"active":"")">
+                                <a href="@Url.RouteUrl(RouteNames.EntryManageList)">Makaleler</a>
+                            </li>
+                            <li class="@(activeMenu==2?"active":"")">
+                                <a href="@Url.RouteUrl(RouteNames.CategoryManageList)">Kategoriler</a>
+                            </li>
+                            <li class="@(activeMenu==4?"active":"")">
+                                <a href="@Url.RouteUrl(RouteNames.AuthorList)">Yazarlar</a>
+                            </li>
+                            <li class="@(activeMenu==5?"active":"")">
+                                <a href="@Url.RouteUrl(RouteNames.GalleryManagement)">Galeri</a>
+                            </li>
+                            <li class="@(activeMenu==3?"active":"")">
+                                <a href="@Url.RouteUrl(RouteNames.CacheManagement)">Cache</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            
+        </header>
+        <div class="mb30 site-content container">
+            @if (ViewBag.OperationResult != null)
+            {
+                var result = ViewBag.OperationResult as Result;
+                if (result.OK)
+                {
+                    <div class="mt20 panel-success">
+                        <i class="fa fa-check"></i>
+                        @(!string.IsNullOrEmpty(result.Message) ? result.Message : "İşlem başarıyla tamamlandı.")
+                    </div>
+                }
+                else
+                {
+                    <div class="mt20 panel-error">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        @(!string.IsNullOrEmpty(result.Message) ? result.Message : "İşlem başarısız!")
+                    </div>
+                }
+            }
+
+            @RenderBody()
+        </div>
+
+        @Html.Partial("_CommonModals")
+        @RenderSection("scripts", required: false)
+    </div>
+</body>
+</html>

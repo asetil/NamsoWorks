@@ -1,0 +1,23 @@
+﻿@model string
+@{
+    ViewBag.Title = "Hata";
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h2>İşlem Başarısız</h2>
+        </div>
+    </div>
+</section>
+
+<div class="page-section container notfound text-center">
+    @if (Model == "facebook_login")
+    {
+        <h4 class="mt20">Facebook ile giriş yapılamıyor!</h4>
+    }
+    else
+    {
+        <h4 class="mt20">Üzgünüz, işleminize devam edemiyoruz..</h4>
+    }
+</div>

@@ -1,0 +1,62 @@
+﻿@model WebMarket.Admin.Models.RegionDisplayModel
+@{
+    ViewBag.Title = "Bölge Yönetimi";
+    TempData["ActivePage"] = 34;
+}
+
+<section class="container-fluid ">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-table"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                    </h2>
+
+                    @if (Model != null)
+                    {
+                        <div class="col-md-4 region-list city">
+                            <h3>İller</h3>
+                            <div>
+                                @Html.Partial("_RegionList", Model)
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 region-list county">
+                            <h3>İlçeler</h3>
+                            <div><span class="info">İl seçiniz</span></div>
+                        </div>
+
+                        <div class="col-md-4 region-list district">
+                            <h3>Mahalleler</h3>
+                            <div><span class="info">İlçe seçiniz</span></div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader{
+    <script src="~/resource/js/region.js" type="text/javascript"></script>
+    <style>
+        .region-list { margin-bottom: 20px; }
+        .region-list > div > span.info { color: #e22d6d; font-weight: 600; }
+
+        .region-list ul { list-style: none; padding: 0; margin: 0; }
+        .region-list ul li { border-radius: 5px; padding: 0; margin: 0; margin-bottom: 4px; background: #f5f5f5; cursor: pointer; }
+        .region-list ul li:hover, .region-list ul li.active { background: #e93975; color: #fff; font-weight: 600; }
+        .region-list ul li .region-info:not(.new) i { display: none; }
+        .region-list ul li:hover .region-info:not(.new) i { display: inline-block; }
+
+        .region-list ul li .region-info span { padding: 7px 10px; display: inline-block; }
+        .region-form, .region-info { position: relative; }
+        .region-form i, .region-info:not(.new) i { position: absolute; right: 34px; top: 12px; color: #fff; font-size: 19px; }
+        .region-form i.fa-remove, .region-info:not(.new) i.fa-remove { color: #ccc; right: 10px; }
+        .region-info i.fa-trash { color: #fff; right: 10px; }
+        .region-form.new i.fa-check { color: #4bd62b !important; }
+        .region-form i.btn-save { color: #4bd62b;}
+    </style>
+}

@@ -1,0 +1,71 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@model Aware.ECommerce.Model.OrderViewModel
+
+@foreach (var item in Model.Settings.PaymentTypes)
+{
+    if (item.SubType == (int)OrderSettingsType.PaymentWithCreditCard && (Model.Settings.PosList == null || !Model.Settings.PosList.Any()))
+    {
+        continue;
+    }
+
+    <div class='payment-method @(item.SubType==Model.Order.PaymentType ? "selected" : "")' data-payment-id="@item.SubType" data-payment-cost="@item.Cost.ToString().Replace(",", ".")">
+        <i></i>
+        <div>
+            <span class="name">@item.Title</span>
+            @if (item.Cost > 0)
+            {
+                <span class="price">+ @item.Cost.ToPrice()</span>
+            }
+            else if (item.Cost < 0)
+            {
+                <span class="price">- @((item.Cost * -1).ToPrice())</span>
+            }
+        </div>
+
+        <div class="description">
+            @if (item.SubType == (int)OrderSettingsType.PaymentWithRemittance && Model.Settings.BankList != null && Model.Settings.BankList.Any())
+            {
+                <p class="mb10">@item.Value</p>
+
+                <table class="table table-remittance">
+                    @foreach (var bank in Model.Settings.BankList)
+                    {
+                        var selected = bank.ID == Model.Order.SubPaymentType;
+                        <tr class="sub-payment @(selected?"selected":"")" data-id="@bank.ID">
+                            <td width="5%"><i class="fa @(selected ? "fa-check-square" : "fa-square-o")"></i></td>
+                            <td width="20%">
+                                @if (!string.IsNullOrEmpty(bank.ImageUrl))
+                                {
+                                    @Html.ImageFor("Bank", bank.ImageUrl, bank.Name, "bank-image img-responsive")
+                                }
+                            <td>
+                                <p>
+                                    <b>@bank.Name - @bank.BranchName</b>
+                                </p>
+                                <p>IBAN : @bank.IBAN, Hesap No : @bank.AccountNumber</p>
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+                <p class="text-info mb10">
+                    <b><i class="fa fa-info-circle"></i> Havalenizi yaparken işlem açıklamasında mutlaka sipariş numarasını belirtiniz.</b>
+                </p>
+            }
+            else if (item.SubType == (int)OrderSettingsType.PaymentWithCreditCard)
+            {
+                <p>@item.Value</p>
+                <p>Aşağıdaki kredi kartları üzerinden çekim yapabilirsiniz.</p>
+                foreach (var pos in Model.Settings.PosList)
+                {
+                    <p>@pos.Name</p>
+                }
+            }
+            else if (!string.IsNullOrEmpty(item.Value))
+            {
+                <p>@item.Value</p>
+            }
+        </div>
+    </div>
+}

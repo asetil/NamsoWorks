@@ -1,0 +1,8 @@
+﻿@model Tuple<Int32,String,String> 
+@{
+    ViewBag.Title = Model.Item2;
+}
+
+<div class="page-section container dynamic-content" data-page-id="@Model.Item1">
+    @Model.Item3
+</div>

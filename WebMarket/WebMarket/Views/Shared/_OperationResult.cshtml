@@ -1,0 +1,71 @@
+﻿@using Aware.Util
+@using Aware.Util.View
+@using Resources
+@model WebMarket.Models.OperationResult
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@Model.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="page-section container">
+    @if (Model.ResultCode == 3) //aktivasyon mesajı üyelik sonrası
+    {
+        <p class="text-center lead">
+            @Html.Raw(@Model.Content) Doğrulama işlemi için, belirtmiş olduğunuz e-posta adresinize bir <b>"doğrulama e-postası"</b> gönderdik. Bu epostada yer alan aktivasyon linki üzerinden aktivasyon işlemini tamamlayabilirsiniz.
+        </p>
+        <hr class="page-divider" />
+        <p style="font-size: 12px;color:#5c5c5c;" class="alert alert-warning">
+            <i class="fa fa-info-circle"></i> Lütfen e-posta adresinizi kontrol edin. Doğrulama e-postasını göremiyorsanız "spam" klasörünü de kontrol etmeyi unutmayın. <br>
+            <i class="fa fa-info-circle"></i> Aktivasyon e-postasının ulaşmadığını düşünüyorsanız, yeni bir aktivasyon kodu talep etmek için <a href="/aktivasyon/3" target="_blank">tıklayınız.</a>
+        </p>
+    }
+    else if (Model.ResultCode == 4) //aktivasyon mesajı üye giriş sonrası
+    {
+        <p class="text-center lead">
+            @Html.Raw(@Model.Content) Doğrulama işlemi için, e-posta adresinize gönderdiğimiz <b>"doğrulama e-postası"</b>
+            ulaşmadıysa yeni bir aktivasyon kodu talep etmek için tıklayınız.
+        </p>
+        <p class="mt20 text-center lead">
+            <a href="/aktivasyon/3" class="btn btn-warn mt20">Yeni Aktivasyon Kodu Al</a>
+        </p>
+        <hr class="page-divider" />
+        <p style="font-size: 12px;color:#5c5c5c;" class="alert alert-warning">
+            <i class="fa fa-info-circle"></i> Lütfen e-posta adresinizi kontrol edin. Doğrulama e-postasını göremiyorsanız "spam" klasörünü de kontrol etmeyi unutmayın.
+        </p>
+    }
+    else if (Model.ResultCode == 5) //aktivasyon kodu talebi
+    {
+        var fields = new FieldHelper();
+        fields.Text("Email", "E-posta", string.Empty, "validate email-check", 30);
+
+        <p class="text-center lead">@Html.Raw(@Model.Content) Aşağıdaki form üzerinden e-postanızı belirterek yeni bir aktivasyon kodu talep edebilirsiniz.</p>
+        <hr class="page-divider" />
+        <div class="activation-dialog">
+            <table>
+                <tr>
+                    <td width="60%">
+                        @Html.Partial("_FieldHelper", fields)
+                    </td>
+                    <td>@Html.ButtonFor("Aktivasyon Kodu Gönder", "btn btn-warn  btn-new-activation mt10 ml10 fr", "ok")</td>
+                </tr>
+            </table>
+        </div>
+    }
+    else if (Model.ResultCode == 6) //aktivasyon başarılı mesajı
+    {
+        <p class="text-center lead">@Html.Raw(@Model.Content)</p>
+        <hr class="page-divider" />
+        <p class="text-center">
+            <a href="#loginModal" data-toggle="modal" class="btn btn-warn">Üye GİRİŞİ</a>
+        </p>
+    }
+
+    else if (!string.IsNullOrEmpty(Model.Content))
+    {
+        <p class="text-center lead">@Html.Raw(@Model.Content)</p>
+    }
+</div>

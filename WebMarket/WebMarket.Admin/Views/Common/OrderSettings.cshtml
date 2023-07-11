@@ -1,0 +1,129 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@using Aware.ECommerce.Model
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model List<SimpleItem>
+@{
+    TempData["ActivePage"] = 27;
+    ViewBag.Title = "Sipariş Ayarları";
+
+    var settings = Util.ArrangeOrderSettings(Model);
+    var singleSelect = settings.Where(i => i.SubType >= (int)OrderSettingsType.AllowShipping).ToList();
+    var paymentTypes = settings.Where(i => i.SubType < (int)OrderSettingsType.AllowShipping).ToList();
+    var posList = ViewBag.PosList != null ? (List<Item>)ViewBag.PosList : new List<Item>();
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    
+                    @using (Html.BeginForm("OrderSettings", "Common", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                    {
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab_general" data-toggle="tab" aria-expanded="false">Sipariş Ayarları</a></li>
+                                <li><a href="@Url.Action("ShippingMethods", "Order")"><i class="fa fa-truck"></i> Kargo Yönetimi</a></li>
+                                <li><a href="@Url.Action("OnlinePos", "Common")"><i class="fa fa-credit-card"></i> Sanal Poslar</a></li>
+                                <li><a href="@Url.Action("BankInfo", "Order")"><i class="fa fa-bank"></i> Bankalar</a></li>
+                                <li><a href="@Url.Action("InstallmentInfo", "Order")"><i class="fa fa-pie-chart"></i> Taksit & Komisyon</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_general">
+                                    <p>
+                                        Bu alanda siparişleriniz için ödeme yöntemlerini belirleyebilir,
+                                        aynı zamanda siparişleriniz için kargo kullanımını etkinleştirebilirsiniz.
+                                    </p>
+
+                                    <table class="mt20 table">
+                                        <thead>
+                                            <tr>
+                                                <th>İşlem</th>
+                                                <th>Onay?</th>
+                                                <th>Ek Fiyat</th>
+                                                <th>Açıklama</th>
+                                            </tr>
+                                        </thead>
+
+                                        @for (var i = singleSelect.Count; i < settings.Count; i++)
+                                        {
+                                            var paymentType = paymentTypes[i - singleSelect.Count];
+                                            <tr>
+                                                <td width="15%">@paymentType.Title</td>
+                                                <td width="4%">
+                                                    @Html.Hidden("Model[" + i + "].ID", paymentType.ID)
+                                                    @Html.Hidden("Model[" + i + "].Type", (int)paymentType.Type)
+                                                    @Html.Hidden("Model[" + i + "].SubType", paymentType.SubType)
+                                                    @Html.Hidden("Model[" + i + "].Title", paymentType.Title)
+
+                                                    <div class="cbx @(paymentType.Status == Statuses.Active ? "active" : "")" data-value-type="byte">
+                                                        @Html.Hidden("Model[" + i + "].Status", (int)paymentType.Status)
+                                                        <i class="fa fa-check"></i>
+                                                    </div>
+                                                </td>
+                                                <td width="10%">
+                                                    @Html.TextBox("Model[" + i + "].Cost", paymentType.Cost, new { @class = "dec-number text-right form-control", maxlength = 6 })
+                                                </td>
+                                                <td width="25%">
+                                                    @Html.TextBox("Model[" + i + "].Value", paymentType.Value, new { @class = "form-control", maxlength = 200 })
+                                                </td>
+                                            </tr>
+                                        }
+
+                                        @for (var i = 0; i < singleSelect.Count; i++)
+                                        {
+                                            var setting = singleSelect[i];
+                                            var isDefaultPos = setting.SubType == (int)OrderSettingsType.DefaultPos;
+                                            <tr>
+                                                <td>
+                                                    @setting.Title
+                                                    @if (setting.SubType == (int)OrderSettingsType.UseOOSPayment)
+                                                    {
+                                                        <i class="ml10 fa fa-info-circle" data-toggle="tooltip" title="Ödemeler için kullanıcı seçilen sanal posun ortak ödeme sayfasına yönlendirilir."></i>
+                                                    }
+                                                </td>
+                                                <td colspan="@(isDefaultPos ? 1 : 3)">
+                                                    @Html.Hidden("Model[" + i + "].ID", setting.ID)
+                                                    @Html.Hidden("Model[" + i + "].Title", setting.Title)
+                                                    @Html.Hidden("Model[" + i + "].SubType", (int)setting.SubType)
+                                                    @Html.Hidden("Model[" + i + "].Type", (int)setting.Type)
+
+                                                    <div class="cbx @(setting.Status == Statuses.Active ? "active" : "")" data-value-type="byte">
+                                                        @Html.Hidden("Model[" + i + "].Status", (int)setting.Status)
+                                                        <i class="fa fa-check"></i>
+                                                    </div>
+                                                </td>
+
+                                                @if (isDefaultPos)
+                                                {
+                                                    var fieldHelper = new FieldHelper(FieldDirection.JustField);
+                                                    fieldHelper.Select(string.Empty, "Model[" + i + "].Value", posList, setting.Value.Int(), "form-control");
+                                                    <td>
+                                                        @Html.Partial("_FieldHelper", fieldHelper)
+                                                    </td>
+                                                    <td></td>
+                                                }
+                                            </tr>
+                                        }
+                                    </table>
+                                    
+                                    <hr/>
+                                    <div class="box-footer">
+                                        @Html.ButtonFor("Değişiklikleri Yayınla", "mr10 btn-info btn-clear-cache", "history", "data-cache-key='ORDER_SETTINGS'")
+                                        @Html.ButtonFor("Değişiklikleri Kaydet", "fr btn-success btn-save-settings")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,62 @@
+﻿@using Aware.ECommerce.Model
+@using Aware.File.Model
+
+@model List<Category>
+@{
+    ViewBag.Title = "Kategori Yönetimi";
+    TempData["ActivePage"] = 8;
+}
+
+<section class="container-fluid category-list">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content category-wrapper">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="mt20 col-md-3 category-list">
+                            @Html.Partial("_CategoryTree", Model)
+                        </div>
+
+                        <div class="mt20 col-md-8 category-detail">
+
+                        </div>
+
+                        if (ViewBag.IsSuper)
+                        {
+                            @Html.Partial("_FileGallery", FileGalleryModel.ModalInstance())
+                        }
+                    }
+                    else
+                    {
+                        <div class="callout callout-danger">
+                            <h4><i class="icon fa fa-warning"></i> Hata</h4>
+                            <p>Görüntüleyebileceğiniz herhangi bir kategori bulunamadı!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader{
+    @Scripts.Render("~/resource/js/categoryjs")
+
+    <style type="text/css">
+        .category-list { min-height: 255px; }
+        .category-list ul { list-style: none; padding: 0; }
+        .category-list ul ul { margin-left: 20px; display: none; }
+        .category-list .category { display: block; padding: 8px 10px; padding-right: 0; margin-bottom: 5px; cursor: pointer; color: #000; background: #f5f5f5; border-radius: 5px; font-size: 15px; }
+        .category-list .category.open { display: block !important; }
+        .category-list .category:hover, .category-list .category.active { background-color: #f3123f !important; font-weight: bold; color: #fff; }
+
+        .category-list .category i { margin-right: 5px; margin-top: 3px; font-size: 12px; padding: 3px 3px; }
+        .category-list .category i.direction:hover { color: #000; background: #fff; border-radius: 50%; margin-top: 4px; }
+        .category-list .category i.toggle-icon { float: left; }
+        .category-list .wrp-file:not(.inactive) { height: 176px; width: 176px; margin: 5px; }
+    </style>
+}

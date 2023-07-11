@@ -1,0 +1,123 @@
+﻿@using Aware.Crm.Model
+@using Aware.ECommerce.Enums
+@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.Search.SearchResult<Aware.Crm.Model.Customer>
+@{
+    ViewBag.Title = "Firma Yönetimi";
+    TempData["ActivePage"] = 3;
+    var searchParams = (CustomerSearchParams)(Model != null ? Model.SearchParams : new CustomerSearchParams());
+}
+
+<section class="container-fluid customer-list">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header card-header-icon">
+                    <i class="fa fa-table"></i>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        <a href="@Url.RouteUrl(RouteNames.CustomerDetailRoute,new {name = "yeni", id = 0})" class="btn btn-info btn-round btn-fab btn-fab-mini ml20" title="Yeni Firma Ekle"><i class="fa fa-plus"></i></a>
+                    </h2>
+                    @if (Model != null && Model.HasResult)
+                    {
+                        @Html.PagingInfo(Model, "firmadan")
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">#ID</th>
+                                        <th colspan="2" width="30%">Firma Adı</th>
+                                        <th width="10%" class="text-center">Durum</th>
+                                        <th width="30%">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var customer in Model.Results)
+                                    {
+                                        var detailLink = Url.RouteUrl(RouteNames.CustomerDetailRoute, new { name = customer.Name.ToSeoUrl(), id = customer.ID });
+                                        <tr>
+                                            <td>@customer.ID</td>
+                                            <td style="width: 8%;">
+                                                <a href="@detailLink">
+                                                    @Html.ImageFor("", customer.Logo, customer.Name, "image", customer.Name)
+                                                </a>
+                                            </td>
+                                            <td class="td-name">
+                                                <a href="@detailLink">@customer.Name</a><br />
+                                            </td>
+                                            <td class="text-center">
+                                                @Html.StatusFor(customer.Status)
+                                            </td>
+                                            <td>
+                                                <a href="@detailLink" class="btn btn-sm btn-success" title="Düzenle"><i class="fa fa-eye"></i></a>
+                                                <a class="btn btn-sm btn-info" title="Kullanıcılar" href="@Url.RouteUrl(RouteNames.CustomerUsersRoute, new {customerID = customer.ID,name=customer.Name.ToSeoUrl()})"><i class="fa fa-users"></i></a>
+                                                <a class="btn btn-sm btn-primary" title="Marketler" href="@Url.RouteUrl(RouteNames.CustomerStoresRoute,new {customerID = customer.ID, name=customer.Name.ToSeoUrl()})"><i class="fa fa-tv"></i></a>
+                                                <a class="btn btn-sm btn-danger" title="Siparişler" href="@Url.RouteUrl(RouteNames.CustomerOrdersRoute,new {customerID = customer.ID, name=customer.Name.ToSeoUrl()})"><i class="fa fa-shopping-cart"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="float: right; margin-bottom: 10px;" class="customer-pager"></div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Aramanıza uygun firma kaydı bulunamadı!</h4>
+                            <p class="description">Kriterlerinizi değiştirerek tekrar filtreleyebilirsiniz!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-filter"></i></div>
+                <div class="card-content search-panel">
+                    <h2 class="card-title">Filtrele</h2>
+
+                    @using (Html.BeginForm("Search", "Customer", FormMethod.Get, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                    {
+                        var filterFields = new FieldHelper(FieldDirection.Horizantal);
+                        filterFields.Text("ids", "ID/ler", searchParams.IDsString, "firm-id", 200);
+                        filterFields.Text("q", "Firma Adı", searchParams.Keyword, "name", 200);
+                        filterFields.Select("Durum", "st", Html.GetStatusList(), (int)searchParams.Status.GetValueOrDefault(), "status-selector");
+
+                        <div class="box-body">
+                            @Html.Partial("_FieldHelper", filterFields)
+                            <hr />
+                            <div class="text-right box-footer">
+                                @Html.ButtonFor("Temizle", "mr10 btn-danger btn-clean-filter", "trash")
+                                @Html.ButtonFor("Ara", "btn-success btn-search", "search")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('.customer-pager').paginate({
+            linkCount: 10,
+            elementPerPage: '@Model.SearchParams.Size',
+            size: '@Model.TotalSize'
+        }, true);
+    });
+    </script>
+}

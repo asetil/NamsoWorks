@@ -1,0 +1,139 @@
+﻿@model ArzTalep.Web.Models.UserViewModel
+@{
+    ViewBag.Title = "Üye Ol";
+}
+
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <h3>@ViewBag.Title</h3>
+                    <ul>
+                        <li><a href="index.html">home</a></li>
+                        <li>Login</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row page-dialog register-dialog">
+        <div class="col-md-12 mb-30 text-center">
+            <h3>ArzTalep.com'a hoşgeldin!</h3>
+            <p class="mt20 mb20 lead" style="border-bottom: 1px dashed #ccc;padding-bottom: 30px;">
+                Size özel kampanya ve fırsatlardan faydalanmak için
+                hemen üyelik formunu doldurun, <br /> fırsatlar dünyasına adım atın.
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            @if (Model != null && Model.User != null)
+            {
+                if (Model.SaveResult != null && !Model.SaveResult.Ok)
+                {
+                    <p class="error lead">@Model.SaveResult.Code</p>
+                }
+
+                using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "plain-form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+
+                    <div class="form-group">
+                        <input type="text" class="form-control validate" id="name" name="name" placeholder="Ad soyad" maxlength="100">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control validate email-check" id="email" name="email" placeholder="E-posta" maxlength="30">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control validate number" id="phoneNumber" name="phoneNumber" placeholder="Cep Telefonu" maxlength="20">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control validate must-equal" id="password" name="password" placeholder="Şifre" maxlength="10">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control validate must-equal" data-compare-id="password" id="passwordRepeat" name="passwordRepeat" placeholder="Şifre Tekrar" maxlength="10">
+                    </div>
+
+                    <div class="form-group form-check">
+                        <input class="form-check-input cbx-aggreement" type="checkbox" value="true" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
+                            <a href="#membershipAggModal" data-bs-target="#membershipAggModal" data-bs-toggle="modal"><b><u>Üyelik sözleşmesi</u></b></a>ni okudum ve kabul ediyorum.
+                        </label>
+                    </div>
+
+                    @*if (Model.HasPermissions)
+                {
+                    <p class="mt20">Webmarket.com'a ait ürün ve hizmetler ile ilgili bülten, kampanya ve promosyonlara yönelik;</p>
+                    foreach (var permission in Model.PermissionList)
+                    {
+                        <div class="db mt10 wm-cbx user-permission" data-permission-id="@permission.ID">
+                            <i class="mr10 fa fa-check-square"></i>
+                            <span>@permission.Title</span>
+                        </div>
+                    }
+                }*@
+
+                    <div class="mt10 form-group">
+                        <button type="submit" class="fr btn btn-primary btn-green btn-register">Üye Ol</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="lead error">İşleminizi şuan gereçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin!</p>
+            }
+        </div>
+
+        <div class="col-md-6 text-center">
+            <div class="panel-user-info">
+
+                <p class="mt20 lead" style="font-weight: 600; color: #5c5c5c;">Zaten üyeyim;</p>
+                <div class="text-center social-container">
+                    <a href="#loginModal" data-bs-target="#loginModal" class="btn btn-border login" data-bs-toggle="modal"><i class="fa fa-user"></i> Giriş Yap</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-large" id="membershipAggModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fa fa-users"></i> Üyelik Sözleşmesi
+                </h2>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Kapat">
+                    <span aria-hidden="true"><i class="icon-x"></i></span>
+                </button>
+            </div>
+            <div class="modal-body wrapper-box">
+                <partial name="_MembershipAggreement" />
+                <hr />
+                <div class="form-group fr">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-success"><i class="fa fa-check"></i> Okudum, Kabul Ediyorum</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .register-dialog .btn-login { margin-left: 100px; }
+    .register-dialog .error_field { display: none; }
+    .panel-user-info { border-radius: 50%; background: #fff; margin: 0 auto; text-align: center; padding: 88px 5px; max-width: 300px; box-shadow: 0 0 1px #ccc; transition: all 0.2s ease-in-out; }
+    .panel-user-info:hover { background: #5bff61ba; }
+    #membershipAggModal .mem-aggreement-content { max-height: 400px; overflow-y: auto; }
+</style>
+
+@section scripts{
+    <script src="~/js/user.js"></script>
+}

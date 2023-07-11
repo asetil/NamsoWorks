@@ -1,0 +1,239 @@
+﻿.address-edit-dialog .selecto-wrap { margin-bottom: 10px; }
+.address-edit-dialog .form-group label { margin-bottom: 5px; }
+
+.address-container, .new-address { display: block; float: left; padding: 10px; width: 100%; height: 177px; border: 2px solid #eee; cursor: pointer; margin-bottom: 20px; margin-right: 20px; position: relative; }
+.address-container > i, .payment-method > i, .shipping-method > i { display: block; float: left; margin-right: 10px; color: #ddd; text-align: center; font-size: 25px; }
+.address-container.selected > i, .payment-method.selected > i, .shipping-method.selected > i { color: #ff3562; }
+.address-container > i:after, .payment-method > i:after, .shipping-method > i:after { content: "\f10c"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; }
+.address-container.selected > i:after, .payment-method.selected > i:after, .shipping-method.selected > i:after { content: "\f192"; }
+
+.new-address > a, .new-address > a:hover { width: 100%; height: 100%; display: table; text-decoration: none; color: #000; }
+.new-address > a > span { font-size: 24px; margin: 0 auto; display: table-cell; text-align: center; vertical-align: middle; }
+
+.address-container span.body { float: left; max-width: 260px; }
+.address-container span.body span { font-size: 12px; }
+
+.order-address .address-container { border: 0 none; background: #efefef; }
+.order-address .address-container .selection { float: left; display: block; width: 30px; margin-right: 10px; height: 100%; }
+.order-address .address-container .selection .address-type { display: block; font-weight: bold; padding: 1px 1px; background: #fff; margin-bottom: 10px; text-align: center; }
+.order-address .address-container .selection .address-type.selected { background: #ff3562; color: #fff; }
+
+.order-basket .my-basket { width: 912px; }
+
+.order-basket .my-basket .totals-row { width: 885px; }
+
+.order-basket .my-basket .item-name { width: 340px; }
+
+.order-basket .my-basket .item-info { width: 395px; }
+.order-basket .basket-summary .totals-row td { border-bottom: 0 none; }
+
+.order-shipments { width: 100%; }
+.order-shipments .shipping-message { color: #676767 !important; }
+.order-shipments .shipping-message.warning { color: #dc143c; }
+
+.order-shipments .shipping-method { border: 2px solid #efefef; padding: 9px 13px; margin-top: 10px; border-radius: 10px; cursor: pointer; font-size: 15px; width: 100%; }
+.order-shipments .shipping-method.selected { border-color: #ff3562; }
+.order-shipments .shipping-method .name { font-weight: bold; }
+.order-shipments .shipping-method .price { font-weight: bold; float: right; }
+.order-shipments .shipping-method .description { font-size: 14px; font-style: italic; margin-top: 6px; margin-left: 30px; }
+
+.order-shipments .payment-method { border: 2px solid #efefef; padding: 9px 13px; margin-top: 10px; border-radius: 10px; cursor: pointer; font-size: 15px; width: 100%; }
+.order-shipments .payment-method.selected { border-color: #ff3562; }
+.order-shipments .payment-method .name { font-weight: bold; }
+.order-shipments .payment-method .price { font-weight: bold; float: right; }
+.order-shipments .payment-method .description { font-size: 14px; font-style: italic; margin-top: 6px; margin-left: 30px; display: none; }
+.order-shipments .payment-method.selected .description { display: block; }
+
+.order-note { width: 100%; height: 70px; border-color: #efefef !important; }
+.order-note:focus { border-color: #ccc !important; }
+
+.order-sub-field { padding: 5px 0px; }
+.order-sub-field label { padding: 10px 0px; }
+.order-sub-field .selected { box-shadow: none; }
+.order-sub-field p { padding: 8px 15px; background: #f7f7f7; color: #232323; font-size: 16px; margin-bottom: 0; border-radius: 5px; }
+.order-sub-field p > span { font-size: 16px; display: inline-block; }
+
+body .btn-approve-order, body .btn-continue-order { color: #fff; border-color: #97be0d; background-color: #97be0d; line-height: 41px; height: 43px; border-radius: 4px; padding: 0 46px; font-size: 16px; }
+body .btn-approve-order:hover, body .btn-continue-order:hover { color: #fff; background-color: #718e0a; border-color: #718e0a; }
+body .btn-back { line-height: 41px; height: 43px; padding: 0 26px; font-size: 16px; }
+
+a.btn-address { font-size: 14px; margin-right: 0; font-weight: bold; padding: 3px 5px; color: #dc143c; }
+a.btn-address:hover { text-decoration: underline; }
+a.btn-address.btn-show-address { color: #232323; }
+
+#addressModal .selecto-wrap { width: 100%; }
+#addressModal .selecto-wrap > input { border: 0 none; padding: 0; font-size: inherit; margin: 0; background: transparent; padding-top: 2px; }
+#addressModal .selecto-wrap.district { height: 38px; }
+
+.order-basket-summary table td.text-right { padding-right: 20px; }
+.order-totals { border-radius: 5px; border: 2px solid #ececec; padding: 10px 0; padding-bottom: 20px; height: auto; display: inline-block; width: 100%; }
+.order-totals h3 { padding: 10px 14px; color: #232323; }
+.order-totals table { margin-bottom: 0; }
+.order-totals table td { border-bottom: 0 none !important; border-top: 0 none !important; padding: 5px 10px; }
+.order-totals td b { font-size: 15px; color: #232323; font-weight: 400; }
+.order-totals .price { text-align: right; font-size: 20pt; color: #232323; }
+.order-totals .order-gross-tatal { background: #eee; padding: 12px 0; }
+.order-totals .order-gross-tatal .price { text-align: center; margin-top: 8px; font-weight: 700; }
+.order-shipments div label { margin: 5px 0; }
+
+.order-basket-summary .item-row img { width: 70px; height: 80px; border-radius: 5px; }
+.order-basket-summary .item-row .name { font-size: 15px; font-weight: 700; }
+.order-basket-summary .item-row .variant { font-size: 12px; color: #636363; font-style: italic; }
+
+.table-remittance .bank-image { max-width: 100px; max-height: 50px; }
+.table-remittance tr td { cursor: pointer; }
+.table-remittance td i { color: #ddd; font-size: 20px; }
+.table-remittance tr.selected { background: #f5f5f5; }
+.table-remittance tr.selected td i { color: #0c0c0c; }
+
+/**************************  MY ORDERS ******************************/
+.order-container { position: relative; margin-bottom: 60px;border-color: #232323;  }
+.order-container > div { font-size: 15px; margin-bottom: 10px; }
+.order-container .order-id { font-size: 20px; }
+.order-container .pricing .price { font-size: 23px; }
+.order-container .status { font-size: 24px; padding-bottom: 10px; color: #3bb19b; }
+.order-container .status i { font-size: 28px; }
+.order-container a { width: 60%; }
+
+.order-container .btn-row { opacity: 0; }
+.order-container:hover .btn-row { opacity: 1; }
+
+/*.order-container.order-2 { border-color: #000; }*/
+.order-container.order-2 .status { color: #000; }
+
+/*.order-container.order-3 { border-color: #6dd4ff; }*/
+.order-container.order-3 .status { color: #6dd4ff; }
+
+/*.order-container.order-4 { border-color: #ffa719; }*/
+.order-container.order-4 .status { color: #ffa719; }
+
+/*.order-container.order-5 { border-color: yellowgreen; }*/
+.order-container.order-5 .status { color: yellowgreen; }
+
+/*.order-container.order-7 { border-color: #dc143c; }*/
+.order-container.order-7 .status { color: #dc143c; }
+
+/*.order-container.order-8 { border-color: #f00; }*/
+.order-container.order-8 .status { color: #f00; }
+
+/************************************ ORDER DETAIL*************************************************/
+.order-detail .order-info .status-desc { padding: 3px 20px; padding-top: 10px; background: #87ceeb; color: #000; display: block; text-align: center; border-radius: 5px; margin-bottom: 20px; }
+.address-wrapper { display: inline-block; float: left; clear: both; }
+.order-items .inner-table { padding-top: 10px; width: 920px; }
+.order-items .my-basket { width: 920px; }
+.order-items .my-basket .totals-row { width: 871px; }
+.order-items .my-basket .item-row > div.item-price { margin-top: 0; }
+
+.order-detail .totals-area { height: auto; display: block; color: #232323; padding: 10px; }
+.order-detail .totals-area table td { font-size: 10pt; padding: 8px 0; color: #232323; text-align: center; }
+.order-detail .totals-area table td.title { font-size: 14pt; color: #ff3562; padding-right: 20px; text-align: right; }
+.order-detail .totals-area table td.price { font-size: 22pt; color: #232323; padding-right: 20px; text-align: right; }
+
+.order-detail .order-status .process { width: 181px; height: 181px; font-size: 15pt; color: #232323; }
+.order-detail .order-status .process.success { color: yellowgreen; }
+.order-detail .order-status .process.fail { color: #ff3562; }
+.order-detail .order-status .process i { position: absolute; left: 67px; top: 37px; font-size: 32pt; }
+.order-detail .order-status .process span { display: block; width: 140px; margin: 0 auto; margin-top: 89px; line-height: 1.2em; }
+
+.order-detail .info-row { padding: 10px 14px; border-radius: 6px; margin-bottom: 10px; font-size: 16px; float: left; width: 100%; border-bottom: 1px dashed #d6d6d6; }
+.order-detail .info-row .value { display: inline-block; width: 68%; vertical-align: top; }
+.order-detail .info-row .title { display: inline-block; width: 30%; font-weight: 600; }
+
+.new-order-modal .modal-body { text-align: center; padding: 50px 30px !important; }
+.new-order-modal .modal-body h2 { color: yellowgreen; }
+.new-order-modal .modal-body span.redirect-message { display: block; margin-top: 13px; }
+.new-order-modal .modal-body i.fa-check { color: #fff; font-size: 50pt; background-color: yellowgreen; padding: 30px; border-radius: 50%; }
+
+.secure-payment-result { text-align: center; padding: 50px 19px !important; }
+.secure-payment-result h2 { color: yellowgreen; }
+.secure-payment-result i { color: #fff; font-size: 50pt; background-color: yellowgreen; padding: 30px; border-radius: 50%; }
+.secure-payment-result.has-error h2 { color: #ff3562; }
+.secure-payment-result.has-error i { background-color: transparent; color: #ff3562; font-size: 50pt; padding: 18px 24px; border-radius: 50%; border: 5px solid #ff3562; }
+
+.payment-modal .loading { color: yellowgreen; }
+.payment-modal.big #paymentFrame { min-height: 370px !important; max-height: 370px !important; }
+.payment-modal.big .loading { display: none; }
+
+.payment-modal.bigger .modal-content { width: 720px; }
+.payment-modal.bigger #paymentFrame { min-height: 560px !important; max-height: 560px !important; }
+.payment-modal.bigger .loading { display: none; }
+
+.chart { position: relative; display: inline-block; width: 94px; height: 94px; text-align: center; }
+.chart canvas { position: absolute; top: 0; left: 0; }
+.percent { display: inline-block; line-height: 110px; z-index: 2; }
+.percent:after { content: '%'; margin-left: 0.1em; font-size: .8em; }
+
+
+/**************************  MY ADDRESSES ******************************/
+.my-addresses .address-container > i, .my-addresses .address-container i.billing { display: none; }
+.my-addresses .address-container span.body > span { font-size: 12px; height: 122px; display: inline-block; overflow: hidden; }
+.my-addresses .address-container:hover, .my-addresses .address-container.selected { background: #f5f5f5; }
+
+/************************** PAYMENT PAGE ******************************/
+#payment_creditcard .form-group label { margin-bottom: 5px; }
+#payment_creditcard .expire-date { width: 64%; float: left; }
+#payment_creditcard .cvc-info { width: 36%; float: left; }
+#payment_creditcard .seperator { display: inline-block; float: left; margin: 5px 10px; font-size: 19px; color: #aaa; }
+.month-selector, .year-selector { box-sizing: border-box; border: 2px solid #ddd; padding: 7px; background: #fff; border-radius: 5px; outline: none; box-shadow: none; height: 38px; float: left; }
+
+/*.installments-container li{ line-height: 30px;padding: 5px 0;}
+.installments-container li > span { line-height: 20px;font-size: 14px;margin-right: 10px;}
+.installments-container li > i { margin: -10px 0 0; margin-right: 8px; color: #ddd; text-align: center; font-size: 25px; }
+.installments-container li > i:after { content: "\f10c"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; }
+.installments-container li.selected > i { color: #ff3562; }
+.installments-container li.selected > i:after { content: "\f192"; }*/
+
+.installments-container tr.selected { background: #f1f1f1; }
+.installments-container tr th { padding: 5px !important; }
+.installments-container tr td { cursor: pointer; padding: 5px !important; border: 0 none !important; }
+.installments-container td > i { color: #ddd; text-align: center; font-size: 22px; }
+.installments-container td > i:after { content: "\f10c"; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; }
+.installments-container tr.selected td > i { color: #ff3562; }
+.installments-container tr.selected td > i:after { content: "\f192"; }
+.installments-container .installment-options.not-found { background: #efefef; padding: 10px 14px; border-radius: 6px; color: #565656; }
+.installments-container .description { background: #f7f7f7; padding: 10px 14px; border-radius: 6px; font-size: 15px; }
+
+.installment-options .pos-image { max-height: 42px; }
+.installment-options td.no-commission { background: #dbf99f; }
+body .btn-all-installments { background: #fff; color: #3cb371; padding: 6px 10px; margin-left: 20px; display: inline-block; }
+body .btn-all-installments:hover { background: #359C63; color: #fff; }
+
+.bank-logo { position: absolute; right: 7px; top: 37px; }
+.bank-logo .bank { width: 60px; height: 24px; display: inline-block; background-size: contain !important; }
+.bank-logo .bank_1_1 { background: url('../img/Bank/garanti-love-bonus.jpg') no-repeat; }
+.bank-logo .bank_2_3 { background: url('../img/Bank/akbank-axess.jpg') no-repeat; }
+
+.bank-logo .brand { width: 60px; height: 24px; display: inline-block; background-size: contain !important; }
+.bank-logo .brand.brand-1 { background: url('../img/Bank/mastercard.jpg') no-repeat; }
+.bank-logo .brand.brand-2 { background: url('../img/Bank/visa.jpg') no-repeat; }
+
+.bank-pos-item { width: 46%; border: 2px solid #eee; padding: 10px; border-radius: 10px; float: left; margin: 0 10px 10px 0; display: block; cursor: pointer; }
+.bank-pos-item.selected { border: 2px solid #ff3562 !important; }
+.bank-pos-item:hover { border: 2px solid #ccc; }
+.bank-pos-item img { max-height: 64px; }
+
+.remittance-message .bank-info { border: 2px solid #eee; border-radius: 10px; max-width: 500px; margin: 0 auto; padding: 7px 0; }
+.remittance-message .bank-info table { max-width: 450px; margin: 0 auto; }
+
+.order-detail .remittance-message { margin-bottom: 20px; text-align: left; border: 1px solid #2cc0f9; padding: 20px; border-left: 4px solid #2cc0f9; }
+.order-detail .remittance-message table { padding-bottom: 0px; max-width: 520px; margin: 0px; }
+
+@media (min-width: 1200px) {
+    .content-tabs .tab-content { padding: 25px 10px; }
+}
+
+@media (max-width: 720px) {
+    .order-detail .info-row .value { width: 100%; }
+    .order-detail .info-row .title { width: 100%; margin-bottom: 7px; }
+
+    .order-container { border-bottom: 1px dashed #232323; margin-bottom: 30px; padding-bottom: 20px; }
+    .order-container .btn-row { opacity: 1; }
+    body .btn-all-installments {  margin-left: 12px;}
+    .xs-fl{float:left;}
+}
+
+@media (max-width: 480px) {
+    #payment_creditcard .expire-date { width: 70%; }
+    #payment_creditcard .cvc-info { width: 30%; }
+    #payment_creditcard .seperator { margin: 5px 7px; }
+}

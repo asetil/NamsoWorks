@@ -1,0 +1,86 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@using WebMarket.Admin.Models
+@model CustomerViewModel
+@{
+    TempData["ActivePage"] = 3;
+    var customer = Model != null ? Model.Customer : null;
+    ViewBag.Title = customer != null ? customer.Name : "Firma Detay";
+}
+
+<section class="container-fluid customer-detail">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-tv"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (customer != null)
+                    {
+                        <div class="box box-info customer-detail-dialog">
+                            @using (Html.BeginForm("Detail", "Customer", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                            {
+                                var imagePath = string.Format("{0}?r={1}", customer.Logo, new Random().Next());
+                                var fields = new FieldHelper(FieldDirection.Horizantal);
+                                fields.Label("#ID", customer.ID.ToString(), "viewable");
+                                fields.Text("Name", "İsim", customer.Name, "validate", 150);
+                                fields.Image("customerImage", "Logo", customer.Name, imagePath).SetAttr("data-extensions='jpg,jpeg,gif,png'");
+                                fields.Select("Durum", "Status", Model.StatusList, (int)customer.Status, "status-selector", string.Empty);
+
+                                @Html.Hidden("ID", customer.ID)
+                                @Html.Partial("_FieldHelper", fields)
+
+                                <hr />
+                                <div class="text-right">
+                                    @if (customer.ID > 0)
+                                    {
+                                        if (Model.IsSuper)
+                                        {
+                                            <a class="mr20" href="@Url.RouteUrl(RouteNames.CustomerUsersRoute, new {customerID = customer.ID,name=customer.Name.ToSeoUrl()})"><i class="fa fa-users"></i> Kullanıcılar</a>
+                                            <a class="mr20" href="@Url.RouteUrl(RouteNames.CustomerStoresRoute,new {customerID = customer.ID, name=customer.Name.ToSeoUrl()})"><i class="fa fa-tv"></i> Marketler</a>
+                                            <a class="mr20" href="@Url.RouteUrl(RouteNames.CustomerOrdersRoute,new {customerID = customer.ID, name=customer.Name.ToSeoUrl()})"><i class="fa fa-shopping-cart"></i> Siparişler</a>
+                                            @Html.ButtonFor("Sil", "mr10 btn-danger btn-delete-customer", "remove")
+                                        }
+                                    }
+                                    @Html.ButtonFor("Kaydet", "btn-success btn-save-customer")
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="callout callout-danger">
+                            <h4><i class="icon fa fa-warning"></i> Firma Bulunamadı</h4>
+                            <p>Böyle bir firma yok ya da işlem yapma/görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).on("click", ".btn-save-customer", {}, function () { return aware.validate(".customer-detail"); });
+            $(document).on("click", ".btn-delete-customer", {}, function () {
+                aware.confirm("Bu firmayı silmek istediğinizden emin misiniz?", function () {
+                    $.post("/Customer/Delete", { customerID: $(".customer-detail-dialog #ID").val() }, function (result) {
+                        if (result.success == 1) {
+                            aware.showToastr("Firma başarıyla silindi.", "success");
+                            aware.delayedRefresh(500, "/firmalar");
+                        } else {
+                            aware.showError(result.message);
+                        }
+                    });
+                });
+                return false;
+            });
+        });
+    </script>
+}

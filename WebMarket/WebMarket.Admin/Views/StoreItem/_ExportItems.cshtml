@@ -1,0 +1,43 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@using WebMarket.Admin.Helper
+@model Aware.Search.SearchResult<Aware.ECommerce.Model.StoreItem>
+
+@if (Model != null && Model.HasResult)
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <td>@Html.CheckBox("item", true)</td>
+                <th colspan="2">Ürün</th>
+                <th>Satış fiyatı</th>
+                <th>Liste fiyatı</th>
+                <th>Stok</th>
+                <th>Durum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Results)
+            {
+                var product = item.Product;
+                <tr data-item-id="@item.ID">
+                    <td>@Html.CheckBox("item",true)</td>
+                    <td style="width:5%;">@Html.ImageFor("", product.DefaultImage.Path, product.Name, "image", product.Name)</td>
+                    <td class="name">@product.Name</td>
+                    <td>@item.SalesPrice.ToPrice()</td>
+                    <td>@item.ListPrice.ToPrice()</td>
+                    <td>@item.Stock.ToString("0")</td>
+                    <td class="text-center">
+                        @(item.Status==Statuses.Active?"Aktif":"Pasif")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">
+        <span><i class="fa fa-comment-o"></i> Aktarım yapılacak herhangi bir ürün bulunamadı!</span>
+    </div>
+}

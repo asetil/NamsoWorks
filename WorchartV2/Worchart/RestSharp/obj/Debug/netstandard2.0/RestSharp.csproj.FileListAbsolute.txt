@@ -1,0 +1,4 @@
+D:\WM\WorchartV2\Worchart\RestSharp\obj\Debug\netstandard2.0\RestSharp.csprojAssemblyReference.cache
+D:\WM\WorchartV2\Worchart\RestSharp\obj\Debug\netstandard2.0\RestSharp.csproj.CoreCompileInputs.cache
+D:\WM\WorchartV2\Worchart\RestSharp\obj\Debug\netstandard2.0\RestSharp.AssemblyInfoInputs.cache
+D:\WM\WorchartV2\Worchart\RestSharp\obj\Debug\netstandard2.0\RestSharp.AssemblyInfo.cs

@@ -1,0 +1,50 @@
+﻿@using Aware.Util
+@using Resources
+@model IEnumerable<Aware.ECommerce.Model.Store>
+@{
+    ViewBag.Title = Resource.Store_ListTitle;
+    ViewBag.ActivePage = 1;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+
+<div class="mb20 container">
+    <p class="text-center lead"><strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Morbi fermentum justo vitae convallis varius. Nulla tristique risus ut justo pulvinar mattis. Phasellus aliquet egestas mauris in venenatis. Nulla tristique risus ut justo pulvinar mattis. Phasellus aliquet egestas mauris in venenatis.</p>
+    <hr class="page-divider">
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="store-list">
+            @foreach (var item in Model)
+            {
+                <a href="@Url.StoreDetail(item.ID, item.DisplayName)" title="@item.DisplayName">
+                    <div class="store @(item.IsOpen ? "open" : "closed")">
+                        @Html.ImageFor(string.Empty, item.DefaultImage.Path, item.DisplayName, string.Empty, item.DisplayName)
+                        <div class="store-name">@item.DisplayName.Short(40)</div>
+                        <i class="fr" title="@(item.IsOpen ? "Açık" : "Kapalı")"></i>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12 mb20">
+            <div class="no-result-found">
+                <i class="fa fa-map-marker"></i>
+                <div>@Resource.Store_NoStoreMessage</div>
+            </div>
+        </div>
+    }
+</div>
+
+@section header{
+    <link href="~/resource/css/store.css" rel="stylesheet" />
+}

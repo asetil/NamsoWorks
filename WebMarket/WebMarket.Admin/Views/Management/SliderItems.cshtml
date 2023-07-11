@@ -1,0 +1,69 @@
+﻿@using Aware.ECommerce.Util
+@using Aware.Util.Slider
+@using WebMarket.Admin.Helper
+@model Aware.Util.Slider.SliderManagementModel
+@{
+    TempData["ActivePage"] = 26;
+    ViewBag.Title = "Manşet Yönetimi" + (Model != null ? string.Format("- {0} Slider", Model.SliderType) : "");
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+
+                        @if (Model != null)
+                        {
+                            var cacheKey = string.Format(Constants.Slider_Cache, Model.SliderType);
+                            @Html.ButtonFor("Yayınla", "fr btn-info btn-clear-cache", "history", "data-cache-key='" + cacheKey + "'")
+                        }
+                    </h2>
+
+                    @if (Model != null)
+                    {
+                        var firstItem = Model.ItemList.FirstOrDefault() ?? new SliderItem();
+
+                        <div class="slider-panel" style="min-height: 450px;">
+                            @Html.Hidden("SliderType", (int)Model.SliderType)
+                            @Html.Partial("_SliderPreview", firstItem)
+
+                            <div class="mt10 slider-list">
+                                @foreach (var item in Model.ItemList)
+                                {
+                                    <div class="@(item.ID == firstItem.ID ? "active" : "")" data-id="@item.ID">
+                                        <i class="fa fa-remove btn-remove-slide"></i>
+                                        <img style="width: 100%;" src="/resource/img/@item.ImagePath" alt="@item.Title">
+                                    </div>
+                                }
+
+                                <div data-id="0">
+                                    <span style="font-size: 20px; margin-top: 14px; display: inline-block;">
+                                        <i class="fa fa-plus fa-2px"></i> Ekle
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Öğeler Listelenemiyor!</h4>
+                            <p class="description">Bu sayfada işlem yapma yetkiniz yok veya teknik bir hata oluştu. Lütfen yöneticinizle görüşün!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <script type="text/javascript" src="/resource/js/slider-management.js"></script>
+}

@@ -1,0 +1,122 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.ECommerce.Model
+@using Aware.Util.Enums
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model SimpleItemListModel
+@{
+    TempData["ActivePage"] = 12;
+    var count = Model != null && Model.List != null ? Model.List.Count() : 0;
+    var isForPermissions = (ItemType)ViewBag.ItemType == ItemType.UserPermissions;
+}
+
+<section class="container-fluid simple-items">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        @Html.ButtonFor(string.Empty, "btn-info btn-round btn-fab btn-fab-mini ml20 btn-view-item", "plus")
+                    </h2>
+
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs @(isForPermissions ? "": "dn")">
+                            <li><a href="/site-ayarlari#tab_general">Genel Ayarlar</a></li>
+                            <li class=""><a href="/site-ayarlari#tab_mail">Mail Ayarları</a></li>
+                            <li class=""><a href="/site-ayarlari#tab_other">Diğer Ayarlar</a></li>
+                            <li class="@(isForPermissions?"active":"")"><a href="@Url.RouteUrl(RouteNames.UserPermissionsRoute)">Kullanıcı İzinleri</a></li>
+                            <li class=""><a href="@Url.RouteUrl(RouteNames.SlidersRoute)">Anasayfa Manşet</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            @if (count > 0)
+                            {
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#ID</th>
+                                                <th>Tip</th>
+                                                <th>Başlık</th>
+                                                <th>İçerik</th>
+                                                <th>Sıra</th>
+                                                <th>Durum</th>
+                                                <th>İşlemler</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.List)
+                                            {
+                                                <tr class="item-wrp" data-item-id="@item.ID">
+                                                    <td>@item.ID</td>
+                                                    <td>@item.Type.ToString()</td>
+                                                    <td>@item.Title</td>
+                                                    <td> @Html.Raw(item.Value)</td>
+                                                    <td>@item.SortOrder</td>
+                                                    <td>@Html.StatusFor(item.Status)</td>
+                                                    <td>
+                                                        @Html.ButtonFor("Güncelle", "btn-sm btn-success btn-view-item", "refresh")
+                                                        @Html.ButtonFor("Sil", "btn-sm btn-danger btn-delete-item", "remove")
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mt20 no-result-found">
+                                    <i class="fa fa-warning"></i>
+                                    <h4>Listelenecek Öğe Bulunamadı!</h4>
+                                    <p class="description"><b>Yeni Ekle</b> butonunu kullanarak yeni öğe ekleyebilirsiniz.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade item-detail-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Öğe Ekle/Güncelle</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("LoadSimpleItem", "Common", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                {
+                    var mailFields = new FieldHelper(FieldDirection.Horizantal);
+                    mailFields.Label("ID", "0", "viewable");
+                    mailFields.Text("Title", "Başlık", string.Empty, "validate", 200);
+                    mailFields.TxtArea("Value", "İçerik", string.Empty, "validate", 600);
+                    mailFields.Text("Url", "Url", string.Empty, "", 200);
+                    mailFields.Text("SortOrder", "Sıra", string.Empty, "validate", 3);
+                    mailFields.Select("Durum", "Status", Model.StatusList, 0, "status-selector", string.Empty);
+
+                    @Html.Hidden("Type", (int)ViewBag.ItemType)
+                    @Html.Hidden("ID", 0)
+                    @Html.Partial("_FieldHelper", mailFields)
+                }
+            </div>
+            <div class="modal-footer">
+                <a href="#" data-dismiss="modal" class="btn btn-default">Kapat</a>
+                @Html.ButtonFor("Kaydet", "btn-success btn-save-item")
+            </div>
+        </div>
+    </div>
+</div>
+
+@section pageheader
+{
+    <script type="text/javascript" src="/resource/js/simpleitem.js"></script>
+    <style>
+        .simple-items table td img { max-width: 250px; cursor: pointer; border: 1px solid #aaa; }
+    </style>
+}

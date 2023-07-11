@@ -1,0 +1,122 @@
+﻿@using Aware.Model
+@using Aware.Util
+@using Aware.ECommerce.Util
+@using Aware.View.Web.Control
+@model Aware.ECommerce.Application.Model.FavoritesViewModel
+
+@{
+    ViewBag.Title = "Favori Ürünlerim";
+    ViewBag.ActivePage = 6;
+    var hasFavorite = Model != null && Model.Products != null && Model.Products.Any();
+}
+
+
+@if (hasFavorite)
+{
+    <section class="page-section breadcrumbs">
+        <div class="container">
+            <div class="page-header">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </section>
+}
+
+<div class="container">
+    @if (hasFavorite)
+    {
+        var dataSource = Model.Stores.Select(i => new Item(i.ID, i.Name)).ToList();
+        var marketFilter = new Selecto(string.Empty, dataSource, default(int), "fr select-store mb10", "filterByStore");
+        marketFilter.BlankOption = "Market Seçimi :";
+
+        <div class="favorite-container ">
+            <div class='list-detail'>
+                <div class="filter-panel">
+                    <div class="fl">
+                        <span>Seçtiklerimi :</span>
+                        <a href="javascript:void(0)" class="ml10 btn btn-red btn-remove-favorites">Kaldır</a>
+                        <a href="javascript:void(0)" class="dn btn btn-green ml10 btn-order-favorites">Sepete At</a>
+                    </div>
+                    <div class="fr">
+                        @Html.TextBox("search-favorite", string.Empty, new { @class = "txt-search-favorite", placeholder = "Ürün ara" })
+                    </div>
+                    @Html.Raw(marketFilter.Draw())
+                </div>
+                <div class="mt20 mb20 my-basket">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div class="wm-cbx cbx-favorite cbx-header">
+                                        <i class="fa fa-check-square"></i>
+                                    </div>
+                                </th>
+                                <th colspan="2">Ürün</th>
+                                <th>Market/Fiyat Bilgisi</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody class="items-wrapper">
+                            @foreach (var product in Model.Products)
+                            {
+                                var storeInfo = string.Join(",", product.Items.Select(i => i.StoreID)).S();
+                                <tr class="item-row" data-product-id="@product.ID" data-stores="@storeInfo">
+                                    <td>
+                                        <div class="wm-cbx cbx-favorite">
+                                            <i class="fa fa-check-square"></i>
+                                        </div>
+                                    </td>
+                                    <td class="image" style="width: 50px;"><img src="~/resource/img/@product.DefaultImage.Path" alt="@product.Name" title="@product.Name"></td>
+                                    <td class="name valign">
+                                        <a href="@Url.ProductDetail(product.Name, product.ID.ToString())" title="@product.Name">@product.Name.Short(50)</a>
+                                    </td>
+                                    <td>
+                                        @foreach (var item in product.Items)
+                                        {
+                                            <div class="store-info" data-store-id="@item.StoreID">
+                                                <span class="sname">@Model.Stores.FirstOrDefault(i => i.ID == item.StoreID).DisplayName.Short(30)</span>
+                                                <span class="sprice">@item.SalesPrice.ToPrice("TL")</span>
+
+                                                @if (item.DiscountRate > 0)
+                                                {
+                                                    <span class="discount"><i class="fa fa-arrow-down"></i> %@item.DiscountRate</span>
+                                                }
+
+                                                @if (!item.HasStock(-2))
+                                                {
+                                                    <span class="stock-info">Tükendi</span>
+                                                }
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0)" class="dn btn-order-favorite"><i class="fa fa-plus"></i> Sepetime At</a>
+                                        <a href="javascript:void(0)" class="ml10 btn-remove-favorite"><i class="fa fa-remove"></i> Kaldır</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12 mb20 mt20 ms-col-0">
+            <div class="no-result-found" style="color: #232323;">
+                <i class="fa fa-heart"></i>
+                <h2 class="mt20">Favori Ürününüz Yok!</h2>
+            </div>
+
+            <p class="text-center lead mt20">
+                Ürünleri favorilerinize ekleyerek hızlıca sipariş verebilirsiniz. Bunun için ürünlerin yanında yer alan <i style="color:#000;" class="fa fa-heart"></i> simgesine tıklamanız yeterli. Aynı simgeye tekrar tıklayarak seçtiğiniz ürünü favorilerinizden kolayca çıkarabilirsiniz.
+            </p>
+        </div>
+    }
+</div>
+
+@section header
+{
+    <script src="~/resource/js/Basket/Basket.js"></script>
+}

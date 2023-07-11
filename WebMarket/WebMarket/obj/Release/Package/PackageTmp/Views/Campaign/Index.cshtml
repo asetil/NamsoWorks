@@ -1,0 +1,47 @@
+﻿@using WebMarket.Models
+@model List<Aware.ECommerce.Model.Campaign>
+@{
+    ViewBag.Title = "Kampanyalar";
+    ViewBag.ActivePage = 3;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>Kampanyalar</h1>
+        </div>
+    </div>
+</section>
+
+<div class="container campaign-wrapper">
+    <p class="text-center lead">
+        <strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Morbi fermentum justo vitae convallis varius. Nulla tristique risus ut justo pulvinar mattis. Phasellus aliquet egestas mauris in venenatis. Nulla tristique risus ut justo pulvinar mattis. Phasellus aliquet egestas mauris in venenatis.
+    </p>
+    <hr class="page-divider">
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <div class="campaign-item">
+                <a href="@Url.CampaignDetail(item.Name, item.ID)">
+                    @Html.ImageFor(string.Empty, item.DefaultImage.Path, item.Name)
+                    <div class="name">@item.Name</div>
+                    <div class="remained"><i class="fa fa-hourglass-end"></i> <span class="countdown" data-remained="@item.RemainedTime"></span></div>
+                </a>
+            </div>
+        }
+
+        @Scripts.Render(Constants.CampaignScripts)
+        <link href="@Html.CssPath("campaign.css")" rel="stylesheet" />
+    }
+    else
+    {
+        <div class="col-md-12 mb20">
+            <div class="no-result-found">
+                <i class="fa fa-tags"></i>
+                <div>Devam eden herhangi bir kampanya bulunamadı.</div>
+            </div>
+        </div>
+    }
+</div>

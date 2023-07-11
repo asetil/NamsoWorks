@@ -1,0 +1,67 @@
+﻿@using CleanCode.Helper
+@model CleanCode.Helper.BannerType
+
+@if (Model == BannerType.Default)
+{
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-8334323762978596",
+            enable_page_level_ads: true
+        });
+    </script>
+}
+else if (Model == BannerType.BannerLeftPanel)
+{
+    <div class="banner-1">
+        <!-- os_up_category -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:250px;height:300px"
+             data-ad-client="ca-pub-8334323762978596"
+             data-ad-slot="3902038104"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else if (Model == BannerType.BannerAuto)
+{
+    <div class="banner-2">
+        <!-- os_esnek_1 -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-8334323762978596"
+             data-ad-slot="9494766824"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else if (Model == BannerType.BannerFeed)
+{
+    <div class="banner-feed">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="fluid"
+             data-ad-layout-key="-fe+66+3m-j5+m7"
+             data-ad-client="ca-pub-8334323762978596"
+             data-ad-slot="6372412486"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}
+else if (Model == BannerType.BannerEntry)
+{
+    <div class="banner-entry">
+        <!-- os_entrydetail -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:100%; height: 90px; max-width: 728px;"
+             data-ad-client="ca-pub-8334323762978596"
+             data-ad-slot="5876808210"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+}

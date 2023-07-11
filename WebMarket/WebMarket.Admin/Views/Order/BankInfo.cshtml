@@ -1,0 +1,114 @@
+﻿@using WebMarket.Admin.Helper
+@{
+    ViewBag.Title = "Banka Yönetimi";
+    TempData["ActivePage"] = 27;
+}
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li><a href="@Url.Action("OrderSettings", "Common")">Sipariş Ayarları</a></li>
+                            <li><a href="@Url.Action("ShippingMethods", "Order")"><i class="fa fa-truck"></i> Kargo Yönetimi</a></li>
+                            <li><a href="@Url.Action("OnlinePos", "Common")"><i class="fa fa-credit-card"></i> Sanal Poslar</a></li>
+                            <li class="active"><a href="#tab_general" data-toggle="tab" aria-expanded="false"><i class="fa fa-bank"></i> Bankalar</a></li>
+                            <li><a href="@Url.Action("InstallmentInfo", "Order")"><i class="fa fa-pie-chart"></i> Taksit & Komisyon</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active bank-management" id="tab_general" ng-app="adminApp" ng-controller="bankCtrl">
+                                <div class="mt20" ng-hide="loaded">
+                                    <img src="/resource/img/Icons/ajax-loading.gif" alt="Yükleniyor.." style="width: auto;" />
+                                </div>
+
+                                <p class="lead error-panel" ng-hide="!loaded || bankList.length>0">
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    Henüz sistemde tanımlı bir banka yok!
+                                </p>
+
+                                <input type="text" class="form-control txt-selection-filter" ng-model="fname" maxlength="20" placeholder="Ara.." ng-show="loaded && bankList.length>=8" />
+                                <table class="mt10 table" ng-show="loaded">
+                                    <thead>
+                                        <tr>
+                                            <th width="3%">#ID</th>
+                                            <th colspan="2" width="25%">Banka</th>
+                                            <th width="10%">Şube</th>
+                                            <th width="10%">IBAN</th>
+                                            <th width="8%">Hesap Numarası</th>
+                                            <th width="10%">Görsel Url</th>
+                                            <th width="15%">İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{newBank.ID}}</td>
+                                            <td width="8%">
+                                                <img class="bank-image" src="/resource/img/Bank/{{getImagePath(newBank)}}" alt="" />
+                                            </td>
+                                            <td width="17%">
+                                                <input type="text" class="form-control" ng-class="{'error':newBank.hasError && newBank.Name.length==0}" maxlength="100" placeholder="Banka" ng-model="newBank.Name" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':newBank.hasError && newBank.BranchName.length==0}" maxlength="100" placeholder="Şube" ng-model="newBank.BranchName" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':newBank.hasError && newBank.IBAN.length==0}" maxlength="100" placeholder="IBAN" ng-model="newBank.IBAN" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':newBank.hasError && newBank.AccountNumber.length==0}" maxlength="100" placeholder="Hesap numarası" ng-model="newBank.AccountNumber" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="100" placeholder="Url.." ng-model="newBank.ImageUrl" />
+                                            </td>
+                                            <td>
+                                                @Html.ButtonFor("Ekle", "btn-sm btn-info", "plus", "ng-click='save(newBank)'")
+                                            </td>
+                                        </tr>
+
+                                        <tr ng-repeat="bank in bankList | filter:{Name:fname}">
+                                            <td>{{bank.ID}}</td>
+                                            <td width="8%">
+                                                <img class="bank-image" src="/resource/img/Bank/{{getImagePath(bank)}}" alt="" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':bank.hasError && bank.Name.length==0}" maxlength="100" placeholder="Banka" ng-model="bank.Name" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':bank.hasError && bank.BranchName.length==0}" maxlength="100" placeholder="Şube" ng-model="bank.BranchName" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':bank.hasError && bank.IBAN.length==0}" maxlength="100" placeholder="IBAN" ng-model="bank.IBAN" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':bank.hasError && bank.AccountNumber.length==0}" maxlength="100" placeholder="Hesap numarası" ng-model="bank.AccountNumber" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" maxlength="100" placeholder="Url.." ng-model="bank.ImageUrl" />
+                                            </td>
+                                            <td>
+                                                @Html.ButtonFor("Güncelle", "btn-sm btn-success", "check", "ng-click='save(bank)'")
+                                                @Html.ButtonFor("Sil", "btn-sm btn-danger", "remove", "ng-click='remove(bank)'")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular-resource.min.js" type="text/javascript"></script>
+    @Scripts.Render("~/resource/js/angularjs")
+}

@@ -1,0 +1,109 @@
+﻿@using Aware.Util
+@using Aware.View
+@using Resources
+
+@model WebMarket.Models.UserViewModel
+@{
+    ViewBag.Title = "Üye Ol";
+}
+
+<div class="page-section container ">
+    <div class="col-md-6 mb20 register-dialog">
+        <h1 class="mb20">@ViewBag.Title</h1>
+
+        @if (Model != null && Model.User != null)
+        {
+            if (Model.Result != null && !Model.Result.OK)
+            {
+                <p class="error lead">@Model.Result.Message</p>
+            }
+
+            using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                var fields = new FieldHelper(Enums.FieldDirection.Inline);
+                fields.Text("Name", "İsim", Model.User.Name, "validate", 50);
+                fields.Text("Email", Resource.Email, Model.User.Email, "validate email-check",30);
+                fields.Pasword("Password", Resource.Password, string.Empty, "validate",10);
+                fields.Pasword("RepeatPassword", "Şifre Tekrarı", string.Empty, "validate equality-check", 10).SetAttr("data-compare-id='Password'");
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                @Html.Partial("_FieldHelper", fields)
+                @Html.Hidden("Permissions", string.Empty)
+
+                <div class="db wm-cbx cbx-aggreement">
+                    <i class="mr10 fa fa-check-square"></i>
+                    <a href="#membershipAggModal" data-toggle="modal"><b><u>Üyelik sözleşmesi</u></b></a>ni okudum ve kabul ediyorum.
+                </div>
+
+                if (Model.HasPermissions)
+                {
+                    <p class="mt20">Webmarket.com'a ait ürün ve hizmetler ile ilgili bülten, kampanya ve promosyonlara yönelik;</p>
+                    foreach (var permission in Model.PermissionList)
+                    {
+                        <div class="db mt10 wm-cbx user-permission" data-permission-id="@permission.ID">
+                            <i class="mr10 fa fa-check-square"></i>
+                            <span>@permission.Title</span>
+                        </div>
+                    }
+                }
+
+                <div class="field-row">
+                    @Html.ButtonFor("Üye Ol", "fr btn-red btn-register", string.Empty)
+                </div>
+            }
+        }
+        else
+        {
+            <p class="lead error">İşleminizi şuan gereçekleştiremiyoruz. Lütfen daha sonra tekrar deneyin!</p>
+        }
+    </div>
+
+    <div class="col-md-6 mb20 text-center sm-section-top">
+        <div class="panel-user-info">
+            <h3>WebMarket'e hoşgeldin!</h3>
+            <p class="mt20 lead">
+                Siz değil marketler ayağınıza gelsin! Webmarket'in ayrıcalıklı dünyasına girmek için bir tık uzaktasınız.
+                Hemen üyelik formunu doldurun, tek adımda hesabınızı oluşturun.
+            </p>
+            <p class="mt20 lead" style="font-weight:400;">Zaten üye misiniz?</p>
+            <hr style="border-top:1px dashed #ccc !important;" />
+
+            <div class="text-center social-container">
+                <a href="#loginModal" class="mt10 btn btn-green login" data-toggle="modal">Üye Girişi</a>
+                <span class="mt10 ml10 mr10 hidden-xs" style="vertical-align:middle">veya</span>
+                <a href="#" class="mt10 btn btn-facebook facebook-login"><i class="fa fa-facebook-square"></i> Facebook ile Giriş</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="membershipAggModal">
+    <div class="modal-dialog">
+        <div class="modal-body wrapper-box">
+            <div>
+                <button type="button" class="pa close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="pb10">
+                    <i class="fa fa-users"></i> Üyelik Sözleşmesi
+                </h2>
+            </div>
+
+            @Html.Partial("_MembershipAggreement")
+            <hr />
+            <div class="field-row fr">
+                @Html.ButtonFor("Tamam", "btn-success", string.Empty, "data-dismiss='modal'")
+            </div>
+        </div>
+    </div>
+</div>
+
+@section header{
+    <script src="~/resource/js/user.js"></script>
+    <style>
+        .register-dialog { margin-bottom: 70px; }
+        .register-dialog .btn-login { margin-left: 100px; }
+        .register-dialog .error_field { display: none; }
+        .panel-user-info h3 { color: #dc143c; }
+        #membershipAggModal .mem-aggreement-content { max-height: 400px; overflow-y: scroll; }
+    </style>
+}

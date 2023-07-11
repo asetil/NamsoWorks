@@ -1,0 +1,190 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@using WebMarket.Admin.Models
+@model CampaignViewModel
+@{
+    ViewBag.Title = "Kampanya Detayı";
+    if (Model.Campaign != null)
+    {
+        ViewBag.Title = Model.Campaign.ID > 0 ? Model.Campaign.Name : "Yeni Kampanya";
+    }
+
+    TempData["ActivePage"] = 5;
+    ViewBag.PageNavigation = new Item(0, "Kampanyalar", "fa-dashboard", "/kampanya-yonetimi");
+}
+
+<section class="container-fluid campaign-detail">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    
+                    @if (Model != null && Model.Campaign != null)
+                    {
+                        var campaignDef = new FieldHelper(FieldDirection.Horizantal);
+                        campaignDef.Image("campaignImage", "Görsel", Model.Campaign.DefaultImage.Name, Model.Campaign.DefaultImage.Path, "campaign-image");
+                        campaignDef.Text("Campaign.Name", "İsim", Model.Campaign.Name, "name validate", 100);
+                        campaignDef.TxtArea("Campaign.Description", "Açıklama", Model.Campaign.Description, "description validate", 400);
+                        campaignDef.BtnGroup("Durum", "Campaign.Status", Model.StatusList, ((int)Model.Campaign.Status).ToString());
+
+                        var campaignCond = new FieldHelper(FieldDirection.Horizantal);
+                        campaignCond.Number("Campaign.Discount", "İndirim", Model.Campaign.Discount.ToString("N"), "mini validate", 7).SetAffix(Model.DiscountSuffix);
+                        campaignCond.Number("Campaign.MinimumAmount", "Minimum Tutar", Model.Campaign.MinimumAmount.ToString("N"), "mini validate", 7).SetAffix(Aware.Util.Common.Currency);
+                        campaignCond.Number("Campaign.MinimumQuantity", "Minimum Adet", ((int)Model.Campaign.MinimumQuantity).ToString(), "mini validate", 2).SetAffix("ad");
+                        campaignCond.Number("Campaign.ExpireDays", "Kapmpanya Süresi", Model.Campaign.ExpireDays.ToString(), "mini validate pnumber", 3).SetAffix("gün");
+                        campaignCond.Text("Campaign.PublishDate", "Yayınlanma Tarihi", Model.Campaign.PublishDate.ToShortDateString(), "validate datepicker publish-date", 30).SetAffix("<i class='fa fa-calendar'></i>");
+
+                        using (Html.BeginForm("Detail", "Campaign", FormMethod.Post, new { enctype = "multipart/form-data", @class = "col-md-12 form-horizontal" }))
+                        {
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="@(Model.SelectedTemplate > 0 ? "" : "active")"><a href="#tab_template" data-toggle="tab" aria-expanded="false">Şablon Seçimi</a></li>
+                                    @if (Model.SelectedTemplate > 0)
+                                    {
+                                        <li class="@(Model.SelectedTemplate > 0 ? "active" : "")"><a href="#tab_definition" data-toggle="tab" aria-expanded="false">Kampanya Tanımı</a></li>
+                                        <li class=""><a href="#tab_condition" data-toggle="tab" aria-expanded="false">Kampanya Koşulları</a></li>
+                                        <li class=""><a href="#tab_filter" data-toggle="tab" aria-expanded="false">Filtre Seçimi</a></li>
+                                    }
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane @(Model.SelectedTemplate > 0 ? "" : "active")" id="tab_template">
+                                        <fieldset class="col-md-12 fn">
+                                            @if (Model.SelectedTemplate <= 0)
+                                            {
+                                                <p class="text-green lead">
+                                                    Devam etmek için şablon seçimi yapmalısınız!
+                                                </p>
+                                            }
+
+                                            @foreach (var template in Model.CampaignTemplates)
+                                            {
+                                                <div class="campaign-template @(template.ID == Model.SelectedTemplate ? "active" : "")" data-id="@template.ID">
+                                                    <div class="cover-image"></div>
+                                                    <div class="info">
+                                                        <h2>@template.Name</h2>
+                                                        <p>@template.Description</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </fieldset>
+                                    </div>
+
+                                    <div class="tab-pane @(Model.SelectedTemplate > 0 ? "active" : "")" id="tab_definition">
+                                        <fieldset class="col-md-12 fn">
+                                            @Html.HiddenFor(model => model.Campaign.ID)
+                                            @Html.HiddenFor(model => model.Campaign.Scope)
+                                            @Html.HiddenFor(model => model.Campaign.DiscountType)
+                                            @Html.HiddenFor(model => model.Campaign.FilterInfo)
+
+                                            @Html.Partial("_FieldHelper", campaignDef)
+
+                                            <div class="field-row button-row fr">
+                                                @Html.ButtonFor("Geri", "mr10 btn-black btn-prev", "chevron-left")
+                                                <button class="btn btn-black btn-next">Sonraki <i class="fa fa-chevron-right"></i></button>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="tab-pane" id="tab_condition">
+                                        <fieldset class="col-md-10 fn">
+                                            @Html.Partial("_FieldHelper", campaignCond)
+
+                                            <div class="field-row button-row fr">
+                                                @Html.ButtonFor("Geri", "mr10 btn-black btn-prev", "chevron-left")
+                                                <button class="btn btn-black btn-next">Sonraki <i class="fa fa-chevron-right"></i></button>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <div class="tab-pane" id="tab_filter">
+                                        <fieldset class="col-md-10 fn">
+                                            <div class="form-group">
+                                                <label class="title col-sm-2 control-label">Mağaza Seçimi</label>
+                                                <div class="col-sm-10">
+                                                    <select multiple="multiple" id="StoreInfo" class="store-selector" data-selected="@(string.IsNullOrEmpty(Model.GetFilter("sid")) ? "-1" : Model.GetFilter("sid"))">
+                                                        <option value="-1" selected='selected'>Tümü</option>
+                                                        @foreach (var item in Model.StoreList)
+                                                        {
+                                                            <option value="@item.ID" @(item.OK ? "selected='selected'" : "")>@item.Value</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="title col-sm-2 control-label">Kategori Seçimi</label>
+                                                <div class="col-sm-10">
+                                                    <select multiple="multiple" id="CategoryInfo" class="category-selector" data-selected="@(string.IsNullOrEmpty(Model.GetFilter("cid")) ? "-1" : Model.GetFilter("cid"))">
+                                                        <option value="-1" selected='selected'>Tümü</option>
+                                                        @foreach (var item in Model.CategoryList)
+                                                        {
+                                                            <option value="@item.ID" @(item.OK ? "selected='selected'" : "")>@item.Value</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="title col-sm-2 control-label">Özellik Seçimi</label>
+                                                <div class="col-sm-10">
+                                                    <select multiple="multiple" id="PropertyInfo" class="property-selector" data-selected="@(string.IsNullOrEmpty(Model.GetFilter("pid")) ? "-1" : Model.GetFilter("pid"))">
+                                                        <option value="-1" selected='selected'>Tümü</option>
+                                                        @foreach (var item in Model.PropertyList)
+                                                        {
+                                                            <option value="@item.ID" @(item.OK ? "selected='selected'" : "")>@item.Title : @item.Value</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="field-row button-row fr">
+                                                @Html.ButtonFor("Geri", "btn-black btn-prev", "chevron-left")
+                                                @if (Model.AllowEdit && Model.SelectedTemplate > 0)
+                                                {
+                                                    if (Model.Campaign != null && Model.Campaign.ID > 0)
+                                                    {
+                                                        @Html.ButtonFor("Sil", "ml10 btn-red active btn-delete-campaign", "remove", "style='margin-right:3px;'")
+                                                    }
+                                                    @Html.ButtonFor("Kaydet", "ml10 btn-green active btn-save-campaign")
+                                                }
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Kampanya Bulunamadı!</h4>
+                            <p class="description">Böyle bir kampanya yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader{
+    <link href="~/resource/css/jquery-ui.css" rel="stylesheet" />
+    <script src="~/resource/js/jquery-ui.js"></script>
+    <script src="~/resource/js/campaign.js"></script>
+
+    <style>
+        .campaign-detail h3 { color: #dc143c; }
+        .campaign-detail .image-wrapper { width: 100%; max-width: 100%; }
+        .campaign-detail .image-wrapper .thumbnail > img { max-width: 100%; max-height: 300px; }
+        .campaign-detail .image-wrapper .selector { text-align: right; }
+
+        .campaign-template { border: 2px solid #eee; padding: 8px 20px; font-size: 16px; margin-bottom: 10px; cursor: pointer; border-radius: 5px; letter-spacing: 0.8px; color: #ccc; }
+        .campaign-template.active, .campaign-template:hover { border-color: #43c35b; color: #43c35b; }
+    </style>
+}

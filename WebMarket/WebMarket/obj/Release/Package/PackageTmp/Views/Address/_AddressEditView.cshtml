@@ -1,0 +1,24 @@
+﻿@using Aware.Util
+@using Aware.View
+@model Aware.ECommerce.Model.AddressViewModel
+
+@if (Model != null)
+{
+    <div class="address-edit-dialog">
+        @using (Html.BeginForm("Index", "Order"))
+        {
+            var fields = new FieldHelper();
+            fields.Text("Name", "Adres ismi", Model.Address.Name, "validate", 30);
+            fields.Text("District", "Semt", Model.DistrictInfo.Name, "validate sbx-check district",20).SetAttr("data-id='" + Model.Address.DistrictID + "'");
+            fields.TxtArea("Body", "Adres detay", Model.Address.Description, "validate", 250);
+            fields.Text("Phone", "Telefon", Model.Address.Phone, "validate number", 11);
+            
+            @Html.AntiForgeryToken()
+            @Html.Partial("_FieldHelper", fields)
+
+            <div class="field-row">
+                <div class="msg-info"></div>
+            </div>
+        }
+    </div>
+}

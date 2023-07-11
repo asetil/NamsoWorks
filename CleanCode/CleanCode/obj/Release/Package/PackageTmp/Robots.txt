@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap Files:
+Sitemap: http://www.osmansokuoglu.com/sitemap.xml

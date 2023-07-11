@@ -1,0 +1,40 @@
+﻿@using Aware.Util.View
+@using Aware.Util.Enums
+@using CleanCode.Helper
+@{
+    ViewBag.SeoModel = new CleanCode.Helper.SeoModel("Üye Girişi");  
+}
+
+<div class="mt20 col-md-6">
+    <div class="login-panel">
+        <h2 class="mb20">Üye Girişi</h2>
+
+        @using (Html.BeginForm("Login", "User"))
+        {
+            var fields = new FieldHelper(FieldDirection.Inline);
+            fields.Text("Email", "E-posta", string.Empty, "validate email-check", 30);
+            fields.Pasword("Password", "Şifre", string.Empty, "validate", 10);
+
+            @Html.AntiForgeryToken()
+            @Html.Hidden("RememberMe", true)
+            @Html.Partial("_FieldHelper", fields)
+
+            <div class="form-group text-right">
+                @Html.ButtonFor("Giriş Yap", "btn btn-blue btn-fluid btn-login", string.Empty)
+            </div>
+        }
+    </div>
+</div>
+
+<div class="col-md-6">
+    <div class="panel-warn" style="margin-top:27px;">
+        <p><i class="fa fa-4x fa-exclamation-triangle"></i></p>
+        <p class="lead">Yönetim sayfalarına erişmek için giriş yapmalısınız!</p>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script src="~/res/js/user.js"></script>
+}

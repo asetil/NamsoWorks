@@ -1,0 +1,14 @@
+﻿@model WebMarket.Models.ProductSearchViewModel
+@{
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? "Ürünler" : (Model.Title.Trim() + " Ürünleri");
+    ViewBag.ActivePage = 2;
+    ViewBag.HasProduct = true;
+}
+
+@{Html.RenderPartial("_ProductListView", Model);}
+
+@section header
+{
+    @Scripts.Render(Constants.ProductListPageScripts)
+    <link href="~/resource/css/swiper.min.css" rel="stylesheet" />
+}

@@ -1,0 +1,134 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@using Aware.ECommerce.Util
+@using Aware.File.Model
+@using Aware.Util.Enums
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.File.Model.FileGalleryModel
+
+@if (Model != null && Model.Size > 0)
+{
+    var fileCount = Model.Files != null ? Model.Files.Count() : 0;
+
+    <div class="file-gallery">
+        @Html.HiddenFor(x => x.RelationID)
+        @Html.HiddenFor(x => x.RelationType)
+        @Html.HiddenFor(x => x.GalleryType)
+        @Html.HiddenFor(x => x.Size)
+
+        @if (fileCount > 0)
+        {
+            foreach (var file in Model.Files)
+            {
+                <div class="wrp-file" data-file-id="@file.ID">
+                    <div class="preview">
+                        @if (PostedFileModel.IsImage(file.Path))
+                        {
+                            @Html.ImageFor(string.Empty, file.Path, file.Name, "img-view", "", true)
+                        }
+                        else
+                        {
+                            @Html.ImageFor("Icons", string.Format("preview-{0}.jpg", file.Extension), file.Name)
+                        }
+                        <span class="status @(file.Status.ToString().ToLowerInvariant())" title="@(file.Status==Statuses.Active?"Aktif":"Pasif")"></span>
+                    </div>
+                    <div class="operations">
+                        <span>@file.Name.Short(18)</span>
+                        @if (Model.ViewMode == ViewTypes.Editable)
+                        {
+                            <i class="fa fa-remove" title="Sil"></i>
+                            <i class="fa fa-refresh" title="Güncelle"></i>
+                        }
+                        <i class="fa fa-search" title="İncele"></i>
+                    </div>
+                </div>
+            }
+        }
+
+        @if (fileCount <= 0)
+        {
+            <p class="mt10 lead">Listelenecek öğe bulunamadı.</p>
+        }
+
+        @if (Model.ViewMode == ViewTypes.Editable)
+        {
+            <div class="@(fileCount >= Model.Size ? "dn" : "")" style="    display: inline-block;float: left;clear: both;width: 100%;">
+                <hr />
+                <div class="wrp-file inactive" data-file-id="0">
+                    @Html.ButtonFor("Yeni Ekle", "btn-black btn-single-modal", "plus")
+                    @Html.ButtonFor("Çoklu Ekle", "ml10 btn-red btn-multi-modal", "list")
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (Model != null && Model.HasModal)
+{
+    var fields = new FieldHelper();
+    fields.Text("Name", "Dosya Adı", string.Empty, "validate", 30);
+    fields.Text("SortOrder", "Sıra", string.Empty, "validate", 3);
+    fields.Text("Format", "Boyut", string.Empty, "validate", 2);
+    fields.Select("Durum", "Status", Html.GetStatusList(), (int)Statuses.Active, "status-selector", string.Empty);
+
+    var imageField = new FieldHelper();
+    imageField.Image("File", "Dosya Seç", string.Empty, "Product/0.png", "validate validate-file").SetAttr("accept='" + Model.AllowedExtensions + "'");
+
+    @Html.HiddenFor(x => x.AllowedExtensions)
+    <div id="FileGalleryModal" class="modal fade" data-keyboard="true" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Galeri Öğesi Düzenle</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="row single-file">
+                        <div class="col-md-6">
+                            @Html.Hidden("ID", "0")
+                            @Html.Hidden("RelationID", "0")
+                            @Html.Hidden("RelationType", "0")
+                            @Html.Partial("_FieldHelper", fields)
+                        </div>
+                        <div class="col-md-6">
+                            @Html.Partial("_FieldHelper", imageField)
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    @Html.ButtonFor("Vazgeç", "btn-default", "", "data-dismiss='modal'")
+                    @Html.ButtonFor("Kaydet", "btn-success btn-save-file")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="MultiFileGalleryModal" class="modal fade" data-keyboard="true" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Çoklu Öğe Ekleme</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="multi-file">
+                        @Html.Hidden("ID", "0")
+                        @Html.Hidden("RelationID", "0")
+                        @Html.Hidden("RelationType", "0")
+
+                        @Html.ButtonFor("Yüklenecek Dosyaları Seç", "btn-black btn-multi-file", "download")
+                        @Html.ButtonFor("Geçerli Dosyaları Yükle", "dn ml10 btn-success btn-save-multi", "upload")
+                        <div class="mt10 info">Sadece '@Model.AllowedExtensions' uzantılı dosyalar yükleyebilirsiniz!</div>
+
+                        <input name="MultiFile" id="MultiFile" class="dn upload-multi-file" type="file" multiple="multiple" accept="@Model.AllowedExtensions">
+                        <div class="selections"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    @Html.ButtonFor("Vazgeç", "btn-default", "", "data-dismiss='modal'")
+                </div>
+            </div>
+        </div>
+    </div>
+}

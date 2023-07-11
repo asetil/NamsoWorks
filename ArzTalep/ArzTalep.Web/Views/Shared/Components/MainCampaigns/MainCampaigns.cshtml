@@ -1,0 +1,25 @@
+﻿@model Aware.Search.SearchResult<ArzTalep.BL.Model.Campaign>
+
+<div class="campaign-list">
+    @if (Model != null && Model.HasResult)
+    {
+        foreach (var item in Model.Results)
+        {
+            <div class="campaign-item">
+                @*<img src="~/img/@item.Image" />*@
+                <span>@item.Name</span>
+                <div class="join-panel">
+                    <div><span>500</span><span>Katılım</span></div>
+                    <button>Katıl</button>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<style>
+    .campaign-list .campaign-item { border: 2px solid #efefef; padding: 5px; margin-bottom: 10px; border-radius: 5px; }
+    .campaign-list .campaign-item img { max-width:120px;max-height:160px;}
+    .campaign-list .campaign-item .join-panel > span { border: 1px solid #ccc; border-radius: 50%; padding: 38px 20px; text-align: center; }
+    .campaign-list .campaign-item .join-panel button { background: #fdb81d; max-width: 182px; padding: 5px 14px; border-radius: 4px; }
+</style>

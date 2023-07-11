@@ -1,0 +1,16 @@
+23:32:48:919|FileService > SaveToDisc - failed -- Could not find a part of the path 'D:\WM\WebMarket\WebMarket.Admin\resource\img\resource\img\gallery\img_587481ec0a3a9_1484030444.jpg'.|
+23:32:49:451|------------------------------------------------------------------------
+
+|
+23:32:51:958|FileService > SaveFilesToDirectory - Fail with path: /resource/img/gallery -- Could not find a part of the path 'D:\WM\WebMarket\WebMarket.Admin\resource\img\resource\img\gallery\img_587481ec0a3a9_1484030444.jpg'.|
+23:32:51:958|------------------------------------------------------------------------
+
+|
+23:34:15:195|FileService > SaveToDisc - failed -- Could not find a part of the path 'D:\WM\WebMarket\WebMarket.Admin\resource\img\resource\img\gallery\img_587481ec0a3a9_1484030444.jpg'.|
+23:34:15:195|------------------------------------------------------------------------
+
+|
+23:34:15:195|FileService > SaveFilesToDirectory - Fail with path: /resource/img/gallery -- Could not find a part of the path 'D:\WM\WebMarket\WebMarket.Admin\resource\img\resource\img\gallery\img_587481ec0a3a9_1484030444.jpg'.|
+23:34:15:195|------------------------------------------------------------------------
+
+|

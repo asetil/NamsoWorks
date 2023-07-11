@@ -1,0 +1,59 @@
+﻿@using Aware
+@using Aware.ECommerce.Util
+@using Aware.Util
+@using WebMarket.Helper
+@model Aware.ECommerce.Model.ProductSearchResult
+
+@if (Model.SearchParams != null && Model.HasResult)
+{
+    foreach (var product in Model.Results)
+    {
+        var pricer = Html.Pricer(product.DefaultItem.SalesPrice);
+        <div class='product-view item product-wrapper col-md-4 col-sm-6 col-xs-6' data-pid="@product.ID" data-price="@pricer.Price.Formatted()" data-seo-url="@product.Name.ToSeoUrl()-@product.ID">
+            <div class="item-wrp">
+                <input type='hidden' class='items-info' value='@product.ItemsInfo' />
+                <img class="pimage lazy" src="/resource/img/Product/loading.jpg" data-src="@Html.ImagePath(product.DefaultImage.Path,"m")" title="@product.Name" />
+                <div class='name' title='@product.Name'>
+                    @product.Name.Short(30)
+                    <span class="dn description">@product.ShortDescription</span>
+                </div>
+
+                <div class='item-price'>
+                    @if (product.DefaultItem.DiscountRate > 0)
+                    {
+                        <div class='discount-rate'>%@product.DefaultItem.DiscountRate </div>
+                    }
+
+                    <div class="price-list hidden-xs">@product.DefaultItem.ListPrice.ToPrice()</div>
+                    <div class="price"> @pricer.Left,<span class='price-dec'>@pricer.Right TL</span></div>
+                </div>
+
+                <div>
+                    @if (product.IsFavorite(Model.FavoriteProducts))
+                    {
+                        <div class='fa fa-heart btn-favorite favorite' data-product-id="@product.ID" title="Bu ürünü favorilerimden kaldır."></div>
+                    }
+                    else
+                    {
+                        <div class='fa fa-heart btn-favorite' data-product-id="@product.ID" title="Bu ürünü favorilerime ekle."></div>
+                    }
+
+                    @if (Model.AllowCompare)
+                    {
+                        <div class="fa fa-random btn-compare-product" title="Karşılaştırma listesine ekle."></div>
+                    }
+
+                    @if (product.IsForSale && product.HasStock(1))
+                    {
+                        <i class="fa fa-shopping-basket btn-basket"></i>
+                    }
+                    else if (product.IsForSale)
+                    {
+                        <div class='fa fa-bell-o no-stock btn-basket' title="Ürün stoğu tükendi"></div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    }
+}

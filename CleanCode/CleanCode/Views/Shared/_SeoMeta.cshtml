@@ -1,0 +1,69 @@
+﻿@using CleanCode.Helper
+@{
+   var seoModel = (SeoModel)(ViewBag.seoModel != null ? ViewBag.SeoModel : new SeoModel("Anasayfa"));
+}
+
+<meta charset="utf-8" />
+<meta http-equiv="content-type" content="text/html; charset=windows-1254">
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-9">
+
+<title>@seoModel.Title</title>
+<link rel="shortcut icon" href="/res/img/favicon.ico" type="image/x-icon">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width" />
+<meta name="content-language" content="tr">
+<meta name="Copyright" content="@seoModel.Copyright" />
+<meta name="robots" content="@(string.IsNullOrEmpty(seoModel.Robots) ? "index, follow":seoModel.Robots)">
+<meta name="yandex-verification" content="0f3ea1a9c1e52b1a" />
+
+<meta property="og:locale" content="tr_TR">
+<meta property="og:title" content="@seoModel.Title" />
+<meta property="og:type" content="@seoModel.ContentType" />
+<meta name="twitter:title" content="@seoModel.Title">
+<meta name="twitter:card" content="summary">
+
+@if (!string.IsNullOrEmpty(seoModel.Description))
+{
+    <meta name="description" content="@seoModel.Description" />
+    <meta property="og:description" content="@seoModel.Description" />
+    <meta name="twitter:description" content="@seoModel.Description">
+}
+
+@if (!string.IsNullOrEmpty(seoModel.Author))
+{
+    <meta name="author" content="@seoModel.Author" />
+    <meta name="twitter:creator" content="@seoModel.Author">
+}
+
+@if (!string.IsNullOrEmpty(seoModel.Keywords))
+{
+    <meta name="keywords" content="@seoModel.Keywords" />
+}
+
+@if (!string.IsNullOrEmpty(seoModel.Copyright))
+{
+    <meta name="Copyright" content="@seoModel.Copyright" />
+}
+
+@if (!string.IsNullOrEmpty(seoModel.SiteName))
+{
+    <meta property="og:site_name" content="@seoModel.SiteName">
+    <meta name="twitter:site" content="@seoModel.SiteName">
+}
+
+@if (!string.IsNullOrEmpty(seoModel.ImageUrl))
+{
+    <meta property="og:image" content="@seoModel.ImageUrl" />
+    <meta property="twitter:image" content="@seoModel.ImageUrl" />
+}
+
+@if (!string.IsNullOrEmpty(seoModel.PageUrl))
+{
+    <meta property="og:url" content="@seoModel.PageUrl" />
+}
+
+@if (!string.IsNullOrEmpty(seoModel.CanonicalUrl))
+{
+    <link rel="canonical" href="@seoModel.CanonicalUrl">
+}

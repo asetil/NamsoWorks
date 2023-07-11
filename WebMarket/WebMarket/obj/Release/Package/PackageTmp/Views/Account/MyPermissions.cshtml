@@ -1,0 +1,25 @@
+﻿@model List<Aware.ECommerce.Model.SimpleItem>
+@{
+    ViewBag.Title = "İzinlerim";
+}
+
+<div class="page-section container">
+    <div class="col-md-6 account-dialog">
+        <div class="block-title"><span>İzinlerim</span></div>
+        @if (Model != null && Model.Any())
+        {
+            <p class="mt20">Webmarket.com'a ait ürün ve hizmetler ile ilgili bülten, kampanya ve promosyonlara yönelik;</p>
+            foreach (var permission in Model)
+            {
+                <div class="db mt10" data-permission-id="@permission.ID">
+                    <i class="mr10 fa fa-check-square cbx-aggreement"></i>
+                    <span>@permission.Title</span>
+                </div>
+            }
+            
+            <div class="field-row">
+                @Html.ButtonFor("Kaydet", "fr btn-black hover btn-save-permissions", string.Empty)
+            </div>
+        }
+    </div>
+</div>

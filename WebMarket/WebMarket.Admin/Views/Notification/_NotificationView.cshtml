@@ -1,0 +1,31 @@
+﻿@using Aware.Notification
+@using Aware.Util.Enums
+@using Aware.Util.View
+
+@model NotificationDetailModel
+
+@if (Model != null && Model.Notification!=null)
+{
+    using (Html.BeginForm("SaveNotification", "Notification", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+    {
+        var fields = new FieldHelper(FieldDirection.Horizantal, 3);
+        fields.Label("ID", Model.Notification.ID.ToString(), "viewable");
+        fields.Text("Name", "İsim", Model.Notification.Name, "validate", 200);
+        fields.TxtArea("Content", "İçerik", Model.Notification.Content, "validate notification-content db", 8000);
+        fields.Select("Hedef Kitle", "Target", Model.TargetList, (int)Model.Notification.Target, "target-selector validate sbx-check");
+        fields.Text("TargetList", "Hedef Seçimler", Model.Notification.TargetList, "", 300);
+        fields.BtnGroup("Gösterim Şekli", "DisplayMode", Model.DisplayModeList, ((int)Model.Notification.DisplayMode).ToString(), "validate");
+        fields.Number("Expire", "Yayın Süresi", Model.Notification.Expire.ToString(), "validate pnumber", 3).SetAffix("gün");
+        fields.Text("PublishDate", "Yayınlanma Tarihi", Model.Notification.PublishDate.ToString("dd.MM.yyyy"), "validate datepicker publish-date", 30).SetAffix("<i class='fa fa-calendar'></i>");
+        fields.BtnGroup("Durum", "Status", Model.StatusList,((int)Model.Notification.Status).ToString());
+
+        @Html.Hidden("ID", Model.Notification.ID)
+        @Html.Partial("_FieldHelper", fields)
+        <br />
+        <br />
+    }
+}
+else
+{
+    <div class="alert alert-danger">Bildirim bulunamadı ya da görüntülenemiyor!</div>
+}

@@ -1,0 +1,17 @@
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\Aware.deps.json
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\Aware.dll
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\Aware.pdb
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.csproj.CoreCompileInputs.cache
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.AssemblyInfoInputs.cache
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.AssemblyInfo.cs
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.dll
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.pdb
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\Microsoft.IdentityModel.Tokens.dll
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\System.IdentityModel.Tokens.Jwt.dll
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\Microsoft.IdentityModel.Tokens.pdb
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\Microsoft.IdentityModel.Tokens.xml
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\System.IdentityModel.Tokens.Jwt.pdb
+D:\WM\ArzTalep\Aware\bin\Debug\netcoreapp2.2\System.IdentityModel.Tokens.Jwt.xml
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.csproj.CopyComplete
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.csproj.AssemblyReference.cache
+D:\WM\ArzTalep\Aware\obj\Debug\netcoreapp2.2\Aware.GeneratedMSBuildEditorConfig.editorconfig

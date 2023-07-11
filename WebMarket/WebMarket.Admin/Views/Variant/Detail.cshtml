@@ -1,0 +1,122 @@
+﻿@using Aware.ECommerce.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+
+@model Aware.ECommerce.Model.VariantDetailModel
+@{
+
+    var property = Model != null ? Model.VariantProperty : null;
+    ViewBag.SaveResult = Model != null ? Model.SaveResult : null;
+
+    ViewBag.Title = "Varyant Detay";
+    if (property != null)
+    {
+        ViewBag.Title = property != null && property.ID > 0 ? property.Name : "Yeni Varyant Özellik";
+    }
+
+    ViewBag.PageNavigation = new Item(0, "Varyant Özellikler", "fa-th", "/varyant-ozellikler");
+    TempData["ActivePage"] = 11;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    @if (property == null)
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Varyant Özellik Bulunamadı</h4>
+                            <p class="description">Böyle bir özellik bulunamadı ya da görüntüleme yetkiniz yok!</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="box box-info property-detail-panel">
+                            <div class="box-header">
+
+                            </div>
+                            @using (Html.BeginForm("Detail", "Variant", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                            {
+                                <div class="box-body">
+                                    @if (Model.AllowEdit)
+                                    {
+                                        var fields = new FieldHelper(FieldDirection.Horizantal, 3);
+                                        fields.Label("#ID", property.ID.ToString(), "viewable");
+                                        fields.Text("Name", "İsim", property.Name, "validate", 100);
+                                        fields.Text("DisplayName", "Görünen İsim", property.DisplayName, "validate", 100);
+                                        fields.Select("Gösterim Şekli", "DisplayMode", Model.PropertyDisplayModes, (int)property.DisplayMode, "display-mode-selector", string.Empty);
+                                        fields.Number("MaxSelection", "Max Seçim", property.MaxSelection.ToString(), "pnumber", 3);
+                                        fields.Text("SortOrder", "Sıra", property.SortOrder, "", 3);
+                                        fields.Select("Durum", "Status", Model.StatusList, (int)property.Status, "status-selector", string.Empty);
+                                        fields.CheckBox("IsRequired", "Zorunlu Mu?", property.IsRequired);
+                                        fields.CheckBox("TrackStock", "Stok Takibi?", property.TrackStock);
+
+                                        @Html.Hidden("ID", property.ID)
+                                        @Html.Partial("_FieldHelper", fields)
+
+                                        <hr />
+                                        <div class="text-right field-row button-row">
+                                            @if (property.ID > 0)
+                                            {
+                                                var childCount = Model.ChildList != null ? Model.ChildList.Count() : 0;
+                                                @Html.ButtonFor("Sil", "mr10 btn-danger btn-delete-variant", "remove", "data-id='" + property.ID + "' data-childs='" + childCount + "'")
+                                            }
+                                            @Html.ButtonFor("Kaydet", "btn-success btn-save-property")
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <table class="table table-striped table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-bold" width="20%">ID</td>
+                                                    <td>@property.ID</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">İsim</td>
+                                                    <td>@property.Name</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Gösterim Şekli</td>
+                                                    <td>@Html.LookupValue(Model.PropertyDisplayModes, (int)property.DisplayMode)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Zorunlu Mu?</td>
+                                                    <td class="text-center"><i class="fa @(property.IsRequired ? "text-green fa-check" : "text-red fa-remove")"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Stok Takibi?</td>
+                                                    <td class="text-center"><i class="fa @(property.TrackStock ? "text-green fa-check" : "text-red fa-remove")"></i></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-bold">Durum</td>
+                                                    <td>@Html.StatusFor(property.Status)</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (property != null && property.ID > 0)
+        {
+            @Html.Partial("~/Views/Property/_SubPropertyView.cshtml", property.AsPropertyView(Model.ChildList, Model.AllowEdit))
+        }
+    </div>
+</section>
+
+@section pageheader{
+    <script src="~/resource/js/property.js"></script>
+}

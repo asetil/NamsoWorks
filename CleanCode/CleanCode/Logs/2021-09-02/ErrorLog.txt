@@ -1,0 +1,16 @@
+17:21:30:761|NHibernateRepository > Find - Failed -- could not execute query
+[ select simpleitem0_.ID as ID29_, simpleitem0_.Title as Title29_, simpleitem0_.Value as Value29_, simpleitem0_.Url as Url29_, simpleitem0_.SubType as SubType29_, simpleitem0_.Cost as Cost29_, simpleitem0_.SortOrder as SortOrder29_, simpleitem0_.Type as Type29_, simpleitem0_.Status as Status29_ from [SimpleItem] simpleitem0_ where simpleitem0_.Type=@p0 order by simpleitem0_.SortOrder asc ]
+  Name:p1 - Value:2
+[SQL: select simpleitem0_.ID as ID29_, simpleitem0_.Title as Title29_, simpleitem0_.Value as Value29_, simpleitem0_.Url as Url29_, simpleitem0_.SubType as SubType29_, simpleitem0_.Cost as Cost29_, simpleitem0_.SortOrder as SortOrder29_, simpleitem0_.Type as Type29_, simpleitem0_.Status as Status29_ from [SimpleItem] simpleitem0_ where simpleitem0_.Type=@p0 order by simpleitem0_.SortOrder asc]|
+17:21:30:787|------------------------------------------------------------------------
+|
+17:21:30:792|CommonService > GetSimpleItems - Fail for itemType:SiteSettings -- could not execute query
+[ select simpleitem0_.ID as ID29_, simpleitem0_.Title as Title29_, simpleitem0_.Value as Value29_, simpleitem0_.Url as Url29_, simpleitem0_.SubType as SubType29_, simpleitem0_.Cost as Cost29_, simpleitem0_.SortOrder as SortOrder29_, simpleitem0_.Type as Type29_, simpleitem0_.Status as Status29_ from [SimpleItem] simpleitem0_ where simpleitem0_.Type=@p0 order by simpleitem0_.SortOrder asc ]
+  Name:p1 - Value:2
+[SQL: select simpleitem0_.ID as ID29_, simpleitem0_.Title as Title29_, simpleitem0_.Value as Value29_, simpleitem0_.Url as Url29_, simpleitem0_.SubType as SubType29_, simpleitem0_.Cost as Cost29_, simpleitem0_.SortOrder as SortOrder29_, simpleitem0_.Type as Type29_, simpleitem0_.Status as Status29_ from [SimpleItem] simpleitem0_ where simpleitem0_.Type=@p0 order by simpleitem0_.SortOrder asc]|
+17:21:30:792|------------------------------------------------------------------------
+|
+17:21:30:792|CommonService > GetSiteSettings - Fail -- Value cannot be null.
+Parameter name: source|
+17:21:30:792|------------------------------------------------------------------------
+|

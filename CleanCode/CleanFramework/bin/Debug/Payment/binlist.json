@@ -1,0 +1,174 @@
+/*
+
+Bank
+=============================
+1 : Garanti
+2 : Akbank 
+3 : Ziraat Bankası
+4 : Halk Bankası 
+5 : Yapı Kredi
+
+
+Card
+=============================
+1 : Bonus
+2 : Maximum
+3 : Axess
+4 : Paraf
+5 : World
+
+Brand
+=============================
+1 : Mastercard
+2 : Visa
+3 : Amex
+
+Pos
+=============================
+1 : GarantiPos
+2 : AkbankPos
+4 : HalkbankPos
+5 : YapıKrediPos
+
+*/
+
+[
+    /* Garanti Bin Numbers */
+    { "bin": "540036", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "540037", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "542030", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "540226", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "540227", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "545102", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "554960", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "554796", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "552095", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "557023", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "544078", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "558699", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "540669", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "540709", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "521824", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "521825", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "521832", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "520922", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "520940", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "520988", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "528939", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "553130", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "514915", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "541865", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "521368", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "557945", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "534261", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "546001", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "547302", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "520097", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "522204", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "528956", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "533169", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "543738", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "548935", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "540118", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "526955", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "524659", "bank": 1, "card": 1, "brand": 1, "pos": 1, "credit": true },
+
+    /* Akbank Bin Numbers */
+    { "bin": "557113", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "557829", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "552608", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "552609", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "521807", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "520932", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "512754", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "524347", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "553056", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "435508", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": true },
+    { "bin": "435509", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": true },
+    { "bin": "413252", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": true },
+    { "bin": "432071", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": true },
+    { "bin": "432072", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": true },
+    { "bin": "425669", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": true },
+    { "bin": "589004", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": false },
+    { "bin": "516840", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "516841", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "521942", "bank": 2, "card": 3, "brand": 1, "pos": 2, "credit": true },
+    { "bin": "474853", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": false },
+    { "bin": "474854", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": false },
+    { "bin": "450803", "bank": 2, "card": 3, "brand": 2, "pos": 2, "credit": false },
+
+
+    /* T.C. ZIRAAT BANKASI, A.S. Bin Numbers */
+    { "bin": "540134", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "547287", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "542374", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "540130", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "534981", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "530905", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+	{ "bin": "454671", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "454672", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "454673", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "454674", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "413226", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "444676", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "444677", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "444678", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "469884", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": true },
+    { "bin": "676123", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": false },
+    { "bin": "676124", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": false },
+    { "bin": "528208", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": false },
+    { "bin": "531102", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": false },
+    { "bin": "516932", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "527682", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "512440", "bank": 3, "card": 2, "brand": 1, "pos": 1, "credit": true },
+    { "bin": "447504", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": false },
+    { "bin": "407814", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": false },
+    { "bin": "476619", "bank": 3, "card": 2, "brand": 2, "pos": 1, "credit": false },
+	
+	 /* T.C. HALK BANKASI Bin Numbers */
+    { "bin": "540435", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": true },
+	{ "bin": "543081", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": true },
+	{ "bin": "552879", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": true },
+	{ "bin": "510056", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": true },
+	{ "bin": "521378", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": true },
+	
+	{ "bin": "492094", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": true },
+	{ "bin": "492095", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": true },
+	{ "bin": "498852", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": true },
+	{ "bin": "415514", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": true },
+	
+	{ "bin": "676258", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": false },
+	{ "bin": "588843", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": false },
+	{ "bin": "639001", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": false },
+	{ "bin": "526289", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": false },
+	{ "bin": "526290", "bank": 4, "card": 4, "brand": 1, "pos": 4, "credit": false },
+	
+	{ "bin": "447505", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": false },
+	{ "bin": "440776", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": false },
+	{ "bin": "415515", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": false },
+	{ "bin": "421030", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": false },
+	{ "bin": "499821", "bank": 4, "card": 4, "brand": 2, "pos": 4, "credit": false },
+	
+	 /* YAPI KREDİ BANKASI Bin Numbers */
+    { "bin": "479794", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "479795", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "492128", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "450634", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "492130", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	
+	{ "bin": "455359", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "491205", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "491206", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "404809", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "446212", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	{ "bin": "476625", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+    { "bin": "476626", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": true },
+	
+	{ "bin": "494314", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": false },
+	{ "bin": "401622", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": false },
+	{ "bin": "490983", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": false },
+	{ "bin": "413382", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": false },
+	{ "bin": "414392", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": false },
+	{ "bin": "442106", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": false },
+    { "bin": "420342", "bank": 5, "card": 5, "brand": 2, "pos": 5, "credit": false }
+]

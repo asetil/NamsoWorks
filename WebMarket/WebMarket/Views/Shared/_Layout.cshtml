@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+
+<html lang="tr">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - WebMarketim.com</title>
+        @if (ViewBag.PageDescription != null)
+        {
+            <meta name="description" content="@ViewBag.PageDescription " />
+        }
+
+        <link href="~/resource/img/App/favico.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content="TR" http-equiv="content-language" />
+
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+        <meta content="text/html; charset=windows-1254" http-equiv="content-type" />
+        <meta content="text/html; charset=ISO-8859-9" http-equiv="content-type" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        @*<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />*@
+        @RenderSection("metatags", required: false)
+
+        @Styles.Render(Constants.ThemeWhiteCss)
+        @if (ViewBag.HasProduct != null && ViewBag.HasProduct == true)
+        {
+            @Styles.Render(Constants.PageWithProductCss)
+        }
+
+        @Scripts.Render(Constants.CommonScripts)
+        @RenderSection("header", required: false)
+
+        @Html.Partial("_TagScript")
+    </head>
+    <body class="theme-green2">
+        @Html.Action("SiteHeader", "Home")
+        <div class="body-container">
+            @RenderBody()
+        </div>
+        @Html.Partial("_Footer")
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

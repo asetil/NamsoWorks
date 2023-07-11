@@ -1,0 +1,107 @@
+﻿@using Aware
+@using Aware.Util
+@using Aware.ECommerce.Util
+@using WebMarket.Helper
+
+@model Aware.ECommerce.Model.ProductSearchResult
+@{
+    var colSpan = Model.DrawFilterPanel ? 9 : 12;
+    var filterCss = Model.DrawFilterPanel ? "has-filter" : "has-no-filter";
+}
+
+<div class="container product-list gutter-0 @filterCss">
+    <div class="col-md-12 gutter-0" style="margin: 0 auto;">
+        @if (Model.FilterDirection == Enums.LayoutDirection.Horizantal)
+        {
+            <div class="col-md-12">
+                @Html.Partial("_FilterSelectionPanel", Model)
+            </div>
+        }
+        else if (Model.SearchParams.IncludeAggregations)
+        {
+            <div class="col-md-3 col-sm-3 mb20 filter-container">
+                @Html.Partial("_FilterVerticalPanel", Model)
+            </div>
+        }
+
+        @if (Model.Success && Model.TotalSize > 0)
+        {
+            if (Model.FilterDirection == Enums.LayoutDirection.Vertical)
+            {
+                <div class="col-md-@colSpan col-sm-@colSpan selection">
+                    @Html.Partial("_FilterSelectionPanel", Model)
+                </div>
+            }
+
+            <div class="col-md-@colSpan col-sm-@colSpan dsp3 products-panel">
+                @foreach (var product in Model.Results)
+                {
+                    var pricer = Html.Pricer(product.DefaultItem.SalesPrice);
+                    <div class='product-view item product-wrapper col-md-4 col-sm-6 col-xs-6' data-pid="@product.ID" data-price="@pricer.Price.Formatted()" data-seo-url="@product.Name.ToSeoUrl()-@product.ID">
+                        <div class="item-wrp">
+                            <input type='hidden' class='items-info' value='@product.ItemsInfo' />
+                            <img class="pimage lazy" src="/resource/img/Product/loading.jpg" data-src="@Html.ImagePath(product.DefaultImage.Path,"m")" title="@product.Name" alt="" />
+                            <div class='name' title='@product.Name'>
+                                @product.Name.Short(30)
+                                <span class="description">@product.ShortDescription</span>
+                            </div>
+
+                            <div class='item-price'>
+                                @if (product.DefaultItem.DiscountRate > 0)
+                                {
+                                    <div class='discount-rate'>%@product.DefaultItem.DiscountRate </div>
+                                }
+
+                                <div class="price-list hidden-xs">@product.DefaultItem.ListPrice.ToPrice()</div>
+                                <div class="price"> @pricer.Left,<span class='price-dec'>@pricer.Right TL</span></div>
+                            </div>
+
+                            <div>
+                                @if (product.IsFavorite(Model.FavoriteProducts))
+                                {
+                                    <div class='fa fa-heart btn-favorite favorite' data-product-id="@product.ID" title="Bu ürünü favorilerimden kaldır."></div>
+                                }
+                                else
+                                {
+                                    <div class='fa fa-heart btn-favorite' data-product-id="@product.ID" title="Bu ürünü favorilerime ekle."></div>
+                                }
+
+                                @if (Model.AllowCompare)
+                                {
+                                    <div class="fa fa-random btn-compare-product" title="Karşılaştırma listesine ekle."></div>
+                                }
+
+                                @if (product.IsForSale && product.HasStock(1))
+                                {
+                                    <i class="fa fa-shopping-basket btn-basket"></i>
+                                }
+                                else if (product.IsForSale)
+                                {
+                                    <div class='fa fa-bell-o no-stock btn-basket' title="Ürün stoğu tükendi"></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class='dedect-scroll' data-loading-complete="@(Model.HasMore ? 0 : 1)" data-dedect-scroll="1">
+                @Html.ImageFor("Icons", "ajax-loading.gif")
+            </div>
+        }
+        else if (!Model.ForStoreDetail)
+        {
+            <div class="col-md-@colSpan col-sm-@colSpan mb20">
+                <div class="no-result-found" style="color: #232323;">
+                    <i class="fa fa-search  fa-4x"></i>
+                    <h3 class="mt20">Üzgünüz, kriterlerinizle eşleşen herhangi bir sonuç bulamadık!</h3>
+                    <h4 class="mt20 mb20">Arama kriterlerinizi gözden geçirerek tekrar deneyin.</h4>
+                </div>
+            </div>
+        }
+
+        @Html.Hidden("SearchFilter", Model.SearchParams.FilterInString)
+    </div>
+</div>
+
+@Scripts.Render(WebMarket.Helper.Constants.ProductListPageScripts)

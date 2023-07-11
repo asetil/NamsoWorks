@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Sayfa Bulunamadı";
+}
+
+<style>
+    .header_bottom { border-bottom: 1px solid #ededed; }
+    .error_section { padding: 55px 0 70px; }
+</style>
+
+<div class="container">
+    <div class="row error_section page-dialog">
+        <div class="col-md-12">
+            <div class="error_form text-center">
+                <h1>404</h1>
+                <h2>Opps! Sayfa Bulunamadı</h2>
+                <p>Üzgünüz gitmek istediğiniz sayfayı bulamadık, sayfa kaldırılmış olabilir, <br />ismi değişmiş olabilir veya geçici olarak ulaşılamıyor olabilir.</p>
+                <form action="/home/search">
+                    <input placeholder="Ara..." type="text">
+                    <button type="submit"><i class="icon-search"></i></button>
+                </form>
+                <a href="/">Anasayfaya</a>
+            </div>
+        </div>
+    </div>
+</div>

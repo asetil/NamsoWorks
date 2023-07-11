@@ -1,0 +1,114 @@
+﻿@using Aware
+@using Aware.ECommerce.Enums
+@using Aware.Task.Model
+@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model TaskDefinition
+@{
+    ViewBag.Title = Model != null ? string.Format("#{0} - {1}", Model.ID, Model.Name) : "Planlanmış Görev";
+    ViewBag.PageNavigation = new Item(0, "Planlanmış Görevler", "fa-tasks", "/planlanmis-gorevler");
+    TempData["ActivePage"] = 31;
+}
+
+<section class="container-fluid task-detail">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model != null && Model.ID > 0)
+                    {
+                        <div class="col-md-10">
+                            <h4><i>@Html.Raw(Model.Description)</i></h4>
+                            <div class="alert alert-success">Görev Durumu @Model.Status.ToString()</div>
+                            @if (Model.LastEnd.HasValue)
+                            {
+                                <div class="alert alert-warning">Son Çalışma @Model.LastEnd : @Model.LastMessage</div>
+                            }
+                        </div>
+
+                        if (!string.IsNullOrEmpty(Model.TriggerDefinition))
+                        {
+                            var triggerList = Model.TriggerDefinition.DeSerialize<IEnumerable<Trigger>>();
+                            if (triggerList != null && triggerList.Any())
+                            {
+                                <div class="col-md-10">
+                                    <h4>Çalışma Koşulları</h4>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <td style="width: 20%; font-weight: bold;">Çalışma Şekli</td>
+                                                    <td style="width: 20%; font-weight: bold;">Çalışma Günü</td>
+                                                    <td style="width: 20%; font-weight: bold;">Başlama Saati</td>
+                                                    <td style="width: 20%; font-weight: bold;">Bitiş Saati</td>
+                                                    <td style="width: 20%; font-weight: bold;">Çalışma Periyodu</td>
+                                                    <td style="width: 20%; font-weight: bold;">Çalışma Parametresi</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in triggerList)
+                                                {
+                                                    var triggerTypeDescription = "Günlük";
+                                                    switch (item.TriggerType)
+                                                    {
+                                                        case TriggerType.RunOnce:
+                                                            triggerTypeDescription = "Bir kez";
+                                                            break;
+                                                        case TriggerType.RunWeekly:
+                                                            triggerTypeDescription = "Haftalık";
+                                                            break;
+                                                    }
+
+                                                    <tr>
+                                                        <td>@triggerTypeDescription</td>
+                                                        <td>@(item.GetWeekDayName())</td>
+                                                        <td>@item.StartTime</td>
+                                                        <td>@(string.IsNullOrEmpty(item.EndTime) ? "Belirtilmemiş" : item.EndTime)</td>
+                                                        <td>@item.IntervalMinutes dk</td>
+                                                        <td>@item.Value</td>
+                                                    </tr>
+                                                }
+
+                                                @if (Model.Status == Statuses.Active)
+                                                {
+                                                    <tr data-task-type="@((int) Model.Type)">
+                                                        <td colspan="2" style="width: 30%;">@Html.TextBox("ExecutionParam", string.Empty, new { @class = "form-control", maxlength = 30, placeholder = "Parametre" })</td>
+                                                        <td colspan="4">
+                                                            @Html.ButtonFor("Çalıştır", "btn-success btn-execute-task")
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Planlanmış Görev Bulunamadı!</h4>
+                            <p class="description">Böyle bir görev yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+@section pageheader
+{
+    <script src="~/resource/js/task.js" type="text/javascript"></script>
+}

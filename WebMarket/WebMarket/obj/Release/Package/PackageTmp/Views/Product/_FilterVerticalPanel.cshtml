@@ -1,0 +1,85 @@
+﻿@using Aware.ElasticSearch.Search
+@using Aware.Util
+@model Aware.ECommerce.Model.ProductSearchResult
+<div class="filter-selection">
+    <div class="filter-section" data-filter-type="keyword">
+        <h5>Anahtar Kelime</h5>
+        <div class="keyword-filter">
+            @Html.TextBox("Keyword", Model.SearchParams.Keyword, new { @class = "form-control text", maxlength=100 })
+            @Html.ButtonFor("Ara", string.Empty, string.Empty)
+        </div>
+        <hr />
+    </div>
+
+    @if (Model.Aggregations != null && Model.Aggregations.Any())
+    {
+        foreach (var aggregation in Model.Aggregations)
+        {
+            if (aggregation.MapType == AgregationMapType.Property)
+            {
+                foreach (var child in aggregation.Items)
+                {
+                    var subChild = child.Childs.FirstOrDefault();
+                    if (subChild != null)
+                    {
+                        var propertyValues = subChild.Items;
+                        <div class="filter-section" data-filter-type="pid_@child.Text">
+                            <h5>@child.Text.Capitalize()</h5>
+                            <div class="@(propertyValues.Count > 10 ? "scrollContent flow" : "")">
+                                @foreach (var item in propertyValues)
+                                {
+                                    var itemName = item.Text.Capitalize();
+                                    <div class="filter-item @(item.IsActive ? "active" : "")" data-filter-id="@item.Term" data-name="@itemName">
+                                        <i class="fa @(item.IsActive ? "fa-check-square" : "fa-square") cbx"></i> <span>@itemName <b>(@item.Count)</b></span>
+                                    </div>
+                                }
+                            </div>
+                            <hr />
+                        </div>
+                    }
+                }
+            }
+            else if (aggregation.MapType == AgregationMapType.CommentRating)
+            {
+                <div class="filter-section" data-filter-type="@aggregation.SearchName">
+                    <h5>@aggregation.Name</h5>
+                    <div class="@(aggregation.Items.Count > 10 ? "scrollContent flow" : "")">
+                        @foreach (var item in aggregation.Items)
+                        {
+                            var rating = item.Term.Int();
+                            <div class="filter-item @(item.IsActive ? "active" : "")" data-filter-id="@item.Term" data-name="@item.Text">
+                                <i class="fa @(item.IsActive ? "fa-check-square" : "fa-square") cbx"></i>
+                                <span class="rating-star">
+                                    <i class="fa fa-star @(rating>0?"nms":"")"></i>
+                                    <i class="fa fa-star @(rating>1?"nms":"")"></i>
+                                    <i class="fa fa-star @(rating>2?"nms":"")"></i>
+                                    <i class="fa fa-star @(rating>3?"nms":"")"></i>
+                                    <i class="fa fa-star @(rating > 4 ? "nms" : "")"></i>
+                                    <b>(@item.Count)</b>
+                                </span>
+                            </div>
+                        }
+                    </div>
+                    <hr />
+                </div>
+            }
+            else if (aggregation.Items.Count > 0)
+            {
+                <div class="filter-section" data-filter-type="@aggregation.SearchName">
+                    <h5>@aggregation.Name</h5>
+                    <div class="@(aggregation.Items.Count > 10 ? "scrollContent flow" : "")">
+                        @foreach (var item in aggregation.Items)
+                        {
+                            <div class="filter-item @(item.IsActive ? "active" : "")" data-filter-id="@item.Term" data-name="@item.Text">
+                                <i class="fa @(item.IsActive ? "fa-check-square" : "fa-square") cbx"></i> <span>@item.Text <b>(@item.Count)</b></span>
+                            </div>
+                        }
+                    </div>
+                    <hr />
+                </div>
+            }
+        }
+    }
+
+    @Html.ButtonFor("Filtrele", "btn-warn btn-filter", string.Empty)
+</div>

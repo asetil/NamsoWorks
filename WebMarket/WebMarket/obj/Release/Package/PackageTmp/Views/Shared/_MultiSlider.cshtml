@@ -1,0 +1,86 @@
+﻿@using Aware.ECommerce
+@using Aware.Util
+@using WebMarket.Models
+@model MultiSliderModel
+
+@{
+    var pageCount = Math.Ceiling((double)(Model.Products.Count/Model.ItemCount));
+}
+
+<div class="mt20 col-md-12 text-center main-campaign">
+    <div class="block-title text-center">
+        <span>@Model.Title</span>
+    </div>
+
+    <div id='@Model.ID' class='carousel slide slick-items @Model.Css @(Model.LazyLoad ? "lazy-enabled" : "")' data-interval='@Model.SwitchTime' data-ride='carousel' data-type="multi">
+        <div class="carousel-inner">
+            @for (var i = 0; i < pageCount; i++)
+            {
+                var productList = Model.Products.Skip(i).Take(Model.ItemCount);
+                <div class='@(i==0 ? "active" : "") item'>
+                    @foreach (var product in productList)
+                    {
+                        var itemCount = product.ItemCount;
+                        if (itemCount <= 0)
+                        {
+                            continue;
+                        }
+
+                        var storeName = product.DefaultItem.Store.Name;
+                        var pricer = new Pricer(product.DefaultItem.SalesPrice);
+                        var imagePath=product.DefaultImage.Path;
+
+                        <div class='col-md-3 col-sm-6 col-xs-6'>
+                            <div class='product-view' data-pid='@product.ID' data-seo-url="@product.Name.ToSeoUrl()-@product.ID">
+                                <input type='hidden' class='items-info' value='@product.ItemsInfo' />
+                                <input type='hidden' class='description' value='@product.Description' />
+
+                                @if (Model.LazyLoad)
+                                {
+                                    <img class='pimage lazy' data-src="@Html.ImagePath(imagePath, "m")" alt=""/>
+                                }
+                                else
+                                {
+                                    <img class='pimage' src='@Html.ImagePath(imagePath, "m")' alt="" />
+                                }
+
+                                <div class='name' title='@product.Name'>@product.Name.Short(18)</div>
+                                <div class='view'>
+                                    <span class='top'>Ürünü İncele</span><br />
+                                    <span>@itemCount markette</span>
+                                </div>
+
+
+                                @if (itemCount == 1)
+                                {
+                                    <div class='store-info' title='@storeName'>Sadece @storeName.Short(25, string.Empty)</div>
+                                }
+                                else
+                                {
+                                    <div class='store-info' title='@storeName'>En uygun @storeName.Short(24, string.Empty)</div>
+                                }
+
+                                <div class='price-row'>
+                                    <span class='discount @(product.DefaultItem.DiscountRate > 0 ? "" : "dn")'>%@product.DefaultItem.DiscountRate</span>
+                                    <span class='sprice formatted-price'>
+                                        <span class='lp'>@pricer.Left</span>
+                                        <span class='rp'>,@pricer.Right @Aware.Common.Currency</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            }
+        </div>
+
+        <a class='carousel-control left' href='#@Model.ID' data-slide='prev'>
+            <i class="fa fa-2x fa-angle-left"></i>
+        </a>
+
+        <a class='carousel-control right' href='#@Model.ID' data-slide='next'>
+            <i class="fa fa-2x fa-angle-right"></i>
+        </a>
+    </div>
+</div>

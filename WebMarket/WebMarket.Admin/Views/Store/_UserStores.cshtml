@@ -1,0 +1,46 @@
+﻿@using Aware.Util
+@using WebMarket.Admin.Helper
+@model IEnumerable<Aware.ECommerce.Model.Store>
+
+@if (Model != null && Model.Any())
+{
+    <div class="col-md-6">
+        <div class="box">
+            <div class="box-header">
+                <h4 class="pull-left">Yöneticisi Olduğu Marketler</h4>
+                <div class="pull-right">
+                    <span class="badge badge-info">@Model.Count()</span>
+                </div>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered ">
+                    <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th colspan="2" width="40%">Market</th>
+                            <th width="15%">Min. Sipariş Tutarı</th>
+                            <th width="15%">Durum</th>
+                            <th width="30%">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var store in Model)
+                        {
+                            <tr>
+                                <td>@store.ID</td>
+                                <td style="width: 5%;">@Html.ImageFor(string.Empty, store.ImageInfo, store.DisplayName, string.Empty, store.DisplayName)</td>
+                                <td>@store.DisplayName</td>
+                                <td><span class="db text-right">@store.MinOrderAmount.ToPrice()</span></td>
+                                <td class="text-center">@Html.StatusFor(store.Status)</td>
+                                <td>
+                                    <a href="@Url.Action("Detail", "Store", new {storename = @store.DisplayName.ToSeoUrl(), id = @store.ID})" class="btn btn-info">Detay</a>
+                                    <a href="@Url.Action("Index", "StoreItem", new {storename = @store.DisplayName.ToSeoUrl(), storeID = @store.ID})" class="btn btn-warning">Ürünler</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

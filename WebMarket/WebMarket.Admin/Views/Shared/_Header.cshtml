@@ -1,0 +1,160 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@using WebMarket.Admin.Helper
+@model Aware.Authenticate.Model.CustomPrincipal
+
+<header class="main-header">
+    <a href="/" class="logo hidden-xs">
+        <span class="logo-mini"><b>W</b>YP</span>
+        <span class="logo-lg"><b>WebMarket</b> Yönetim Paneli</span>
+    </a>
+
+    <nav class="navbar navbar-static-top" role="navigation">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+
+        <a href="/" class="visible-xs" style=" color: #fff;text-align: center;display: inline-block !important;padding: 12px 20px;font-size: 18px;">
+            <span><b>WebMarket</b></span>
+        </a>
+
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                @if (Model.Role == UserRole.SuperUser)
+                {
+                    <li class="dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-gear"></i>
+                            <span class="label label-danger">6</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header"><i class="fa fa-th"></i> Yönetimsel Ayarlar</li>
+                            <li>
+                                <ul class="menu">
+                                    <li>
+                                        <a href="@Url.Action("SiteSettings", "Common")"><i class="fa fa-sitemap"></i> <span>Site Ayarları</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("MailTemplates", "Common")"><i class="fa fa-envelope"></i> <span>E-posta Şablonları</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("CacheManagement", "Common")"><i class="fa fa-tachometer"></i> <span>Cache Yönetimi</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("OnlinePos", "Common")"><i class="fa fa-credit-card"></i> <span>Sanal Pos Tanımları</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "Task")"><i class="fa fa-tasks"></i> <span>Planlanmış Görevler</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("AuthorityDefinition", "Common")"><i class="fa fa-automobile"></i> <span>Yetki Tanımları</span></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                }
+
+                <li class="dropdown messages-menu hidden-xs">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="label label-success">4</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="header">You have 4 messages</li>
+                        <li>
+                            <ul class="menu">
+                                <li>
+                                    <!-- start message -->
+                                    <a href="#">
+                                        <div class="pull-left">
+                                            <img src="/resource/img/App/user1-128x128.jpg" class="img-circle" alt="User Image">
+                                        </div>
+                                        <h4>
+                                            Support Team
+                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                                        </h4>
+                                        <p>Why not buy a new awesome theme?</p>
+                                    </a>
+                                </li><!-- end message -->
+                                <li>
+                                    <a href="#">
+                                        <div class="pull-left">
+                                            <img src="/resource/img/App/user3-128x128.jpg" class="img-circle" alt="User Image">
+                                        </div>
+                                        <h4>
+                                            AdminLTE Design Team
+                                            <small><i class="fa fa-clock-o"></i> 2 hours</small>
+                                        </h4>
+                                        <p>Why not buy a new awesome theme?</p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <div class="pull-left">
+                                            <img src="/resource/img/App/user4-128x128.jpg" class="img-circle" alt="User Image">
+                                        </div>
+                                        <h4>
+                                            Developers
+                                            <small><i class="fa fa-clock-o"></i> Today</small>
+                                        </h4>
+                                        <p>Why not buy a new awesome theme?</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="footer"><a href="#">See All Messages</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown notifications-menu  hidden-xs">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-warning">10</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="header">You have 10 notifications</li>
+                        <li>
+                            <ul class="menu">
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the page and may cause design problems
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="footer"><a href="#">View all</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="/resource/img/App/user2-160x160.jpg" class="user-image" alt="User Image">
+                        <span class="hidden-xs">@Model.Name</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img src="/resource/img/App/user2-160x160.jpg" class="img-circle" alt="User Image">
+                            <p>
+                                @Model.Name - Web Developer
+                                <small>Member since Nov. 2012</small>
+                            </p>
+                        </li>
+                        <li class="user-footer">
+                            <div class="pull-left">
+                                <a href="@Url.RouteUrl(RouteNames.UserDetail,new {userID = Model.ID })" class="btn btn-default btn-flat">Profil</a>
+                            </div>
+                            <div class="pull-right">
+                                <a href="@Url.Action("Logout", "User")" class="btn btn-default btn-flat">Çıkış</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,51 @@
+﻿@using Aware.Util.View
+@using CleanCode.Helper
+
+@model Aware.ECommerce.Model.Custom.CategoryViewModel
+
+@if (Model != null && Model.Category != null)
+{
+    var fields = new FieldHelper();
+    fields.Text("Name", "İsim", Model.Category.Name, "validate", 60);
+    fields.Select("Durum", "Status", Model.StatusList, (int)Model.Category.Status, "form-control status-selector", string.Empty);
+
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_general" data-toggle="tab" aria-expanded="false">DETAY</a></li>
+            <li class=""><a href="#tab_gallery" data-toggle="tab" aria-expanded="false">GÖRSELLER</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="row tab-pane active" id="tab_general">
+                <div class="col-md-9">
+                    @Html.Hidden("CategoryID", Model.Category.ID)
+                    @Html.Hidden("ParentID", Model.Category.ParentID)
+
+                    <p id="Hierarchy" class="@(Model.Category.Level==1?"dn":"")">
+                        <i class="fa fa-book"></i>  @Model.HierarchyInfo
+                    </p>
+                    @Html.Partial("_FieldHelper", fields)
+
+                    @if (Model.AllowEdit)
+                    {
+                        @Html.ButtonFor("Sil", "mr10 btn-danger btn-delete-category", "remove")
+                        @Html.ButtonFor("Alt Kategori", "mr10 btn-info btn-add-sub-category", "plus")
+                        @Html.ButtonFor("Kaydet", "mr10 btn-success btn-save-category", "check")
+                    }
+                </div>
+            </div>
+            <div class="tab-pane" id="tab_gallery">
+                @*@Html.Partial("_FileGallery", Model.FileGallery)*@
+                <p class="alert alert-info">
+                    Şu an görsel düzenleme mevcut değil!
+                </p>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="callout callout-danger">
+        <h4><i class="icon fa fa-warning"></i> Hata</h4>
+        <p>Böyle bir kategori yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+    </div>
+}

@@ -1,0 +1,38 @@
+﻿@using Aware.Util.Enums
+@using WebMarket.Admin.Helper
+@model WebMarket.Admin.Models.RegionDisplayModel
+
+@if (Model != null)
+{
+    <ul data-type="@((int)Model.Type)">
+        @if (Model.RegionList != null && Model.RegionList.Any())
+        {
+            foreach (var region in Model.RegionList)
+            {
+                <li data-id="@region.ID" data-parent-id="@region.ParentID">
+                    <div class="region-info">
+                        <span>@region.Name</span>
+                        <i class="fa fa-edit btn-edit" title="Güncelle"></i>
+                        <i class="fa fa-trash btn-remove" title="Sil"></i>
+                    </div>
+                    <div class="dn region-form">
+                        <input type="text" class="form-control validate" placeholder="İsim" value="@region.Name" />
+                        <i class="fa fa-check btn-save" title="Kaydet"></i>
+                        <i class="fa fa-remove btn-cancel" title="Vazgeç"></i>
+                    </div>
+                </li>
+            }
+        }
+
+        <li data-id="0" data-parent-id="@Model.ParentID">
+            <div class="new region-info">
+                <span><i class="fa fa-plus"></i> Ekle</span>
+            </div>
+            <div class="dn new region-form">
+                <input type="text" class="form-control validate" placeholder="İsim" />
+                <i class="fa fa-check btn-save" title="Kaydet"></i>
+                <i class="fa fa-remove btn-cancel" title="Vazgeç"></i>
+            </div>
+        </li>
+    </ul>
+}

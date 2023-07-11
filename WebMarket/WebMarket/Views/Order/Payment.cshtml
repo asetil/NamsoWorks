@@ -1,0 +1,359 @@
+﻿@using Aware
+@using Aware.ECommerce.Enums
+@using Aware.Util
+@using Aware.Util.Model
+@using Aware.Util.View
+
+@model Aware.ECommerce.Model.OrderViewModel
+@{
+    ViewBag.Title = "Ödeme Bilgileri";
+    var paymentTypes = Model.Settings.PaymentTypes;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <div class="container">
+        @Html.Partial("_OrderProcess", 2)
+
+        <div class="col-md-8 ms-col-0">
+            @if (paymentTypes == null || !paymentTypes.Any())
+            {
+                <p class="lead error">Herhangi bir ödeme yöntemi bulunamadı!</p>
+            }
+            else
+            {
+                var creditCard = Model.Settings.GetPayment(PaymentType.CreditCard);
+                var remittance = Model.Settings.GetPayment(PaymentType.Remittance);
+                var atDoor = Model.Settings.GetPayment(PaymentType.AtDoor);
+                var atDoorWithCard = Model.Settings.GetPayment(PaymentType.CreditCardAtDoor);
+                var garantiPay = Model.Settings.GetPayment(PaymentType.GarantiPay);
+
+                var isActiveC = Model.Order.PaymentType == (int)PaymentType.CreditCard || Model.Order.PaymentType == 0;
+                var isActiveR = creditCard == null || Model.Order.PaymentType == (int)PaymentType.Remittance;
+                var isActiveG = (creditCard == null && remittance == null) || Model.Order.PaymentType == (int)PaymentType.GarantiPay;
+                var isActiveD = (creditCard == null && remittance == null && garantiPay == null) || (Model.Order.PaymentType == (int)PaymentType.AtDoor || Model.Order.PaymentType == (int)PaymentType.CreditCardAtDoor);
+
+                <div class="mb20 tabs-wrapper content-tabs">
+                    <ul class="nav nav-tabs">
+                        @if (creditCard != null)
+                        {
+                            <li class="payment-type @(isActiveC ? "active" : "")" data-payment-type="@creditCard.SubType" data-payment-cost="@creditCard.Cost.ToString().Replace(",", ".")" data-payment-name="Kredi Kartı ile">
+                                <a href="#payment_creditcard" data-toggle="tab" aria-expanded="true">Kredi Kartı</a>
+                            </li>
+                        }
+
+                        @if (remittance != null)
+                        {
+                            <li class="payment-type @(isActiveR ? "active" : "")" data-payment-type="@remittance.SubType" data-payment-cost="@remittance.Cost.ToString().Replace(",", ".")" data-payment-name="Havale ile">
+                                <a href="#payment_remittance" data-toggle="tab" aria-expanded="true">Havale</a>
+                            </li>
+                        }
+
+                        @if (garantiPay != null)
+                        {
+                            <li class="payment-type @(isActiveG ? "active" : "") payment-garanti-pay" data-payment-type="@garantiPay.SubType" data-payment-cost="@garantiPay.Cost.ToString().Replace(",", ".")" data-payment-name="Garanti Pay ile">
+                                <a href="#payment_garantipay" data-toggle="tab" aria-expanded="true">
+                                    <img src="/resource/img/Bank/garanti-pay.png" alt="Garanti Pay ile" />
+                                </a>
+                            </li>
+                        }
+
+                        @if (atDoor != null || atDoorWithCard != null)
+                        {
+                            <li class="payment-type tab-at-door @(isActiveD ? "active" : "")" data-payment-type="@atDoor.SubType" data-payment-cost="@atDoor.Cost.ToString().Replace(",", ".")" data-payment-name="Kapıda Ödeme">
+                                <a href="#payment_atdoor" data-toggle="tab" aria-expanded="true">Kapıda Ödeme</a>
+                            </li>
+                        }
+                    </ul>
+                    <div class="tab-content">
+                        @if (creditCard != null)
+                        {
+                            var useOOS = Model.Settings.UseOOSPayment && Model.Settings.PosList != null;
+                            <div class="tab-pane fade in @(isActiveC ? "active" : "")" id="payment_creditcard" data-oos="@(useOOS ? 1 : 0)">
+                                @if (useOOS)
+                                {
+                                    <div class="col-md-12 ms-col-0">
+                                        <p class="mb10">
+                                            <b>Ödeme işlemi için seçeceğiniz bankanın "Güvenli Ortak Ödeme Sayfası"na yönlendirileceksiniz.</b>
+                                            <br />
+                                            Güvenli Ortak Ödeme Sayfası, banka tarafından barındırılan, bakımı ve güvenliği banka tarafından sağlanan, ortak kullanım için tasarlanmış ödeme sayfasıdır.
+                                        </p>
+
+                                        <p class="mb20">
+                                            Ödeme yapmak istediğiniz kartı seçiniz :
+                                        </p>
+                                    </div>
+
+                                    <div class="dib mb20 col-md-6 ms-col-0">
+                                        @foreach (var pos in Model.Settings.PosList)
+                                        {
+                                            <div class="bank-pos-item" data-pos-id="@pos.ID">
+                                                @Html.ImageFor("Bank", pos.ImageUrl, "", "img-responsive")
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="dib mb20 col-md-6 ms-col-0">
+                                        <h4>Taksit Seçenekleri <span class="btn btn-green btn-sm btn-all-installments" data-loaded="0">Tümü</span></h4>
+                                        <div class="installments-container">
+                                            <p class="mt10 description">
+                                                Bu alan kart bilgilerinize göre güncellenecektir.
+                                            </p>
+                                            <div class="installment-options"></div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("Payment", "Order", FormMethod.Post))
+                                    {
+                                        var fields = new FieldHelper();
+                                        var monthList = Enumerable.Range(1, 12).Select(i => new Item(i, i.ToString().PadLeft(2, '0'))).ToList();
+                                        var yearList = Enumerable.Range(DateTime.Now.Year, 10).Select(i => new Item(i, i.ToString())).ToList();
+
+                                        fields.Text("CardNumber", "Kart Numarası", "", "validate pnumber", 19).Placeholder = "_ _ _ _  _ _ _ _  _ _ _ _  _ _ _ _";
+                                        <div class="col-md-6">
+                                            <h4 class="mb20">Kart Bilgileri</h4>
+                                            @Html.Partial("_FieldHelper", fields)
+
+                                            <div class="bank-logo">
+                                                <i class="bank"></i>
+                                                <i class="brand"></i>
+                                            </div>
+
+                                            <div class="form-group expire-date">
+                                                <label for="" class="title">Son Kullanma</label>
+                                                <div class="">
+                                                    <select id="ExpireMonth" name="ExpireMonth" class="month-selector form-control sbx validate sbx-check" data-selected="0" style="max-width: 56px;">
+                                                        <option value="0">Ay</option>
+                                                        @foreach (var month in monthList)
+                                                        {
+                                                            <option value="@month.ID">@month.Value</option>
+                                                        }
+                                                    </select>
+
+                                                    <div class="seperator">/</div>
+                                                    <select id="ExpireYear" name="ExpireYear" class="year-selector form-control sbx  validate sbx-check" data-selected="0" style="max-width: 73px;">
+                                                        <option value="0">Yıl</option>
+                                                        @foreach (var year in yearList)
+                                                        {
+                                                            <option value="@year.ID">@year.Value</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group cvc-info">
+                                                <label for="CVC" class="title">
+                                                    Cvc2
+                                                    <i class="ml10 fa fa-question-circle" data-toggle="tooltip" title="Visa ve Master kartları için arka yüzdeki son 3 rakam. AMEX kartlar için ön yüzdeki son 4 rakam."></i>
+                                                </label>
+                                                <div class="">
+                                                    <input type="text" class="form-control text validate pnumber" id="CVC" name="CVC" placeholder="" maxlength="4" style="display: inline-block;">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 xs-fl">
+                                            <h4>Taksit Seçenekleri <span class="btn btn-green btn-sm btn-all-installments" data-loaded="0">Tümü</span></h4>
+                                            <div class="installments-container">
+                                                <p class="mt10 description">
+                                                    Bu alan kart bilgilerinize göre güncellenecektir.
+                                                </p>
+                                                <div class="installment-options"></div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        }
+
+                        @if (remittance != null)
+                        {
+                            <div class="tab-pane fade in @(isActiveR ? "active" : "")" id="payment_remittance">
+                                @if (remittance.Cost > 0)
+                                {
+                                    <p class="mb10">
+                                        Havale ile ödemelerde <b>+ @remittance.Cost.ToPrice()</b> fiyat farkı alınmaktadır.
+                                    </p>
+                                }
+                                else if (remittance.Cost < 0)
+                                {
+                                    <p class="mb10">
+                                        Havale ile nakit ödemelerde <b>@((remittance.Cost * -1).ToPrice())</b> indirim yapılmaktadır.
+                                    </p>
+                                }
+
+                                @if (!string.IsNullOrEmpty(remittance.Value))
+                                {
+                                    <p class="mb10">@remittance.Value</p>
+                                }
+
+                                <table class="table table-remittance">
+                                    @foreach (var bank in Model.Settings.BankList)
+                                    {
+                                        var selected = bank.ID == Model.Order.SubPaymentType;
+                                        <tr class="sub-payment @(selected ? "selected" : "")" data-id="@bank.ID">
+                                            <td width="5%"><i class="fa @(selected ? "fa-check-square" : "fa-square-o")"></i></td>
+                                            <td width="20%">
+                                                @if (!string.IsNullOrEmpty(bank.ImageUrl))
+                                                {
+                                                    @Html.ImageFor("Bank", bank.ImageUrl, bank.Name, "bank-image img-responsive")
+                                                }
+                                            <td>
+                                                <p>
+                                                    <b>@bank.Name - @bank.BranchName</b>
+                                                </p>
+                                                <p>IBAN : @bank.IBAN, Hesap No : @bank.AccountNumber</p>
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+
+                                <p class="text-info mb10">
+                                    Lütfen bankanızdan Havale / EFT yaparken açıklama yaparken "Açıklama" kısmına
+                                    <b>@Model.Order.UniqueID</b> nolu sipariş ID'sini eklemeyi unutmayın!
+                                </p>
+                            </div>
+                        }
+
+                        @if (garantiPay != null)
+                        {
+                            <div class="tab-pane fade in @(isActiveG ? "active" : "")" id="payment_garantipay">
+                                <p class="mb10 text-bold">Garanti Pay ile ödeme yaparken garanti.com.tr sayfasına yönlendirileceksiniz.</p>
+
+                                @if (garantiPay.Cost > 0)
+                                {
+                                    <p class="mb10">
+                                        Garanti Pay ile ödemelerde <b>+ @garantiPay.Cost.ToPrice()</b> fiyat farkı alınmaktadır.
+                                    </p>
+                                }
+                                else if (garantiPay.Cost < 0)
+                                {
+                                    <p class="mb10">
+                                        Garanti Pay  ile nakit ödemelerde <b>@((garantiPay.Cost * -1).ToPrice())</b> indirim yapılmaktadır.
+                                    </p>
+                                }
+
+                                <p class="mb10">
+                                    Açılan sayfada TC Kimlik numaranız veya cep telefonu numaranız ile giriş yapabilirsiniz. Sonrasında mobil cihazınızdaki "Bonus Flaş" uygulaması üzerinden
+                                    dilediğiniz kartı seçerek ödemenizi kolayca gerçekleştirebilirsiniz.
+                                </p>
+                                <p class="mb10">Alışverişinizi tamamladıktan sonra otomatik olarak yine WebMarket.com'a yönlendirileceksiniz.</p>
+
+                                @if (!string.IsNullOrEmpty(garantiPay.Value))
+                                {
+                                    <p class="mb10">@garantiPay.Value</p>
+                                }
+                            </div>
+                        }
+
+                        @if (atDoor != null || atDoorWithCard != null)
+                        {
+                            <div class="tab-pane fade in @(isActiveD ? "active" : "")" id="payment_atdoor">
+                                @if (atDoor != null)
+                                {
+                                    <div class="panel-atdoor">
+                                        @if (atDoor.Cost > 0)
+                                        {
+                                            <p class="mb10">
+                                                Kapıda yapılan ödemelerde <b>+ @atDoor.Cost.ToPrice()</b> fiyat farkı alınmaktadır.
+                                            </p>
+                                        }
+                                        else if (atDoor.Cost < 0)
+                                        {
+                                            <p class="mb10">
+                                                Kapıda yapılan ödemelerde <b>@((atDoor.Cost * -1).ToPrice())</b> indirim yapılmaktadır.
+                                            </p>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(atDoor.Value))
+                                        {
+                                            <p class="mb10">@atDoor.Value</p>
+                                        }
+                                    </div>
+                                }
+
+                                @if (atDoorWithCard != null)
+                                {
+                                    <div class="@(atDoor != null ? "dn" : "") panel-cardatdoor">
+                                        @if (atDoorWithCard.Cost > 0)
+                                        {
+                                            <p class="mb10">
+                                                Kapıda kredi kartı ile yapılan ödemelerde <b>+ @atDoorWithCard.Cost.ToPrice()</b> fiyat farkı alınmaktadır.
+                                            </p>
+                                        }
+                                        else if (atDoorWithCard.Cost < 0)
+                                        {
+                                            <p class="mb10">
+                                                Kapıda kredi kartı ile yapılan ödemelerde <b>@((atDoorWithCard.Cost * -1).ToPrice())</b> indirim yapılmaktadır.
+                                            </p>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(atDoorWithCard.Value))
+                                        {
+                                            <p class="mb10">@atDoorWithCard.Value</p>
+                                        }
+                                    </div>
+
+                                    <div class="wm-cbx payment-type tab-cardatdoor" id="payment_atdoor" data-payment-type="@atDoorWithCard.SubType" data-payment-cost="@atDoorWithCard.Cost.ToString().Replace(",", ".")" data-payment-name="Kapıda Kredi Kartı">
+                                        <i class="mr10 fa fa-check-square"></i>
+                                        <span><b>Kapıda kredi kartı ile</b> ödemek istiyorum</span>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+
+            <br />
+            <div class="dbfl mt20 mb10 wm-cbx cbx-sales-aggreement">
+                <i class="mr10 fa fa-check-square"></i>
+                <span>
+                    <a href="#preNotificationModal" data-toggle="modal"><u>Ön Bilgilendirme Formunu</u></a> ve
+                    <a href="#distanceSalesModal" data-toggle="modal"><u>Mesafeli Satış Sözleşmesini</u></a> okudum, onaylıyorum.
+                </span>
+            </div>
+
+            <div class="mb10 mr10 ml10">
+                <button class="mt20 fr btn btn-lg btn-warn btn-approve-order">@(Model.Order.Status == OrderStatuses.WaitingPayment ? "Ödemeyi Tamamla" : "Siparişi Tamamla")</button>
+                @if (Model.Order.Status == OrderStatuses.WaitingPayment)
+                {
+                    <a href="@Url.Action("Detail", "Order", new {id = Model.Order.UniqueID})" class="fr mt20 mr10 btn btn-lg btn-back"> Geri</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "Order")" class="fr mt20 mr10 btn btn-lg btn-back"> Geri</a>
+                }
+            </div>
+        </div>
+
+        @Html.Partial("_OrderSummary", Model)
+        @Html.Hidden("currentOrderID", Model.Order.ID)
+        @Html.Hidden("orderUniqueID", Model.Order.UniqueID)
+        @Html.Hidden("PaymentType", Model.Order.PaymentType)
+        @Html.Hidden("SelectedPosID", Model.Order.SubPaymentType)
+
+        @Html.Hidden("shippingCost", Model.Settings.AllowShipping && Model.ShippingMethods.Any() ? Model.ShippingMethod.Price.DecToStr("0.##") : "0")
+        @Html.Hidden("orderTotal", (Model.Order.GrossTotal - Model.Order.PaymentCost).DecToStr("0.##"))
+        @Html.Hidden("currency", Common.Currency)
+    </div>
+
+    @Html.Partial("_OrderModals")
+}
+
+@section header
+{
+    <link href="@Html.CssPath("order.css")" rel="stylesheet" />
+    <script src="~/resource/js/order.js"></script>
+}

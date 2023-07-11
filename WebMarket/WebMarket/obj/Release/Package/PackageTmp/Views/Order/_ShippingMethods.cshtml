@@ -1,0 +1,33 @@
+﻿@using Aware.Util
+@model List<Aware.ECommerce.Model.ShippingMethod>
+@{
+    var selectedShippingMethod = ViewBag.SelectedShippingMethod != null ? (int)ViewBag.SelectedShippingMethod : 0;
+}
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        var cost = item.Price.ToString().Replace(",", ".");
+        <div class="shipping-method @(item.ID == selectedShippingMethod ? "selected" : "dn")"
+             data-shipping-id="@item.ID" data-shipping-cost="@cost" data-region-info="@item.RegionInfo">
+            <i></i>
+
+            <div>
+                <span class="name">@item.Name</span>
+                <span class="price">@item.Price.ToPrice()</span>
+            </div>
+
+            <div class="description">
+                @if (!string.IsNullOrEmpty(item.DiscountInfo))
+                {
+                    <p>@item.DiscountInfo</p>
+                }
+                @if (!string.IsNullOrEmpty(item.Description))
+                {
+                    <p>@item.Description</p>
+                }
+            </div>
+        </div>
+    }
+}

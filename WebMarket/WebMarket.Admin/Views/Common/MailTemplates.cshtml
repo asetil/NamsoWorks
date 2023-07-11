@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Aware.Mail.MailTemplate>
+@{
+    ViewBag.Title = "Mail Şablonları";
+    TempData["ActivePage"] = 28;
+    var count = Model != null ? Model.Count() : 0;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#ID</th>
+                                        <th>Şablon Adı</th>
+                                        <th>Ana Şablon</th>
+                                        <th>Mail Konusu</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.ID</td>
+                                            <td>@item.Name</td>
+                                            <td>@(item.Parent != null ? item.Parent.Name : "-")</td>
+                                            <td>@item.Subject</td>
+                                            <td><a href="@Url.Action("MailTemplate", "Common", new {id = item.ID})" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Görüntüle</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Listelenecek E-Posta Şablonu Bulunamadı!</h4>
+                            <p class="description">Tanımlı e-posta şablonlarınız burada listelenecektir.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

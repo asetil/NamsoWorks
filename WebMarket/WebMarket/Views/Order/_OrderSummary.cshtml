@@ -1,0 +1,68 @@
+﻿@using Aware.ECommerce.Model
+@using Aware.Util
+@model Aware.ECommerce.Model.OrderViewModel
+@{
+    decimal basketTotal = Model.Basket.Total;
+    decimal discountTotal = Model.Basket.DiscountTotal;
+    decimal basketGrossTotal = Model.Basket.GrossTotal;
+    decimal shippingCost = Model.Settings.AllowShipping && Model.ShippingMethods.Any() ? Model.ShippingMethod.Price : 0;
+
+    var selectedPaymentType = Model.Settings.PaymentTypes.FirstOrDefault(i => i.SubType == Model.Order.PaymentType) ?? new SimpleItem();
+    decimal paymentCost = selectedPaymentType.Cost;
+    var paymentName = selectedPaymentType.Title;
+    var grossTotal = basketGrossTotal + shippingCost + paymentCost;
+}
+
+<div class="col-md-4 ms-col-0">
+    <div class="mb20 dbfl order-totals">
+        <div style="padding: 0 10px;">
+            <h3>Sipariş Özeti</h3>
+            @Html.Partial("~/Views/Basket/_OrderBasketView.cshtml", new WebMarket.Models.BasketSummaryModel()
+            {
+                Basket = Model.Basket,
+                DrawMode = WebMarket.Models.BasketDrawMode.ForOrder
+            })
+
+            <table class="table">
+                <tr>
+                    <td><b>Sepet Tutarı</b></td>
+                    <td><b>:</b></td>
+                    <td class="price basket-total">@basketTotal.ToPrice()</td>
+                </tr>
+                <tr>
+                    <td><b>İndirim Tutarı</b></td>
+                    <td><b>:</b></td>
+                    <td class="price discount-total">@discountTotal.ToPrice()</td>
+                </tr>
+
+                @if (Model.Settings.AllowShipping)
+                {
+                    <tr>
+                        <td><b>Kargo Tutarı</b></td>
+                        <td><b>:</b></td>
+                        <td class="price shipping-cost">@shippingCost.ToPrice()</td>
+                    </tr>
+                }
+
+                <tr class="payment-total-row @(paymentCost == 0 ? "dn" : "")">
+                    <td><b class="payment-name">@paymentName</b></td>
+                    <td><b>:</b></td>
+                    <td class="price payment-cost">@paymentCost.ToPrice()</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="order-gross-tatal text-center">
+            <p>
+                <b>Genel Toplam</b>
+            </p>
+            <p class="price gross-total" data-price="@grossTotal.DecToStr()">@grossTotal.ToPrice()</p>
+        </div>
+
+        <div class="mt20">
+            <img src="/Resource/img/App/secure-payment.jpg" class="img-responsive" />
+        </div>
+    </div>
+</div>
+
+@Html.Hidden("orderBasketTotal", basketGrossTotal.Formatted())

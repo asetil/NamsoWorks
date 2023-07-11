@@ -1,0 +1,81 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@using WebMarket.Admin.Models
+
+<div id="importItemsModal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Ürün Aktarma Sihirbazı</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("ImportItems", "StoreItem", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <fieldset>
+                        @Html.Hidden("StoreID", 0)
+                        <span class="db mb20 text-navy">
+                            Bu sihirbazı kullanarak ürünlerinizi uygun formattaki bir <span class="file-type"></span> dosyasından hızlıca yükleyebilirsiniz.
+                            Örnek dosya formatı için <a href="/file/sampleformat">tıklayınız</a>.
+                        </span>
+
+                        <div class="fileUpload">
+                            <span class="btn btn-flat btn-danger">Dosya Seç</span>
+                            <span class="fileUploaded input">Dosya seçilmedi..</span>
+                            <input type="file" id="uploaditem" name="uploaditem" class="upload" data-extension="" />
+                        </div>
+                        <span class="db mt10" style="font-style: italic;font-size: 12px;">Sadece <span class="ext-type"></span> uzantılı dosyalar desteklenmektedir.</span>
+                    </fieldset>
+                }
+            </div>
+            <div class="modal-footer">
+                @Html.ButtonFor("Aktarımı Başlat", "btn-success btn-start-import", "check", "disabled='disabled'")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="exportTemplateModal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Ürünleri Şablona Aktar</h4>
+            </div>
+            <div class="modal-body" style="max-height: 360px; overflow-y: scroll;">
+
+            </div>
+            <div class="modal-footer">
+                @Html.ButtonFor("Aktarımı Başlat", "btn-success btn-export-template", "check", "disabled='disabled'")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="updateStockModal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title item-name">Ürün Güncelle</h4>
+            </div>
+            <div class="modal-body">
+                @{
+                    var stockTitle = "Ürün Stoğu <i class='fa fa-info-circle' title='Ürün stoğunu sınırsız yapmak için ürün stoğunu -1 olarak belirtin'></i>";
+                    var fieldHelper = new FieldHelper(FieldDirection.Horizantal,3);
+
+                    fieldHelper.Number("Price", "Satış Fiyatı", string.Empty, "validate dec-pnumber").SetAffix("<i class='fa fa-turkish-lira'></i>");
+                    fieldHelper.Number("ListPrice", "Liste Fiyatı", string.Empty, "validate dec-pnumber").SetAffix("<i class='fa fa-turkish-lira'></i>");
+                    fieldHelper.Number("Stock", stockTitle, string.Empty, "validate dec-number item-stock").SetAffix("<span class='item-unit'>ad</span>");
+                }
+
+                @Html.Partial("_FieldHelper", fieldHelper)
+            </div>
+            <div class="modal-footer">
+                @Html.ButtonFor("Kaydet", "btn-success btn-save-stock", "ok")
+            </div>
+        </div>
+    </div>
+</div>

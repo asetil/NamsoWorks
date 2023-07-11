@@ -1,0 +1,210 @@
+﻿@using Aware.ECommerce.Model
+@using Aware.ECommerce.Search
+@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@using Constants = Aware.ECommerce.Util.Constants
+@model StoreItemListModel
+@{
+    ViewBag.Title = "Ürünlerim";
+    TempData["ActivePage"] = 4;
+
+    Store store = null;
+    var searchResult = Model != null ? Model.SearchResult : null;
+    var searchParams = searchResult != null ? searchResult.SearchParams as ItemSearchParams : new ItemSearchParams();
+    if (searchParams.StoreIDs != null && searchParams.StoreIDs.Count() == 1)
+    {
+        store = Model.Stores.FirstOrDefault(s => s.ID == searchParams.StoreIDs.FirstOrDefault());
+    }
+
+    if (store != null)
+    {
+        ViewBag.Title = string.Format("{0} Ürünleri", store.DisplayName);
+    }
+    store = store ?? new Store() { DisplayName = "magaza" };
+}
+
+<section class="container-fluid item-list">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-table"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        <a href="@Url.RouteUrl(RouteNames.StoreNewItemRoute,new {storename=store.DisplayName.ToSeoUrl(),storeID=store.ID})" class="btn btn-info btn-round btn-fab btn-fab-mini ml20" title="Yeni Ekle"><i class="fa fa-plus"></i></a>
+                    </h2>
+                    <div style="position: absolute;right: 15px;top: 15px; z-index: 100;">
+                        <a data-toggle="collapse" href="#Actions" class="btn btn-info">
+                            <i class="fa fa-gear"></i>  <span>İşlemler <i class="ml10 fa fa-caret-down"></i></span>
+                        </a>
+                        <div class="collapse" id="Actions" style="background: #fff;box-shadow: 0 3px 10px -1px #aaa;">
+                            <ul class="nav">
+                                <li routerlinkactive="active">
+                                    <a href="javascript:void(0)" class="btn-import-data excell"><i class="fa fa-download"></i> Excelden Aktar</a>
+                                </li>
+                                <li routerlinkactive="active" class="">
+                                    <a href="javascript:void(0)" class="btn-import-data"><i class="fa fa-download"></i> Şablondan Aktar</a>
+                                </li>
+                                <li routerlinkactive="active">
+                                    <a href="javascript:void(0)" class="btn-export-modal"><i class="fa fa-share"></i> Şablona Aktar</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    @if (store != null && store.ID > 0)
+                    {
+                        @Html.Hidden("StoreID", store.ID)
+                    }
+
+                    @if (searchResult != null && searchResult.HasResult && searchResult.Success)
+                    {
+                        @Html.PagingInfo(searchResult, "üründen")
+
+                        <div class="fl table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#ID</th>
+                                        <th colspan="2">Ürün</th>
+                                        <th>Kategori</th>
+                                        <th>Satış fiyatı</th>
+                                        <th>Liste fiyatı</th>
+                                        <th>Stok</th>
+                                        <th width="5%">Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in searchResult.Results)
+                                    {
+                                        var product = item.Product;
+                                        var stockInfo = item.Stock != -1 ? item.Stock.ToString("0") + " " + product.UnitDescription.Short(2, "") : "Sınırsız";
+
+                                        <tr data-item-id="@item.ID">
+                                            <td>@item.ID</td>
+                                            <td style="width: 5%;">
+                                                @Html.ImageFor("", product.DefaultImage.Path, product.Name, "image item-image", product.Name)
+                                            </td>
+                                            <td width="15%" class="td-name"><a href="@Url.Action("Detail", "Product", new {name = product.Name.ToSeoUrl(), id = item.ProductID})" target='_blank'>@product.Name</a></td>
+                                            <td>@Model.GetCategoryInfo(product.CategoryID)</td>
+                                            <td class="sales-price">@Html.ToPrice(item.SalesPrice)</td>
+                                            <td class="list-price">@Html.ToPrice(item.ListPrice)</td>
+                                            <td class="stock @(item.Stock == -1 ? "infinite" : "")">@stockInfo </td>
+                                            <td class="text-center">@Html.StatusFor(item.Status) </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-info btn-show-stock" title="Hızlı Güncelle" data-stock="@item.Stock.DecToStr()" data-price="@item.SalesPrice.DecToStr()" data-list-price="@item.ListPrice.DecToStr()">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <a href="@Url.Action("Detail", new {productname = product.Name.ToSeoUrl(), storename = Model.GetStoreInfo(item.StoreID).ToSeoUrl(), id = item.ID})" class="btn btn-sm btn-success" title="İncele"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="fr mt10 mb10 store-item-pager"></div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Listelenecek Ürün Bulunamadı!</h4>
+                            <p class="description">Arama kriterlerinizi gözden geçirin.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-filter"></i></div>
+                <div class="card-content search-panel">
+                    <h2 class="card-title">Filtrele</h2>
+
+                    @using (Html.BeginForm("Index", "StoreItem", FormMethod.Get, new { enctype = "multipart/form-data" }))
+                    {
+                        var storeData = Model.Stores.Select(i => new Item(i.ID, i.DisplayName)).ToList();
+                        var categoryData = Model.Categories.Select(i => new Item(i.ID, i.Name)).ToList();
+
+                        var selectedStores = searchParams.StoreIDs != null ? string.Join(",", searchParams.StoreIDs) : string.Empty;
+                        var selectedCategories = string.Join(",", searchParams.CategoryIDs);
+                        var priceRange = Html.GetRange(searchParams.Price);
+                        var stockRange = Html.GetRange(searchParams.Stock);
+
+                        var filterFields = new FieldHelper();
+                        filterFields.Text("ids", "ID/ler", searchParams.IDsString, "item-id", 200);
+                        filterFields.Text("q", "Ürün Adı", searchParams.Keyword, "name");
+                        filterFields.Select("Market", "sid", storeData, selectedStores, "store-selector", "", true);
+                        filterFields.Select("Kategori", "cid", categoryData, selectedCategories, "category-selector");
+                        filterFields.Select("Durum", "st", Html.GetStatusList(), (int)searchParams.Status.GetValueOrDefault(), "status-selector");
+
+                        <div class="box-body">
+                            @Html.Partial("_FieldHelper", filterFields)
+                            <div class="form-group">
+                                <label>Fiyat Aralığı</label>
+                                <div>
+                                    @Html.Hidden("price", searchParams.Price)
+                                    <input type="text" class="form-control txt-range price-from" value="@priceRange.Key" placeholder="0 TL" />
+                                    <span> - </span>
+                                    <input type="text" class="form-control txt-range price-to" value="@priceRange.Value" placeholder="9999.00 TL" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Hidden("stock", searchParams.Stock)
+                                <label>Stok Durumu</label>
+                                <div>
+                                    <input type="text" class="form-control txt-range stock-from" placeholder="0" value="@stockRange.Key" />
+                                    <span> - </span>
+                                    <input type="text" class="form-control txt-range stock-to" placeholder="9999" value="@stockRange.Value" />
+                                </div>
+                                <div class="mt10">
+                                    <label class="field-cbx unlimited-stock"><input type="checkbox" class="cbx" @(searchParams.IncludeUnlimitedStock ? "checked='checked'" : "") /> Sınırsız stoklu ürünleri dahil et</label>
+                                </div>
+                                <div>
+                                    <label class="field-cbx for-sale"><input type="checkbox" class="cbx" @(searchParams.OnlyForSale ? "checked='checked'" : "") /> Sadece satışa açık ürünler</label>
+                                </div>
+                            </div>
+
+                            <hr />
+                            <div class="box-footer">
+                                @Html.ButtonFor("Temizle", "mr10 btn-danger btn-clean-filter", "trash")
+                                @Html.ButtonFor("Ara", "btn-success btn-search", "search")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("_ExportImportModal")
+    </div>
+</section>
+
+@section pageheader
+{
+    <script src="~/resource/js/storeitem.js"></script>
+    <script src="~/resource/js/bootstrap-slider.js"></script>
+
+    @if (searchResult != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setPager('.store-item-pager', '@searchResult.SearchParams.Size', '@searchResult.TotalSize');
+            });
+        </script>
+    }
+
+    <style>
+        .txt-range { width: 40%; display: inline-block; margin: 0px 5px; }
+        .field-cbx { font-weight: 400; margin-bottom: 8px; margin-left: 5px; }
+        .field-cbx .cbx { vertical-align: top; margin-top: 5px; }
+    </style>
+}

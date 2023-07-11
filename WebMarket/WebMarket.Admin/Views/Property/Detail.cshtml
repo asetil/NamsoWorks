@@ -1,0 +1,119 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.ECommerce.Model.PropertyViewModel
+@{
+    var property = Model.Property;
+    ViewBag.Title = property != null && property.ID > 0 ? property.Name : "Yeni Özellik";
+    ViewBag.PageNavigation = new Item(0, "Ürün Özellikleri", "fa-th", "/ozellik-yonetimi");
+    ViewBag.SaveResult = Model.Result;
+    TempData["ActivePage"] = 10;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (property == null)
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Özellik Bulunamadı!</h4>
+                            <p class="description">Böyle bir özellik yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="property-detail-panel">
+                            @using (Html.BeginForm("Detail", "Property", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                if (Model.AllowEdit)
+                                {
+                                    var fields = new FieldHelper();
+                                    var propertyGroups = Model.ParentList.Select(i => new Item(i.ID, i.Name));
+
+                                    fields.Label("#ID", property.ID.ToString(), "viewable");
+                                    fields.Text("Name", "İsim", property.Name, "validate", 100);
+                                    fields.Select("Tip", "Type", Model.PropertyTypeList, (int)property.Type, "form-control validate sbx-check type-selector");
+
+                                    if (property.Type != PropertyType.PropertyGroup)
+                                    {
+                                        fields.Select("Üst Özellik", "ParentID", propertyGroups, (int)property.ParentID, "parent-selector");
+                                    }
+                                    else
+                                    {
+                                        @Html.Hidden("ParentID", 0)
+                                    }
+                                    fields.Select("Durum", "Status", Model.StatusList, (int)property.Status, "status-selector", string.Empty);
+
+                                    @Html.Hidden("ID", property.ID)
+                                    @Html.Partial("_FieldHelper", fields)
+
+                                    <hr/>
+                                    <div class="text-right button-row">
+                                        @if (property.ID > 0)
+                                        {
+                                            var childCount = Model.ChildList != null ? Model.ChildList.Count() : 0;
+                                            @Html.ButtonFor("Sil", "mr10 btn-danger btn-delete-property", "remove", "data-id='" + property.ID + "' data-isvariant='0' data-childs='" + childCount + "'")
+                                        }
+                                        @Html.ButtonFor("Kaydet", "btn-success btn-save-property")
+                                    </div>
+                                }
+                                else
+                                {
+                                    var parentProperty = Model.ParentList.FirstOrDefault(i => i.ID == Model.Property.ParentID);
+                                    <table class="table table-striped table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="title" width="20%">ID</td>
+                                                <td>@property.ID</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="title">İsim</td>
+                                                <td>@property.Name</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="title">Özellik Tipi</td>
+                                                <td>@Html.LookupValue(Model.PropertyTypeList, (int)property.Type)</td>
+                                            </tr>
+
+                                            @if (Model.Property.Type != PropertyType.PropertyOption && parentProperty != null)
+                                            {
+                                                <tr>
+                                                    <td class="title">Özellik Grubu</td>
+                                                    <td>@parentProperty.Name</td>
+                                                </tr>
+                                            }
+
+                                            <tr>
+                                                <td class="title">Durum</td>
+                                                <td>@Html.StatusFor(property.Status)</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("_SubPropertyView", Model)
+    </div>
+</section>
+
+@section pageheader{
+    <script src="~/resource/js/property.js"></script>
+    <style>
+        td.title { font-weight: bold; }
+    </style>
+}

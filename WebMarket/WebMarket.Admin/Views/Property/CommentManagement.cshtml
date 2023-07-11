@@ -1,0 +1,149 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.ECommerce.Search
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@using WebMarket.Admin.Models
+
+@model CommentListModel
+@{
+    ViewBag.Title = "Yorum Yönetimi";
+    TempData["ActivePage"] = 12;
+    var hasComment = Model != null && Model.SearchResult != null && Model.SearchResult.HasResult;
+}
+
+<section class="container-fluid comment-list">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (hasComment)
+                    {
+                        <div class="table-responsive">
+                            <div class="mt10 mb10">@Html.PagingInfo(Model.SearchResult, "yorumdan")</div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#ID</th>
+                                        <th width="10%">Ürün</th>
+                                        <th width="40%">Yorum</th>
+                                        <th width="10%">Durum</th>
+                                        @if (Model.AllowEdit)
+                                        {
+                                            <th width="15%">İşlemler</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var comment in Model.SearchResult.Results)
+                                    {
+                                        var item = Model.GetItem(comment);
+                                        <tr data-comment-id="@comment.ID">
+                                            <td class="text-center">@comment.ID</td>
+                                            <td width="20%">
+                                                <div>
+                                                    @Html.ImageFor("", item.Url, item.Value, "product-image", item.Value)
+                                                </div>
+                                            </td>
+                                            <td width="50%" class="comment-detail">
+                                                <h4>@item.ID - @item.Value</h4>
+                                                <div style="margin-bottom: 3px;">
+                                                    <label>@comment.Title</label>
+                                                    <span>
+                                                        <i class="fa fa-star @(comment.Rating >= 1 ? "active" : "")"></i>
+                                                        <i class="fa fa-star @(comment.Rating >= 2 ? "active" : "")"></i>
+                                                        <i class="fa fa-star @(comment.Rating >= 3 ? "active" : "")"></i>
+                                                        <i class="fa fa-star @(comment.Rating >= 4 ? "active" : "")"></i>
+                                                        <i class="fa fa-star @(comment.Rating >= 5 ? "active" : "")"></i>
+                                                    </span>
+                                                    <span class="fr">@comment.DateCreated</span>
+                                                </div>
+                                                @comment.Value
+                                            </td>
+                                            <td class="text-center">@Html.StatusFor(comment.Status)</td>
+                                            <td>
+                                                @if (Model.AllowEdit)
+                                                {
+                                                    if (comment.Status != CommentStatus.WaitingApproval)
+                                                    {
+                                                        <a href="#" class="btn btn-sm btn-warning btn-status" data-status="3" title="Onaya Gönder"><i class="fa fa-question"></i></a>
+                                                    }
+
+                                                    if (comment.Status != CommentStatus.Rejected)
+                                                    {
+                                                        <a href="#" class="btn btn-sm btn-danger btn-status" data-status="2" title="Reddet"><i class="fa fa-remove"></i></a>
+                                                    }
+
+                                                    if (comment.Status != CommentStatus.Approved)
+                                                    {
+                                                        <a href="#" class="btn btn-sm btn-success btn-status" data-status="1" title="Onayla"><i class="fa fa-check"></i></a>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="float: right; margin-top: 10px;" class="comment-pager"></div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Listelenecek Yorum Bulunamadı!</h4>
+                            <p class="description">Arama kriterlerinizi değiştirerek tekrar deeyibilirsiniz.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-filter"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">Filtrele</h2>
+
+                    @using (Html.BeginForm("CommentManagement", "Property", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        var searchParams = Model.SearchResult.SearchParams as CommentSearchParams;
+                        var filterFields = new FieldHelper();
+                        filterFields.Text("ids", "Ürün/Yorum ID", searchParams.IDsString);
+                        filterFields.Text("q", "Başlık/İçerik", searchParams.Keyword);
+                        filterFields.Select("Puanlama", "r", Model.RaitingStarList, searchParams.Rating, "rating-selector");
+                        filterFields.Select("Durum", "st", Model.CommentStatusList, (int)searchParams.CommentStatus, "status-selector");
+
+                        <div class="box-body">
+                            @Html.Partial("_FieldHelper", filterFields)
+
+                            <div class="box-footer">
+                                @Html.ButtonFor("Ara", "btn-success btn-search", "search")
+                                @Html.ButtonFor("Temizle", "btn-danger btn-clear", "rotate-left")
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@section pageheader
+{
+    <script src="~/resource/js/management.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setPager('.comment-pager', '@Model.SearchResult.SearchParams.Size', '@Model.SearchResult.TotalSize');
+        });
+    </script>
+
+    <style>
+        .comment-list .comment-detail { vertical-align: top; }
+        .comment-list .comment-detail span { margin-left: 10px; }
+        .comment-list .comment-detail span i.active { color: #dc143c; }
+    </style>
+}

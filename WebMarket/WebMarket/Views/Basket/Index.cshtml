@@ -1,0 +1,51 @@
+﻿@using Resources
+@using WebMarket.Models
+@model Aware.ECommerce.Model.Basket
+@{
+    ViewBag.Title = Resource.Basket_Title;
+    ViewBag.ActivePage = 4;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@Resource.Basket_Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="mb20 container">
+    @if (Model != null && Model.ID > 0 & Model.Items.Any())
+    {
+        Html.RenderPartial("_OrderProcess", 0);
+        <div class="mt20 basket-container">
+            <div class='basket-content'>
+                @Html.Partial("_BasketView", Model)
+            </div>
+        </div>
+        @Html.Hidden("basketID", Model.ID)
+    }
+    else
+    {
+        <div class="col-md-12 mb20">
+            <div class="no-result-found" style="color: #232323;">
+                <i class="fa fa-shopping-bag"></i>
+                <h2 class="mt20">Sepetinizde Henüz Ürün Yok</h2>
+                <p class="text-center lead"><a href="/urunler" class="btn btn-green mt20">@Resource.StartPurchase</a></p>
+            </div>
+        </div>
+    }
+</div>
+
+@section header
+{
+    <script src="~/resource/js/Basket/Basket.js"></script>
+    @if (TempData["CheckResult"] != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                aware.showError("@Html.Raw(TempData["CheckResult"])", "İşleme Devam Edilemiyor", "exclamation-circle");
+            });
+        </script>
+    }
+}

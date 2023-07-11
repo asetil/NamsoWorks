@@ -1,0 +1,4 @@
+﻿namespace CleanFramework.Business.Util
+{
+
+}

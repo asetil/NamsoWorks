@@ -1,0 +1,14 @@
+﻿@using Aware.Util
+@using CleanCode.Helper
+@model Aware.Authenticate.Model.CustomPrincipal
+
+@if (Model != null && Model.ID > 0)
+{
+    <div class="fr text-right mt10">
+        <i class="fa fa-user"></i> Merhaba, @Model.Name <a href="@Url.RouteUrl(RouteNames.AuthorDetail,new {name=Model.Name.ToSeoUrl(), id=Model.ID})" class="btn btn-success">Bilgilerim</a> <a class="ml10 btn btn-sm btn-danger" href="@Url.RouteUrl(RouteNames.UserLogout)">Çıkış</a>
+    </div>
+}
+else
+{
+    <a class="fr btn-login-page" href="@Url.RouteUrl(RouteNames.UserLogin)"><i class="fa fa-user"></i> Üye Girişi</a>
+}

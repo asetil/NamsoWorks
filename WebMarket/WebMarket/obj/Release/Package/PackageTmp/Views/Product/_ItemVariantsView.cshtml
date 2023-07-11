@@ -1,0 +1,109 @@
+﻿@using Aware.Util
+@model Aware.ECommerce.Model.VariantRelationViewModel
+
+@if (Model != null && Model.Relations != null && Model.VariantProperties != null)
+{
+    foreach (var variant in Model.VariantProperties)
+    {
+        var relations = Model.Relations.Where(i => i.VariantID == variant.ID);
+        if (relations != null && relations.Any())
+        {
+            <div class="mb20 variant-property" data-variant-id="@variant.ID" data-required="@(variant.IsRequired?1:0)" data-track-stock="@(variant.TrackStock ? 1 : 0)">
+                <p class="title" data-name="@variant.DisplayName">@variant.DisplayName Seçin : </p>
+
+                @if (variant.DisplayMode == Enums.PropertyDisplayMode.Dropdown)
+                {
+                    <select class="form-control variant-options select">
+                        <option value="0" class="variant-option">Seçiniz</option>
+                        @foreach (var option in variant.OptionList)
+                        {
+                            var relation = relations.FirstOrDefault(i => i.VariantValue == 0 || i.VariantValue == option.ID);
+                            if (relation != null)
+                            {
+                                <option value="@option.ID" class="variant-option" data-price="@relation.Price">@option.Name @(relation.Price != 0 ? " (+ " + relation.Price.ToPrice() + ")" : "")</option>
+                            }
+                        }
+                    </select>
+                }
+                else if (variant.DisplayMode == Enums.PropertyDisplayMode.ButtonGroup)
+                {
+                    <div class="variant-options button-group">
+                        @foreach (var option in variant.OptionList)
+                        {
+                            var relation = relations.FirstOrDefault(i => i.VariantValue == 0 || i.VariantValue == option.ID);
+                            if (relation != null)
+                            {
+                                <span class="variant-option" data-option-id="@option.ID" data-price="@relation.Price">@option.Name @(relation.Price != 0 ? " (+ " + relation.Price.ToPrice() + ")" : "")</span>
+                            }
+                        }
+                    </div>
+                }
+                else if (variant.DisplayMode == Enums.PropertyDisplayMode.Checkbox)
+                {
+                    <ul class="variant-options checkbox" data-max-selection="@variant.MaxSelection">
+                        @foreach (var option in variant.OptionList)
+                        {
+                            var relation = relations.FirstOrDefault(i => i.VariantValue == 0 || i.VariantValue == option.ID);
+                            if (relation != null)
+                            {
+                                <li class="variant-option" data-option-id="@option.ID" data-price="@relation.Price"><i></i> <span>@option.Name @Html.Raw(relation.Price != 0 ? " <b>(+ " + relation.Price.ToPrice() + ")</b>" : "")</span></li>
+                            }
+                        }
+                    </ul>
+                }
+                else if (variant.DisplayMode == Enums.PropertyDisplayMode.RadioGroup)
+                {
+                    <div class="variant-options radio-group">
+                        @foreach (var option in variant.OptionList)
+                        {
+                            var relation = relations.FirstOrDefault(i => i.VariantValue == 0 || i.VariantValue == option.ID);
+                            if (relation != null)
+                            {
+                                <span class="variant-option" data-option-id="@option.ID" data-price="@relation.Price"><i></i> @option.Name @Html.Raw(relation.Price != 0 ? " <b>(+ " + relation.Price.ToPrice() + ")</b>" : "")</span>
+                            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <ul class="variant-options">
+                        @foreach (var option in variant.OptionList)
+                        {
+                            var relation = relations.FirstOrDefault(i => i.VariantValue == 0 || i.VariantValue == option.ID);
+                            if (relation != null)
+                            {
+                                <li class="variant-option" data-option-id="@option.ID" data-price="@relation.Price">@option.Name @(relation.Price != 0 ? " (+ " + relation.Price.ToPrice() + ")" : "")</li>
+                            }
+                        }
+                    </ul>
+                }
+            </div>
+        }
+    }
+    
+    <span class="annotate stock-info-display text-bold"></span>
+}
+
+<style>
+    .variant-container { float: left; width: 100%; }
+    .variant-container .variant-property .title { font-weight: bold; margin-bottom: 5px; }
+    .variant-container .variant-options { cursor: pointer; }
+    .variant-container .variant-options.select { max-width: 300px; height: 38px; outline: none !important; border: 2px solid #e5e5e5; box-shadow: none; }
+    .variant-container .variant-options.button-group span { padding: 5px 9px; border: 1px solid #eee; margin-right: 10px; border-radius: 4px; width: 45px; display: inline-block; text-align: center; }
+    .variant-container .variant-options.button-group span.active { border-color: #dc143c; }
+
+    .variant-container .variant-options.radio-group span { vertical-align: top; margin-top: -1px; display: inline-block; color: #232323; margin-right: 10px; }
+    .variant-container .variant-options.radio-group span i { font-size: 20px; color: #ccc; margin-right: 5px; font-style: normal; vertical-align: top; display: inline-block; }
+    .variant-container .variant-options.radio-group span i:after { content: '\f10c'; font-family: 'FontAwesome'; }
+    .variant-container .variant-options.radio-group span.active i:after { color: #dc143c; content: '\f192'; font-size: 19px; }
+
+    .variant-container .variant-options.checkbox li { margin-bottom: 5px; }
+    .variant-container .variant-options.checkbox li i { font-size: 20px; color: #ccc; margin-right: 5px; font-style: normal; }
+    .variant-container .variant-options.checkbox li i:after { content: '\f096'; font-family: 'FontAwesome'; }
+    .variant-container .variant-options.checkbox li span { vertical-align: top; margin-top: -1px; display: inline-block; color: #232323; }
+    .variant-container .variant-options.checkbox li.active i:after { color: #dc143c; content: '\f14a'; font-size: 19px; }
+
+    .variant-container .variant-options.button-group .variant-option.no-stock { position: relative; background: #f1f1f1; border: 1px solid #c2c2c2; color: #999; }
+    .variant-container .variant-options.button-group .variant-option.no-stock:after { z-index: 5; content: ""; position: absolute; top: 3px; left: -10px; width: 53px; border-bottom: 1px solid #c2c2c2; transform: translateY(13px) translateX(6px) rotate(-29deg); -ms-transform: translateY(13px) translateX(6px) rotate(-29deg); -moz-transform: translateY(13px) translateX(6px) rotate(-29deg); -o-transform: translateY(13px) translateX(6px) rotate(-29deg); -webkit-transform: translateY(13px) translateX(6px) rotate(-40deg); }
+    .variant-container .variant-options.radio-group .variant-option.no-stock i:after { color: #ccc; content: '\f057'; font-size: 19px;}
+</style>

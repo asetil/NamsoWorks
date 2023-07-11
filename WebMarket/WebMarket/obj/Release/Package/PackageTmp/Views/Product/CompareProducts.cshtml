@@ -1,0 +1,130 @@
+﻿@using Aware.ECommerce.Model
+@using Aware.Util
+@model ProductSearchResult
+@{
+    ViewBag.Title = "Ürünleri Karşılaştır";
+    var products = Model != null ? Model.Results.ToArray() : null;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    @if (products != null && products.Any())
+    {
+        var propertyIDs = products.SelectMany(i => i.Properties.Select(p => p.ID)).Distinct();
+        var propertyData = ViewBag.PropertyData != null ? (List<PropertyValue>)ViewBag.PropertyData : new List<PropertyValue>();
+        var width = 100 / (products.Length + 1);
+
+        <div class="mt20 compare-products" style="width:@((products.Length + 1)*240)px;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th width="@Math.Max(10,width)%"> Özellik</th>
+                        @foreach (var product in products)
+                        {
+                            <th width="@Math.Max(10,width)%" class="text-center">@product.Name</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="items-wrapper">
+                    <tr>
+                        <th class="title">Görsel</th>
+                        @foreach (var product in products)
+                        {
+                            <td>@Html.ImageFor(string.Empty, product.DefaultImage.Path, "", "image")</td>
+                        }
+                    </tr>
+
+                    <tr class="hidden-xs">
+                        <th class="title">Açıklama</th>
+                        @foreach (var product in products)
+                        {
+                            <td>
+                                <div class="description">@product.ShortDescription.Short(150)</div>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <th class="title">Yorum</th>
+                        @foreach (var product in products)
+                        {
+                            <td class="comment">
+                                @product.CommentRating.DecString("N1") <i class="fa fa-star"></i> <span>(@product.CommentCount Yorum)</span>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <th class="title"> Liste Fiyatı</th>
+                        @foreach (var product in products)
+                        {
+                            <td class="list-price">@product.DefaultItem.ListPrice.ToPrice()</td>
+                        }
+                    </tr>
+
+                    <tr>
+                        <th class="title">Satış Fiyatı</th>
+                        @foreach (var product in products)
+                        {
+                            <td class="sales-price">@product.DefaultItem.SalesPrice.ToPrice()</td>
+                        }
+                    </tr>
+
+
+                    @foreach (var propertyID in propertyIDs)
+                    {
+                        var property = propertyData.FirstOrDefault(i => i.ID == propertyID);
+                        if (property != null)
+                        {
+                            <tr>
+                                <th class="title">@property.Name</th>
+                                @foreach (var product in products)
+                                {
+                                    var productProperty = product.Properties.FirstOrDefault(i => i.ID == propertyID);
+                                    if (productProperty != null && property.Type == Enums.PropertyType.Selection)
+                                    {
+                                        var option = propertyData.FirstOrDefault(i => i.ID == productProperty.Value.Int());
+                                        <td>@(option != null ? option.Name : "-")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@(productProperty != null ? productProperty.Value : "-")</td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12 mb20">
+            <div class="no-result-found" style="background: #fff; border: 0 none;">
+                <i class="fa fa-commenting  fa-4x"></i>
+                <h3 class="mt20">Karşılaştırma listenizde hiç ürün yok. </h3>
+                <p class="mt20 lead">İstediğiniz ürünü detay sayfasında bulunan karşılaştır butonunu<br /> kullanarak listenize ekleyebilirsiniz.</p>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .compare-products { margin-bottom: 80px;max-width: 100%;margin: 0 auto;}
+    .compare-products thead tr { background: #636262; color: #fff; }
+    .compare-products thead tr th { vertical-align: middle; }
+    .items-wrapper td { text-align: center; }
+    .items-wrapper .image { max-width: 100%; }
+    .items-wrapper .description { overflow-y: hidden; max-height: 120px; font-size: 12px; }
+    .items-wrapper .sales-price { font-size: 23px; color: #dc143c; }
+    .items-wrapper .list-price { font-size: 17px; text-decoration: line-through; color: #757575; font-style: italic; }
+    .items-wrapper .comment { font-size: 23px; color: #e8b83f; }
+    .items-wrapper .comment span { font-size: 12px; color: #232323; font-style: italic; white-space: nowrap; }
+    tr:nth-child(even) { background: #f5f5f5; }
+</style>

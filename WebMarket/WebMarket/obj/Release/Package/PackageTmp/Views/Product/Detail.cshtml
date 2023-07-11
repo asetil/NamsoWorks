@@ -1,0 +1,261 @@
+﻿@using Aware.ECommerce
+@using Aware.ECommerce.Application
+@using Aware.ECommerce.Util
+@using Aware.Model
+@using Aware.Util
+@using Aware.View.Web.Control
+@using WebMarket.Helper
+@using Constants = WebMarket.Helper.Constants
+@model WebMarket.Models.ProductViewModel
+@{
+    ViewBag.Title = Model != null && Model.Product != null ? Model.Product.Name : "Ürün Detay";
+    ViewBag.ActivePage = 2;
+}
+
+@if (Model != null && Model.Product != null)
+{
+    var unit = Model.Product.UnitDescription;
+    var itemCount = Model.Product.ItemCount;
+    var isFavorite = Model.Product.IsFavorite(Model.FavoriteProducts);
+
+    <div class="mb20 mt20 pr container product product-detail product-wrapper" data-pid="@Model.Product.ID">
+        @Html.Hidden("ProductID", Model.Product.ID)
+        @Html.Hidden("itemID", Model.Product.DefaultItem.ID)
+        @Html.Hidden("categoryID", Model.Product.CategoryID)
+        @Html.Hidden("storeID", Model.Product.DefaultItem.StoreID)
+        @Html.Hidden("stockInfo", Model.Product.DefaultItem.Stock)
+        <input type='hidden' class='items-info' value='@Model.Product.ItemsInfo' />
+
+        <div class="detail-container product-header">
+            @*<div class="category-hierarchy" data-category-id="@Model.Product.CategoryID">&nbsp;</div>
+            <hr class="page-divider" />*@
+            <h1 class="name mb10">@Model.Product.Name</h1>
+            <div class="mb10 brand">@Model.Product.Brand</div>
+        </div>
+
+        @Html.Partial("_ProductImageView", Model)
+        <div class="pr detail-container">
+            <div class="mb10 description">@Model.Product.ShortDescription</div>
+            <div class="pr mt10 mb10 fl formatted-price" data-price="@Model.Product.DefaultItem.SalesPrice.DecToStr()">
+                <p class="mb20 list-price">@Model.Product.DefaultItem.ListPrice.ToPrice()/@unit.Short(2,string.Empty)</p>
+                @Html.PriceHtml(Model.Product.DefaultItem.SalesPrice, "/" + unit.Short(2, string.Empty))
+
+                @if (Model.DisplayComments)
+                {
+                    <a class="rating-summary" title="Yorumlar için tıklayınız.">
+                        <span class="rating-star">
+                            <span class="rating-star" style="width: 0;">0</span>
+                        </span>
+                        <span class="comment-count">(0)</span>
+                    </a>
+                }
+            </div>
+            <hr class="page-divider" />
+
+            <div class="dbfl mt10 mb10 items">
+                @if (itemCount > 1)
+                {
+                    <div class="mb10">
+                        <b>Market Seçimi :</b>
+                    </div>
+                    <select id="SelectedStore" class="store-selector">
+                        @foreach (var item in Model.Product.Items)
+                        {
+                            <option value="@item.ID">@item.Store.DisplayName (@item.SalesPrice.ToPrice())</option>
+                        }
+                    </select>
+                }
+            </div>
+            <div class="variant-container"></div>
+
+            <div class="mt10 mb20 pnl-button quantity-row">
+                <div class="quantity">
+                    @Html.QuantityBox("Quantity", "quantity-box", 1, Enums.MeasureUnits.Unit, string.Empty)
+                    <button type="submit" class="btn btn-green btn-add-to-basket">Sepete Ekle</button>
+                </div>
+                <button class="btn btn-no-stock">Ürün Tükendi</button>
+            </div>
+
+            <div class="mb20 pnl-button">
+                <span class="mr10 btn-favorite @(isFavorite?"favorite":"")" data-product-id="@Model.Product.ID">
+                    <i class="fa fa-heart"></i> @(isFavorite ? "Favorilerimden Kaldır" : "Favorilerime Ekle")
+                </span>
+
+                @if (Model.AllowCompare)
+                {
+                    <span class="btn-compare-product"><i class="fa fa-random"></i> Karşılaştır </span>
+                }
+            </div>
+            <hr class="page-divider" />
+
+            @if (Model.AllowSoialShare)
+            {
+                <div class="mb20 addthis_inline_share_toolbox_rmb1"></div>
+            }
+
+            @if (Model.Product.DefaultItem.DiscountRate > 0)
+            {
+                <span class="icon discount"><i class="fa fa-caret-down"></i><br>%@(Model.Product.DefaultItem.DiscountRate)</span>
+            }
+
+            @if (itemCount == 1)
+            {
+                <div class="store-info stats">
+                    @if (Model.Product.DefaultItem.Store != null)
+                    {
+                        <a href="@Url.StoreDetail(Model.Product.DefaultItem.StoreID, Model.Product.DefaultItem.Store.DisplayName)">
+                            <img class="icon img-responsive" src="~/resource/img/@Model.Product.DefaultItem.Store.DefaultImage.Path" title="Sadece @Model.Product.DefaultItem.Store.Name">
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <span class="icon icon-store" title="Bu ürün @itemCount farklı markette"><i class="fa fa-tags"></i><br />#@itemCount</span>
+            }
+        </div>
+    </div>
+
+    <div class="mt20 mb20 container similar-items"> </div>
+    <div class="mt30 mb20 container">
+        <div class="mt30 tabs-wrapper content-tabs">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#item-description" data-toggle="tab" aria-expanded="true">Açıklama</a></li>
+
+                @if (Model.PropertyList != null && Model.PropertyList.Any())
+                {
+                    <li><a href="#item-props" data-toggle="tab" aria-expanded="true">Özellikler</a></li>
+                }
+
+                @if (Model.DisplayComments)
+                {
+                    <li class=""><a href="#reviews" class="review-tab" data-toggle="tab" aria-expanded="false">Yorumlar <span class="comment-count">(0)</span></a></li>
+                }
+
+                @if (Model.ShowInstallments)
+                {
+                    <li class="btn-show-installments" data-loaded="0"><a href="#installments" data-toggle="tab" aria-expanded="false">Taksit Seçenekleri</a></li>
+                }
+
+                <li class=""><a href="#cancelorder" data-toggle="tab" aria-expanded="false">İade Koşulları</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="item-description">
+                    @if (!string.IsNullOrEmpty(Model.Product.Description))
+                    {
+                        <p class="mb20">@Html.Raw(Model.Product.Description)</p>
+                    }
+                    else if (!string.IsNullOrEmpty(Model.Product.ShortDescription))
+                    {
+                        <p class="mb20">@Html.Raw(Model.Product.ShortDescription)</p>
+                    }
+                    else
+                    {
+                        <p>Ürün ile ilgili herhangi bir açıklama mevcut değil!</p>
+                    }
+                </div>
+
+                @if (Model.PropertyList != null && Model.PropertyList.Any())
+                {
+                    <div class="tab-pane fade item-properties" id="item-props">
+                        <table class="table table-bordered">
+                            @foreach (var property in Model.PropertyList)
+                            {
+                                <tr>
+                                    @if (property.OK)
+                                    {
+                                        <td colspan="2" class="property-group">
+                                            <b>@property.Title</b>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="width: 20%">
+                                            <b>@property.Title</b>
+                                        </td>
+                                        <td style="width: 80%" class="text-left">
+                                            @Html.Raw(property.Value)
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                }
+
+                @if (Model.DisplayComments)
+                {
+                    <div class="tab-pane fade" id="reviews" data-loaded="0">
+                        <p class="mb20">Lütfen bekleyiniz..</p>
+                        @Html.ImageFor("Icons", "ajax-loader.gif")
+                    </div>
+                }
+
+                @if (Model.ShowInstallments)
+                {
+                    <div class="tab-pane fade" id="installments">
+                        <p class="mb20">Lütfen bekleyiniz..</p>
+                        @Html.ImageFor("Icons", "ajax-loader.gif")
+                    </div>
+                }
+
+                <div class="tab-pane fade" id="cancelorder">
+                    <p>
+                        İncelediğiniz ürün, doğrudan üretici firma tarafından size kargoyla gönderilecektir.
+                        İade işlemlerinizi aşağıdaki şekilde yapmalısınız:<br>Ürünün adresinize teslim tarihinden itibaren 14 gün
+                        içinde "Sipariş Takibi" sayfasından "İade ve Geri gönderim" başvurusunda bulunarak iade sürecinizi
+                        başlatabilirsiniz. <br>Başvurunuz sonrasında “Hesabım” sayfasında bulunan başvuru takibi bölümünde
+                        gösterilen kargo gönderi kodu ile göndermeniz gerekmektedir. İadenizin kabul edilmesi için, ürünün hasar görmemiş
+                        ve kullanılmamış olması gerekmektedir.<br>İade etmek istediğiniz ürün, tarafımızdan üretici firmaya
+                        ulaştırılacak ve iade işlemleriniz Hepsiburada.com tarafından takip edilecektir.<br><br>Daha detaylı bilgi için
+                        <a href="/yardim-destek">Yardım</a> sayfasını ziyaret edebilirsiniz.<br>
+                        * Bedel İadesi: İade işlemi sonuçlandıktan sonra bedel ödemesi kredi kartınıza/banka hesabınıza 24 saat içinde
+                        yapılmaktadır. Ödeme işlemlerinin hesabınıza yansıma süresi bankanıza göre değişkenlik gösterebilir.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        @if (Model.AllowSoialShare)
+        {
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57f39b16f8c00757"></script>
+        }
+    }
+}
+else
+{
+    <section class="page-section breadcrumbs">
+        <div class="container">
+            <div class="page-header">
+                <h1>Ürün Detay</h1>
+            </div>
+        </div>
+    </section>
+
+    <div class="container text-center mb20">
+        <div class="mb20 no-result-found">
+            <i class="fa fa-qrcode"></i>
+            <div>Böyle bir ürün yok!</div>
+        </div>
+    </div>
+}
+
+@section header
+{
+    @Scripts.Render(Constants.ProductScripts)
+    @Styles.Render(Constants.ProductDetailCss)
+}
+
+@section metatags{
+    @if (Model != null && Model.Product != null)
+    {
+        <meta name="twitter:card" value="summary">
+        <meta property="og:url" content="@(string.Format("{0}/urun-detay/{1}-{2}",Aware.Util.Config.DomainUrl,Model.Product.Name.ToSeoUrl(),Model.Product.ID))" />
+        <meta property="og:type" content="product" />
+        <meta property="og:title" content="@Model.Product.Name" />
+        <meta property="og:description" content="@Model.Product.ShortDescription" />
+        <meta property="og:image" content="@Html.ImagePath(Model.Product.DefaultImage.Path, "m", true)" />
+    }
+}

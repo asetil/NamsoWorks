@@ -1,0 +1,110 @@
+﻿@using Aware.ECommerce.Enums
+@using WebMarket.Admin.Helper
+
+@model Aware.ECommerce.Model.PropertyViewModel
+@{
+    var property = Model.Property;
+    var isPropertyGroup = Model.Property.Type == PropertyType.PropertyGroup;
+    var isSelectionProperty = Model.Property.Type == PropertyType.Selection || Model.Property.Type == PropertyType.VariantProperty;
+    var isVariant = Model.Property.Type == PropertyType.VariantProperty;
+}
+
+@if (isPropertyGroup || isSelectionProperty)
+{
+    <div class="col-md-6">
+        <div class="card property-selection-panel">
+            <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+            <div class="card-content">
+                <h2 class="card-title">@Model.Property.Name @(isPropertyGroup ? "Özellikleri" : "Seçimlik Değerleri")</h2>
+                @if (isPropertyGroup && Model.ChildList != null)
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Özellik</th>
+                            <th>Tip</th>
+                            <th>Durum</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var child in Model.ChildList)
+                        {
+                            <tr>
+                                <td>@child.ID</td>
+                                <td class="td-name"><a href="@Url.PropertyDetail(child.Name, child.ID)">@child.Name</a></td>
+                                <td>@Html.LookupValue(Model.PropertyTypeList, (int) child.Type)</td>
+                                <td>@Html.StatusFor(child.Status)</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+                else if (isSelectionProperty)
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th width="5%">#ID</th>
+                            <th class="td-name" width="40%">Seçimlik Değer</th>
+                            <th width="20%">Sıralama</th>
+                            @if (Model.AllowEdit)
+                            {
+                                <th width="35%">İşlemler</th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if (Model.ChildList != null && Model.ChildList.Any())
+                        {
+                            foreach (var selectionProperty in Model.ChildList)
+                            {
+                                if (Model.AllowEdit)
+                                {
+                                    <tr data-id="@selectionProperty.ID" data-parentid="@selectionProperty.ParentID">
+                                        <td class="text-center">@selectionProperty.ID</td>
+                                        <td>
+                                        <input class="form-control name" type="text" disabled="disabled" maxlength="30" placeholder="Seçimlik Değer" value="@selectionProperty.Name"/>
+                                        <td>
+                                            <input type="text" class="form-control  sort-order" disabled="disabled" maxlength="3" placeholder="Sıra" value="@selectionProperty.SortOrder"/>
+                                        </td>
+                                        <td>
+                                            @Html.ButtonFor("Düzenle", "btn-sm btn-info btn-edit", string.Empty)
+                                            @Html.ButtonFor("Kaydet", "btn-sm btn-success btn-save", "check", "data-isvariant='" + (isVariant ? 1 : 0) + "'")
+                                            @Html.ButtonFor("Vazgeç", "btn-sm btn-default btn-cancel", string.Empty)
+                                            <button data-id="@selectionProperty.ID" data-is-option="1" class="btn btn-sm  btn-danger btn-delete-property"><i class='fa fa-remove'></i> Sil</button>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr data-id="@selectionProperty.ID" data-name="@selectionProperty.Name">
+                                        <td>@selectionProperty.ID</td>
+                                        <td>@selectionProperty.Name</td>
+                                        <td>@selectionProperty.SortOrder</td>
+                                    </tr>
+                                }
+                            }
+                        }
+
+                        @if (Model.AllowEdit)
+                        {
+                            <tr data-id="0" data-parentid="@Model.Property.ID">
+                                <td>0</td>
+                                <td>
+                                <input class="form-control name new" type="text" maxlength="30" placeholder="Seçimlik Değer" value=""/>
+                                <td>
+                                    <input type="text" class="form-control sort-order new" maxlength="3" placeholder="Sıra" value=""/>
+                                </td>
+                                <td>
+                                    @Html.ButtonFor("Yeni Ekle", "btn-sm btn-success btn-save btn-add-new", "check", "data-isvariant='" + (isVariant ? 1 : 0) + "'")
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+}

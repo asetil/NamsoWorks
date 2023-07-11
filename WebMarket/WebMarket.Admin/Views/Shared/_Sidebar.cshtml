@@ -1,0 +1,193 @@
+﻿@using Aware.ECommerce.Enums
+@using WebMarket.Admin.Helper
+
+@model WebMarket.Admin.Models.SideBarModel
+@{
+    var role = Model != null ? Model.User.Role : UserRole.AdminUser;
+    var isSuper = role == UserRole.SuperUser;
+    var activePage = TempData["ActivePage"] != null ? TempData["ActivePage"].ToString().AsInt() : 0;
+}
+
+<div class="sidebar">
+    <div class="logo">
+        <div class="logo-normal">
+            <a class="simple-text" href="/dashboard">
+                WebMarket
+            </a>
+        </div>
+
+        <div class="logo-img">
+            <img src="/resource/img/App/logo2.png">
+        </div>
+    </div>
+
+    <div class="sidebar-wrapper">
+        <div class="user">
+            <div class="photo">
+                <img src="/resource/img/App/user.jpg">
+            </div>
+            <div class="info">
+                <a data-toggle="collapse" href="#userMenu">
+                    <span>
+                        @Model.User.Name
+                        <b class="caret"></b>
+                    </span>
+                    <p>@Html.LookupValue(Model.RoleList, (int)role)</p>
+                </a>
+                <div class="collapse" id="userMenu">
+                    <ul class="nav">
+                        <li>
+                            <a href="@Url.RouteUrl(RouteNames.UserDetail,new {userID = Model.User.ID })">
+                                <i class="fa fa-user"></i>
+                                <span class="sidebar-normal">Bilgilerim</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0)" class="btn-logout">
+                                <i class="fa fa-remove"></i>
+                                <span class="sidebar-normal">Oturumu Kapat</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-container">
+            <ul class="nav">
+                @if (isSuper)
+                {
+                    <li class="@(activePage == 3 ? "active" : "")">
+                        <a href="@Url.RouteUrl(RouteNames.CustomerSearchRoute)">
+                            <i class="fa fa-television"></i> <span>Firmalar</span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="@(activePage == 1 ? "active" : "")">
+                        <a href="/">
+                            <i class="fa fa-home"></i> <span>Dashboard</span>
+                        </a>
+                    </li>
+                }
+
+                <li class="@(activePage == 2 ? "active" : "")">
+                    <a href="@Url.RouteUrl(RouteNames.UserListRoute)">
+                        <i class="fa fa-users"></i> <span>Kullanıcılar</span>
+                    </a>
+                </li>
+
+                @if (role == UserRole.AdminUser)
+                {
+                    <li class="@(activePage == 3 ? "active" : "")">
+                        <a href="@Url.RouteUrl(RouteNames.MarketListRoute)">
+                            <i class="fa fa-television"></i> <span>Marketlerim</span>
+                        </a>
+                    </li>
+
+                    <li class="@(activePage == 4 ? "active" : "")">
+                        <a href="@Url.Action("Index", "StoreItem")">
+                            <i class="fa fa-th"></i> <span>Ürünlerim</span>
+                        </a>
+                    </li>
+
+
+                    <li class="@(activePage == 6 ? "active" : "") treeview">
+                        <a data-toggle="collapse" href="#Orders">
+                            <i class="fa fa-shopping-cart"></i> <span>Siparişlerim</span> <i class="fa fa-caret-down open"></i>
+                        </a>
+                        <div class="collapse @(activePage == 6 ? "in" : "")" id="Orders">
+                            <ul class="nav">
+                                <li class="@(activePage == 160 ? "active" : "")">
+                                    <a href="@Url.Action("Index", "Order")"><i class="fa fa-circle-o"></i> Tüm Siparişler</a>
+                                </li>
+                                <li class="@(activePage == 160 ? "active" : "")">
+                                    <a href="@Url.Action("Index", "Order", new {period = "daily"})"><i class="fa fa-circle-o"></i> Bugünün Siparişleri</a>
+                                </li>
+                                <li class="@(activePage == 160 ? "active" : "")">
+                                    <a href="@Url.Action("Index", "Order", new {period = "weekly"})"><i class="fa fa-circle-o"></i> Bu Haftanın Siparişleri</a>
+                                </li>
+                                <li class="@(activePage == 160 ? "active" : "")">
+                                    <a href="@Url.Action("Index", "Order", new {period = "monthly"})"><i class="fa fa-circle-o"></i> Bu Ayın Siparişleri</a>
+                                </li>
+                                <li class="@(activePage == 160 ? "active" : "")">
+                                    <a href="@Url.Action("Index", "Order", new {period = "yearly"})"><i class="fa fa-circle-o"></i> Bu Yılın Siparişleri</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+
+                <li class="@(activePage == 5 ? "active" : "")">
+                    <a href="@Url.Action("Index", "Campaign")"><i class="fa fa-flash "></i> <span>Kampanyalarım</span></a>
+                </li>
+
+                <li class="@(activePage >= 7 && activePage<=25  ? "active" : "") treeview">
+                    <a data-toggle="collapse" href="#Catalog">
+                        <i class="fa fa-bars"></i> <span>Katalog</span> <i class="fa fa-caret-down open"></i>
+                    </a>
+                    <div class="collapse @(activePage >= 7 && activePage<=25  ? "in" : "")" id="Catalog">
+                        <ul class="nav">
+                            <li class="@(activePage == 7 ? "active" : "")">
+                                <a href="@Url.Action("Index", "Product")"><i class="fa fa-database"></i> Ürün Kataloğu</a>
+                            </li>
+                            <li class="@(activePage == 8 ? "active" : "")">
+                                <a href="@Url.Action("Index", "Category")"><i class="fa fa-book"></i> Kategoriler</a>
+                            </li>
+                            <li class="@(activePage == 9 ? "active" : "")">
+                                <a href="@Url.Action("Index", "Brand")"><i class="fa fa-maxcdn"></i> Markalar</a>
+                            </li>
+                            <li class="@(activePage == 10 ? "active" : "")">
+                                <a href="@Url.Action("Index", "Property")"><i class="fa fa-tags"></i> Ürün Özellikleri</a>
+                            </li>
+                            <li class="@(activePage == 11 ? "active" : "")">
+                                <a href="@Url.Action("Index", "Variant")"><i class="fa fa-tags"></i> Varyant Özellikler</a>
+                            </li>
+                            <li class="@(activePage == 12 ? "active" : "")">
+                                <a href="@Url.Action("CommentManagement", "Property")"><i class="fa fa-comments"></i> Ürün Yorumları</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                @if (role == UserRole.SuperUser)
+                {
+                    <li class="@(activePage == 26 ? "active" : "")">
+                        <a href="@Url.Action("SiteSettings", "Common")"><i class="fa fa-sitemap"></i> <span>Site Ayarları</span></a>
+                    </li>
+                    <li class="@(activePage == 27 ? "active" : "")">
+                        <a href="@Url.Action("OrderSettings", "Common")"><i class="fa fa-money"></i> <span>Sipariş Ayarları</span></a>
+                    </li>
+
+                    <li class="@(activePage == 28 ? "active" : "")">
+                        <a href="@Url.Action("MailTemplates", "Common")"><i class="fa fa-envelope"></i> <span>E-posta Şablonları</span></a>
+                    </li>
+                    <li class="@(activePage == 29 ? "active" : "")">
+                        <a href="@Url.Action("CacheManagement", "Common")"><i class="fa fa-tachometer"></i> <span>Cache Yönetimi</span></a>
+                    </li>
+                    <li class="@(activePage == 34 ? "active" : "")">
+                        <a href="@Url.RouteUrl(RouteNames.RegionManagement)"><i class="fa fa-map-marker"></i> <span>Bölge Yönetimi</span></a>
+                    </li>
+                    <li class="@(activePage == 30 ? "active" : "")">
+                        <a href="@Url.Action("Language", "Management")"><i class="fa fa-language"></i> <span>Dil Yönetimi</span></a>
+                    </li>
+                    <li class="@(activePage == 31 ? "active" : "")">
+                        <a href="@Url.Action("Index", "Task")"><i class="fa fa-tasks"></i> <span>Planlanmış Görevler</span></a>
+                    </li>
+                    <li class="@(activePage == 32 ? "active" : "")">
+                        <a href="@Url.Action("AuthorityDefinition", "Common")"><i class="fa fa-book"></i> <span>Yetki Tanımları</span></a>
+                    </li>
+                    <li class="@(activePage == 33 ? "active" : "")">
+                        <a href="@Url.Action("Index", "Notification")"><i class="fa fa-newspaper-o"></i> <span>Bildirim Yönetimi</span></a>
+                    </li>
+                     <li class="@(activePage == 35 ? "active" : "")">
+                        <a href="@Url.Action("Index", "Gallery")"><i class="fa fa-image"></i> <span>Galeri Yönetimi</span></a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="sidebar-background"></div>
+</div>

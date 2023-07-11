@@ -1,0 +1,45 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Şuan Bakımdayız -- WebMarketim.com</title>
+    <link href="~/resource/img/App/favico.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <meta content="TR" http-equiv="content-language" />
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <meta content="text/html; charset=windows-1254" http-equiv="content-type" />
+    <meta content="text/html; charset=ISO-8859-9" http-equiv="content-type" />
+
+    @Styles.Render(Constants.LayoutCss)
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic,600,600italic,700,700italic,800,800italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div class="header" style="border-bottom: 3px solid #dc143c;">
+        <div class="container middle">
+            <div class="text-center site-title" style="margin: 30px auto;max-width: 227px;">
+                <a href='/'>
+                    @Html.ImageFor("App", "logo.png", "WebMarket.com", "img-responsive", "WebMarket.com")
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <section class="page-section breadcrumbs">
+        <div class="container">
+            <div class="page-header">
+                <h1>Üzgünüz, Şuan Bakımdayız</h1>
+            </div>
+        </div>
+    </section>
+    <div class="page-section container">
+        <p class="text-center lead">
+            Lütfen daha sonra tekrar deneyiniz.
+        </p>
+    </div>
+    <footer class="footer"></footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+﻿@using Aware.Util
+@model List<Aware.ECommerce.Model.Category>
+@{
+    var isSuper = ViewBag.IsSuper != null && (bool)ViewBag.IsSuper;
+}
+
+@if (Model != null && Model.Any())
+{
+    var ind = 0;
+    <ul>
+        @foreach (var category in Model)
+        {
+            var hasSubCategory = category.SubCategories.Any();
+            <li>
+                <span class="db category" data-category-id="@category.ID" data-order="@category.SortOrder">
+                    @if (hasSubCategory)
+                    {
+                        <i class="fa fa-plus toggle-icon"></i>
+                    }
+                    else
+                    {
+                        <i class="fa fa-circle-o"></i>
+                    }
+                    
+                    <span class="name">@category.Name.Short(24)</span>
+                    @if (isSuper)
+                    {
+                        if (ind < Model.Count - 1)
+                        {
+                            <i class='fr direction fa fa-chevron-down' data-direction='1'></i>
+                        }
+                        if (ind != 0)
+                        {
+                            <i class='fr direction fa fa-chevron-up' data-direction='-1'></i>
+                        }
+                        ind++;
+                    }
+                </span>
+                
+                @if (hasSubCategory)
+                {
+                    @Html.Partial("_CategoryTree",category.SubCategories)
+                }
+            </li>
+        }
+    </ul>
+}

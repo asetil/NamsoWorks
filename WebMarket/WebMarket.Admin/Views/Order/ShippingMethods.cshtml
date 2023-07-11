@@ -1,0 +1,84 @@
+﻿@using Aware.Util
+@using Aware.ECommerce.Model
+@using Aware.Regional.Model
+@using WebMarket.Admin.Helper
+@model List<ShippingMethod>
+@{
+    ViewBag.Title = "Kargo Yönetimi";
+    TempData["ActivePage"] = 27;
+    var count = Model != null ? Model.Count() : 0;
+    var regionList = (List<Region>)ViewBag.RegionList ?? new List<Region>();
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        <a href="@Url.Action("ShippingMethod", new {id = 0})" class="btn btn-info btn-round btn-fab btn-fab-mini"><i class="fa fa-plus"></i></a>
+                    </h2>
+                    
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li><a href="@Url.Action("OrderSettings", "Common")">Sipariş Ayarları</a></li>
+                            <li class="active"><a href="#tab_general" data-toggle="tab" aria-expanded="false"><i class="fa fa-truck"></i> Kargo Yönetimi</a></li>
+                            <li><a href="@Url.Action("OnlinePos", "Common")"><i class="fa fa-credit-card"></i> Sanal Poslar</a></li>
+                            <li><a href="@Url.Action("BankInfo", "Order")"><i class="fa fa-bank"></i> Bankalar</a></li>
+                            <li><a href="@Url.Action("InstallmentInfo", "Order")"><i class="fa fa-pie-chart"></i> Taksit & Komisyon</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_general">
+                                @if (count > 0)
+                                {
+                                    <div class="box-header">
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table order-list">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%">#ID</th>
+                                                    <th width="25%">İsim</th>
+                                                    <th width="20%">Semt Bilgisi</th>
+                                                    <th width="10%">Fiyat</th>
+                                                    <th width="8%">Durum</th>
+                                                    <th>İşlemler</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var shippingMethod in Model)
+                                                {
+                                                    var regionInfo = string.Join(", ", regionList.Where(i => shippingMethod.HasRegion(i.ID)).Select(i => i.Name));
+                                                    <tr>
+                                                        <td style="text-align: center;">@shippingMethod.ID</td>
+                                                        <td>@shippingMethod.Name</td>
+                                                        <td style="max-width: 300px;" class="text-overflow" title="@regionInfo">@regionInfo</td>
+                                                        <td class="text-right">@shippingMethod.Price.ToPrice()</td>
+                                                        <td class="text-center">@Html.StatusFor(shippingMethod.Status)</td>
+                                                        <td>
+                                                            <a href="@Url.Action("ShippingMethod", new {id = shippingMethod.ID})" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Görüntüle</a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="no-result-found">
+                                        <i class="fa fa-warning"></i>
+                                        <h4>Listelenecek Ürün Bulunamadı!</h4>
+                                        <p class="description"><b>Yeni Ekle</b> butonunu kullanarak yeni öğe ekleyebilirsiniz.</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,151 @@
+﻿@using System.Web.Mvc.Html
+@using Aware.ECommerce.Enums
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+
+@model Aware.Authenticate.Model.UserDetailModel
+@{
+    ViewBag.Title = Model != null && Model.User != null && Model.User.ID == 0 ? "Yeni Kullanıcı Ekle" : "Kullanıcı Bilgileri";
+    ViewBag.PageNavigation = new Item(0, "Kullanıcılar", "fa-users", "/kullanicilar");
+    TempData["ActivePage"] = 2;
+}
+
+<section class="container-fluid user-detail">
+    <div class="mt20 row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-user"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model != null && Model.User != null)
+                    {
+                        <div class="user-detail-dialog">
+                            @using (Html.BeginForm("UserDetail", "User", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                            {
+                                var fields = new FieldHelper(FieldDirection.Horizantal, 3);
+                                fields.Label("#ID", Model.User.ID.ToString(), "viewable");
+
+                                if (Model.Customer != null)
+                                {
+                                    fields.Label("Firma", Model.Customer.Name, "viewable");
+                                }
+
+                                fields.Text("Name", "İsim", Model.User.Name, "validate", 50);
+                                fields.Text("Email", "E-posta", Model.User.Email, "validate  email-check", 30);
+
+                                @Html.Hidden("ID", Model.User.ID)
+                                @Html.Hidden("CustomerID", Model.User.CustomerID)
+                                if (Model.AllowPasswordChange)
+                                {
+                                    @Html.Hidden("Role", Model.User.Role)
+                                    @Html.Hidden("TitleID", Model.User.TitleID)
+                                    @Html.Hidden("Status", Model.User.Status)
+
+                                    fields.Label("Yetki", Html.LookupValue(Model.UserRoleList, (int)Model.User.Role), "viewable");
+                                    if (Model.User.CustomerID > 0)
+                                    {
+                                        fields.Label("Ünvan", Html.LookupValue(Model.TitleList, Model.User.TitleID,"Belirtilmemiş"), "viewable");
+                                    }
+                                    fields.Label("Durum", Html.LookupValue(Model.StatusList, (int)Model.User.Status.GetValueOrDefault()), "viewable");
+                                    @Html.Partial("_FieldHelper", fields)
+                                }
+                                else
+                                {
+                                    if (Model.User.CustomerID > 0)
+                                    {
+                                        @Html.Hidden("Role", Model.User.Role)
+                                        fields.Label("Yetki", Html.LookupValue(Model.UserRoleList, (int)Model.User.Role), "viewable");
+                                        fields.Select("Ünvan", "TitleID", Model.TitleList, (int)Model.User.TitleID, "validate sbx-check title-selector");
+                                    }
+                                    else
+                                    {
+                                        var roleList = Model.UserRoleList.Where(i => i.Value != (int)UserRole.AdminUser).ToList();
+                                        fields.Select("Yetki", "Role", roleList, (int)Model.User.Role, "validate sbx-check role-selector");
+                                        @Html.Hidden("TitleID", Model.User.TitleID)
+                                    }
+
+
+                                    fields.BtnGroup("Durum", "Status", Model.StatusList, ((int)Model.User.Status.GetValueOrDefault()).ToString(), string.Empty);
+                                    @Html.Partial("_FieldHelper", fields)
+                                }
+
+                                <div class="box-footer text-right">
+                                    <hr />
+
+                                    @if (Model.AllowPasswordChange)
+                                    {
+                                        <a href="@Url.Action("ChangePassword")" class="mr10 btn btn-primary"><i class="fa fa-refresh"></i> Şifre Değiştir</a>
+                                    }
+                                    else if (Model.User.ID > 0 && Model.User.Status != Statuses.Deleted)
+                                    {
+                                        @Html.ButtonFor("Sil", "mr10 btn-danger btn-remove-user", "remove")
+                                    }
+                                    @Html.ButtonFor("Kaydet", "btn-success btn-save-user")
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Kullanıcı Bulunamadı!</h4>
+                            <p class="description">Böyle bir kullanıcı yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model != null)
+        {
+            <div class="col-md-6">
+                <div class="card card-profile">
+                    @if (Model.User.ID > 0)
+                    {
+                        <div class="card-avatar">
+                            <a href="#pablo"><img src="/resource/img/App/user.jpg" alt=""></a>
+                        </div>
+                        <div class="card-content">
+                            <h4 class="mt20 card-title">@Model.User.Name</h4>
+                            <p class="category text-gray">@Html.LookupValue(Model.UserRoleList, (int)Model.User.Role)</p>
+
+                            @if (Model.User.Role != UserRole.SuperUser)
+                            {
+                                <div class="user-authorities text-left">
+                                    <h3 style="    background: #6fd4f3;padding: 2px 14px;border-radius: 4px;color: #fff;">
+                                        Yetkiler
+                                    </h3>
+                                    @Html.Action("AuthorityUsage", "Common", new { relationID = Model.User.ID, relationType = (int)RelationTypes.User })
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-left" style="padding: 20px; padding-top:0px;">
+                            <h3>Yeni Kullanıcı Eklerken</h3>
+                            <div style="line-height: 1.7em;font-size: 16px;color: #777;">
+                                <p>
+                                    Kullanıcı oluşturulduktan sonra giriş yapılabilmesi için hesabın aktif edilmesi gerekmektedir. Bunun için hesap oluştururken
+                                    belirlediğiniz e-posta adresine bir aktivasyon maili göndereceğiz. Kullanıcı, bu mailde yer alan <span style="font-weight: 400; color: #6DA6ED;">Aktivasyonu Tamamla</span> linkine
+                                    tıklayarak aktivasyon işlemini tamamlayabilir.
+                                </p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section pageheader{
+    <link href="~/resource/css/jquery-ui.css" rel="stylesheet" />
+    <script src="~/resource/js/jquery-ui.js"></script>
+    <script src="~/resource/js/user.js"></script>
+} 

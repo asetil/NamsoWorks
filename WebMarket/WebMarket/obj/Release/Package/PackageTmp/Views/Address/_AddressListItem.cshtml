@@ -1,0 +1,21 @@
+﻿@model Aware.ECommerce.Model.Address
+
+@if (Model != null)
+{
+    var regionInfo = string.Format("{0}_{1}_{2}", Model.CityID, Model.CountyID, Model.DistrictID);
+    <div class="col-md-6 col-sm-6">
+        <div class="address-container" data-address-id="@Model.ID" data-region-info="@regionInfo">
+            <div class="selection">
+                <span class="address-type shipping" title="Bu adresi teslimat adresi olarak kullan.">T</span>
+                <span class="address-type billing" title="Bu adresi fatura adresi olarak kullan.">F</span>
+            </div>
+
+            <div class="body">
+                <span>@Html.Raw(Model.DisplayText)</span><br />
+                <a href="javascript:void(0)" class="btn-address btn-delete-address" data-role="delete-address">Sil <i class="fa fa-remove"></i></a>
+                <a href="javascript:void(0)" class="btn-address btn-show-address">Düzenle <i class="fa fa-edit"></i></a>
+                <i title="Bu adresi fatura adresi olarak kullan." class="billing"> Fatura Adresi</i>
+            </div>
+        </div>
+    </div>
+}

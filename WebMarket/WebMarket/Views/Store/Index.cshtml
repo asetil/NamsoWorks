@@ -1,0 +1,43 @@
+﻿@using Aware.Util
+@using Resources
+@model IEnumerable<Aware.ECommerce.Model.Store>
+@{
+    ViewBag.Title = Resource.Store_ListTitle;
+    ViewBag.ActivePage = 1;
+}
+
+@Html.DrawPageTitle(Resource.Store_ListTitle)
+<div class="mb20 container">
+    <p class="mb20 text-center lead">
+        @Resource.Store_SubTitle
+    </p>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="store-list">
+            @foreach (var item in Model)
+            {
+                <a href="@Url.StoreDetail(item.ID, item.DisplayName)" title="@item.DisplayName">
+                    <div class="store @(item.IsOpen ? "open" : "closed")">
+                        @Html.ImageFor(string.Empty, item.ImageInfo, item.DisplayName, string.Empty, item.DisplayName)
+                        <div class="store-name">@item.DisplayName.Short(40)</div>
+                        <i class="fr" title="@(item.IsOpen ? "Açık" : "Kapalı")"></i>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12 mb20">
+            <div class="no-result-found">
+                <i class="fa fa-map-marker"></i>
+                <div>@Resource.Store_NoStoreMessage</div>
+            </div>
+        </div>
+    }
+</div>
+
+@section header{
+    <link href="~/resource/css/store.css" rel="stylesheet" />
+}

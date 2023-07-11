@@ -1,0 +1,100 @@
+﻿@using Aware.Util;
+@using Aware.Util.Enums
+@using CleanCode.Helper;
+@using CleanFramework.Business.Model;
+
+@model EntryListModel
+@{
+    ViewBag.Title = "Makaleler";
+    ViewBag.ActiveMenu = 1;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var resultList = Model != null && Model.SearchResult != null ? Model.SearchResult.Results : null;
+    var searchParams = Model != null && Model.SearchResult != null ? Model.SearchResult.SearchParams as EntrySearchParams : new EntrySearchParams();
+}
+
+<div class="wrapper-box active">
+    <div class="content-box">
+        <div class="col-md-12">
+            <h2 class="mb20">
+                Makaleler <a href="@Url.Action("ManageDetail", "Entry", new { name = "yeni", id = 0 })" class="ml10 btn btn-blue"><i class="fa fa-plus"></i> Yeni Ekle</a>
+            </h2>
+        </div>
+
+        <div class="mb20 col-md-9">
+            @if (resultList != null && resultList.Any())
+            {
+                <table class="table">
+                   <thead>
+                       <tr>
+                           <th width="5%">#ID</th>
+                           <th width="40%">Başlık</th>
+                           <th width="20%">Kategori</th>
+                           <th width="20%" class="hidden-xs">Oluşturulma</th>
+                           <th>İşlemler</th>
+                       </tr>
+                   </thead>
+                    <tbody>
+                        @foreach (var entry in resultList)
+                        {
+                            var entryUrl = Url.Action("ManageDetail", "Entry", new { name = entry.Name.ToSeoUrl(), id = entry.ID });
+                            var category = Model.CategoryList.FirstOrDefault(i => i.ID == entry.CategoryID) ?? new Aware.ECommerce.Model.Category();
+
+                            <tr>
+                                <td>@entry.ID</td>
+                                <td>@entry.Name</td>
+                                <td>@category.Name</td>
+                                <td class="hidden-xs">@entry.DateCreated.ToString("dd.MM.yyyy hh:mm")</td>
+                                <td><a href="@entryUrl" class="btn btn-sm btn-blue"><i class="fa fa-eye"></i><span class="hidden-xs">&nbsp;Görüntüle</span></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="bottom-pager"></div>
+            }
+            else
+            {
+                <h4 class="text-danger">
+                    <i class="fa fa-exclamation-triangle"></i> Kriterlerinize uygun sonuç bulunamadı!
+                </h4>
+            }
+        </div>
+        <div class="col-md-3">
+            <div class="mb20 filter-wrapper">
+                <h4><i class="fa fa-filter"></i> Filtrele</h4>
+                @using (Html.BeginForm("ManageList", "Entry", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    var filters = new Aware.Util.View.FieldHelper(FieldDirection.Inline);
+                    var dataSource = Model.CategoryList.Select(i => new Aware.Util.Model.Item(i.ID, i.Name)).ToList();
+                    var statusValue = searchParams.Status.GetValueOrDefault();
+
+                    filters.Text("IDsString", "ID/ler", searchParams.IDsString, "entry-id", 200);
+                    filters.Text("Keyword", "Anahtar Kelime", searchParams.Keyword, "keyword", 200);
+                    filters.Text("StartDate", "Başlangıç Tarihi", (searchParams.StartDate > DateTime.MinValue ? searchParams.StartDate.ToString("dd.MM.yyyy") : string.Empty), "datepicker start-date", 30).SetAffix(string.Empty, "<i class='fa fa-calendar'></i>");
+                    filters.Text("EndDate", "Bitiş Tarihi", (searchParams.EndDate > DateTime.MinValue ? searchParams.EndDate.ToString("dd.MM.yyyy") : string.Empty), "datepicker end-date", 30).SetAffix(string.Empty, "<i class='fa fa-calendar'></i>");
+                    filters.Select("Kategori", "CategoryID", dataSource, searchParams.CategoryID, "form-control category-selector", "-- Kategori Seçimi --");
+                    filters.Select("Durum", "Status", Model.StatusList, (int)statusValue, "form-control  status-selector", "-- Durum Seçimi --");
+
+                    <div class="box-body">
+                        @Html.Partial("_FieldHelper", filters)
+
+                        <div class="field-row button-row">
+                            @Html.ButtonFor("Filtrele", "btn-blue btn-search-order")
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section head{
+    @if (Model.SearchResult != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setPager('.bottom-pager', '@Model.SearchResult.SearchParams.Size', '@Model.SearchResult.TotalSize');
+            });
+        </script>
+    }
+}

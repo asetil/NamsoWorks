@@ -1,0 +1,95 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.Payment.Model.PosDefinitionDetailModel
+@{
+    ViewBag.Title = "Sanal Pos Detay";
+    ViewBag.PageNavigation = new Item(0, "Sanal Poslar", "fa-th", "/sanal-poslar");
+    TempData["ActivePage"] = 27;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    @if (Model != null && Model.PosDefinition != null)
+                    {
+                        if (!string.IsNullOrEmpty(Model.PosDefinition.Name))
+                        {
+                            ViewBag.Title = Model.PosDefinition.Name;
+                        }
+
+                        <h2 class="card-title">@ViewBag.Title</h2>
+                        <p class="mt20 lead text-danger">
+                            <i class="fa fa-exclamation-triangle"></i> Bu ayarlar kredi kartı üzerinden işlem yapmak için kullanılacaktır. Lütfen ayarlarla ilgili teknik bilginiz yoksa bu ayarlara dokunmayın!
+                        </p>
+                        <hr/>
+
+                        <div class="online-pos-form">
+                            @using (Html.BeginForm("OnlinePosDetail", "Common", FormMethod.Post, new {enctype = "multipart/form-data", @class = "form-horizontal"}))
+                            {
+                                var fieldInfo = new FieldHelper(FieldDirection.Horizantal, 3);
+                                fieldInfo.Label("ID", Model.PosDefinition.ID.ToString(), "viewable");
+                                fieldInfo.Text("Name", "İsim", Model.PosDefinition.Name, "validate", 40);
+                                fieldInfo.Select("Banka", "PosType", Model.PosTypeList, (int) Model.PosDefinition.PosType, "bank-selector validate sbx-check");
+                                fieldInfo.Text("ImageUrl", "Görsel Yolu", Model.PosDefinition.ImageUrl, "", 100);
+
+                                fieldInfo.Text("TerminalID", "Terminal No", Model.PosDefinition.TerminalID, "validate", 40);
+                                fieldInfo.Text("UserID", "Terminal Kullanıcısı", Model.PosDefinition.UserID, "validate", 40);
+                                fieldInfo.Pasword("Password", "Şifre", Model.PosDefinition.Password, "validate", 30);
+                                fieldInfo.Text("MerchantID", "İş Yeri No", Model.PosDefinition.MerchantID, "validate", 40);
+                                fieldInfo.Select("Ödeme Şekli", "PaymentMethod", Model.PaymentMethodList, (int) Model.PosDefinition.PaymentMethod, "payment-selector validate sbx-check");
+                                fieldInfo.Text("StoreKey", "Güvenlik Anahtarı", Model.PosDefinition.StoreKey, "", 50);
+
+                                fieldInfo.Text("PostUrl", "Banka İstek Url", Model.PosDefinition.PostUrl, "", 250);
+                                fieldInfo.Text("XmlUrl", "Banka XML Url", Model.PosDefinition.XmlUrl, "", 250);
+
+                                fieldInfo.Text("SuccessUrl", "Başarılı İşlem Dönüş Url", Model.PosDefinition.SuccessUrl, "", 250);
+                                fieldInfo.Text("ErrorUrl", "Hatalı İşlem Dönüş Url", Model.PosDefinition.ErrorUrl, "", 250);
+                                fieldInfo.Text("RefundUserID", "İptal Kullanıcısı", Model.PosDefinition.RefundUserID, "", 60);
+                                fieldInfo.Pasword("RefundPassword", "İptal Şifresi", Model.PosDefinition.RefundPassword, "", 30);
+                                fieldInfo.CheckBox("IsTest", "Test Posu", Model.PosDefinition.IsTest);
+
+                                @Html.Hidden("ID", Model.PosDefinition.ID)
+                                @Html.Partial("_FieldHelper", fieldInfo)
+
+                                <hr/>
+                                <div class="text-right">
+                                    <a href="@Url.RouteUrl(RouteNames.OnlinePosRoute)" class="mr10 btn btn-info"><i class="fa fa-chevron-left"></i> Geri</a>
+                                    @Html.ButtonFor("Kaydet", "btn-success btn-save-onlinepos")
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Sanal Pos Bulunamadı!</h4>
+                            <p class="description">Böyle bir sanal pos yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.bank-selector').selecto();
+            $('.payment-selector').selecto();
+
+            $(document).on('click', '.btn-save-onlinepos', {}, function () {
+                return aware.validate('.online-pos-dialog');
+            });
+        });
+    </script>
+}

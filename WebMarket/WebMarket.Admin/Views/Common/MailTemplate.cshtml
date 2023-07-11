@@ -1,0 +1,88 @@
+﻿@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.Mail.MailTemplate
+@{
+    ViewBag.Title = Model != null ? Model.Description : "Mail Şablonu";
+    ViewBag.PageNavigation = new Item(0, "E-posta Şablonları", "fa-th", "/eposta-sablonlari");
+    TempData["ActivePage"] = 28;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model == null)
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>E-Posta Şablonu Bulunamadı!</h4>
+                            <p class="description">Böyle bir mail şablonu yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mail-template-dialog">
+                            @using (Html.BeginForm("MailTemplate", "Common", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                            {
+                                var fieldInfo = new FieldHelper(FieldDirection.Horizantal);
+                                fieldInfo.Label("ID", Model.ID.ToString(), "viewable");
+                                fieldInfo.Label("İsim", Model.Name, "viewable");
+
+                                var masterTemplates = (ViewBag.MasterTemplates as IEnumerable<Item>);
+                                fieldInfo.If(Model.ParentID > 0).Select("Ana şablon", "ParentID", masterTemplates, Model.ParentID, "parent-selector");
+                                fieldInfo.Text("Description", "Açıklama", Model.Description, "", 300);
+                                fieldInfo.If(Model.ParentID > 0).Text("Subject", "Mail Konusu", Model.Subject, "validate", 200);
+                                fieldInfo.TxtArea("Content", "İçerik", Model.Content, "validate", 8000);
+
+                                @Html.HiddenFor(m => m.ID)
+                                @Html.Partial("_FieldHelper", fieldInfo)
+                                <hr/>
+                                <div class="box-footer text-right">
+                                    <a href="@Url.RouteUrl(RouteNames.MailTemplatesRoute)" class="mr10 btn btn-info"><i class="fa fa-chevron-left"></i> Geri</a>
+                                    @Html.ButtonFor("Kaydet", "btn-success btn-save-mailtemplate")
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model != null && Model.ID > 0)
+        {
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header card-header-icon"><i class="fa fa-eye"></i></div>
+                    <div class="card-content mail-preview">
+                        <h2 class="card-title">Önizleme</h2>
+                        @Html.Raw(Model.PreviewHtml)
+                        <hr />
+                        <div>
+                            <i class="fa fa-info-circle"></i> Domain url'i için ### belirtin!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section pageheader
+{
+    <style>.mail-preview table{width: 100% !important;}</style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.parent-selector').selecto();
+            $(document).on('click', '.btn-save-mailtemplate', {}, function () {
+                return aware.validate('.mail-template-dialog');
+            });
+        });
+    </script>
+}

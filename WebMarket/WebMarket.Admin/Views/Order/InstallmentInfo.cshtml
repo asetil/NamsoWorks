@@ -1,0 +1,117 @@
+﻿@using WebMarket.Admin.Helper
+@{
+    ViewBag.Title = "Taksit & Komisyon Yönetimi";
+    TempData["ActivePage"] = 27;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li><a href="@Url.Action("OrderSettings", "Common")">Sipariş Ayarları</a></li>
+                            <li><a href="@Url.Action("ShippingMethods", "Order")"><i class="fa fa-truck"></i> Kargo Yönetimi</a></li>
+                            <li><a href="@Url.Action("OnlinePos", "Common")"><i class="fa fa-credit-card"></i> Sanal Poslar</a></li>
+                            <li><a href="@Url.Action("BankInfo", "Order")"><i class="fa fa-bank"></i> Bankalar</a></li>
+                            <li class="active"><a href="#tab_general" data-toggle="tab" aria-expanded="false"><i class="fa fa-pie-chart"></i> Taksit & Komisyon</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active installment-management" id="tab_general" ng-app="adminApp" ng-controller="installmentCtrl">
+                                <p class="mt10">
+                                    Bu alanda sanal poslarınız için taksit tanımlamaları yapabilir. Taksitlere komisyon oranı uygulayabilirsiniz.
+                                </p>
+
+                                <div ng-hide="loaded">
+                                    <img src="/resource/img/Icons/ajax-loading.gif" alt="Yükleniyor.."  style="width: auto;" />
+                                </div>
+
+                                <p class="dn lead error-panel" ng-class="{'db-imp':!hasPos()}">
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    Tanımlı sanal pos bulunamadı!
+                                    <br />
+                                    <span style="font-size: 16px; color: #232323;">Taksit tanımı yapabilmeniz için sanal pos tanımlamalısınız.</span>
+                                </p>
+
+                                <p ng-show="loaded && itemList && itemList.length==0">
+                                    Henüz taksit & komisyon tanımı yapmadınız!
+                                </p>
+
+                                <input type="text" class="form-control txt-selection-filter" ng-model="fname" maxlength="20" placeholder="Ara.." ng-show="loaded && itemList.length>=8" style="max-width: 300px;" />
+                                <table class="mt10 table" ng-show="loaded && hasPos()" style="max-width: 920px;">
+                                    <thead>
+                                        <tr>
+                                            <th width="2%">#ID</th>
+                                            <th width="15%">Banka</th>
+                                            <th width="15%">İsim</th>
+                                            <th width="10%">Taksit Sayısı</th>
+                                            <th width="10%">% Komisyon</th>
+                                            <th width="25%">İşlemler</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{newItem.ID}}</td>
+                                            <td>
+                                                <select class="form-control" ng-model="newItem.PosID" ng-class="{'error':newItem.hasError && newItem.PosID==0}">
+                                                    <option value="0">Seçiniz</option>
+                                                    <option ng-repeat="pos in posList" value="{{pos.ID}}" ng-selected="{{pos.ID == newItem.PosID}}">{{pos.Value}}</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':newItem.hasError && newItem.Name.length==0}" maxlength="100" placeholder="İsim" ng-model="newItem.Name" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control pnumber" ng-class="{'error':newItem.hasError && newItem.Count<2}" maxlength="2" placeholder="Taksit sayısı" ng-model="newItem.Count" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control dec-number" ng-class="{'error':newItem.hasError && newItem.Commission.length==0}" maxlength="6" placeholder="Komisyon" ng-model="newItem.Commission" />
+                                            </td>
+                                            <td>
+                                                @Html.ButtonFor("Ekle", "btn-sm btn-info", "plus", "ng-click='save(newItem)'")
+                                            </td>
+                                        </tr>
+
+                                        <tr ng-repeat="item in itemList | filter:{Name:fname}">
+                                            <td>{{item.ID}}</td>
+                                            <td>
+                                                <select class="form-control" ng-model="item.PosID" ng-class="{'error':item.hasError && item.PosID==0}">
+                                                    <option value="0">Seçiniz</option>
+                                                    <option ng-repeat="pos in posList" value="{{pos.ID}}" ng-selected="{{pos.ID ==item.PosID}}">{{pos.Value}}</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':item.hasError && item.Name.length==0}" maxlength="100" placeholder="İsim" ng-model="item.Name" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':item.hasError && item.Count<2}" maxlength="2" placeholder="Taksit sayısı" ng-model="item.Count" />
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-class="{'error':item.hasError && item.Commission.length==0}" maxlength="6" placeholder="Komisyon" ng-model="item.Commission" />
+                                            </td>
+                                            <td>
+                                                @Html.ButtonFor("Güncelle", "btn-sm btn-success", "check", "ng-click='save(item)'")
+                                                @Html.ButtonFor("Sil", "btn-sm btn-danger", "remove", "ng-click='remove(item)'")
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular-resource.min.js" type="text/javascript"></script>
+    @Scripts.Render("~/resource/js/angularjs")
+}

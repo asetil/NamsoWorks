@@ -1,0 +1,86 @@
+﻿@using Resources
+<footer class="footer">
+    <div class="footer-widgets">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3 col-sm-3">
+                    <div class="widget widget-categories">
+                        <h4 class="widget-title"><i class="fa fa-home"></i> WebMarket.com</h4>
+                        <p class="mb20">
+                            Türkiye’nin ilk sanal market uygulaması olan WebMarket.com Türkiye’nin marketçilik alanında en büyük e-ticaret sitesi
+                            olma vizyonuyla, 2015 yılında siz değerli müşterilerine hizmet hayatına başlamıştır.
+                        </p>
+                    </div>
+                </div>
+                <div class="mb20 col-md-3 col-sm-3">
+                    <div class="widget widget-categories">
+                        <h4 class="widget-title"><i class="fa fa-sitemap"></i> İlginizi Çekebilir</h4>
+                        <ul>
+                            <li><a href='@Url.Action("Index", "Store")'>@Resource.Stores</a></li>
+                            <li><a href='@Url.Action("Index", "Campaign")'>@Resource.Campaigns</a></li>
+                            <li><a href='/meyve-ve-sebze-urunleri-1'>Meyve & Sebze</a></li>
+                            <li><a href='/icecek-urunleri-6'>İçecek</a></li>
+                            <li><a href='/et-ve-balik-urunleri-2'>Et & Balık</a></li>
+                            <li><a href='/sut-ve-kahvaltilik-urunleri-3'>Süt & Kahvaltılık</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mb20 col-md-3 col-sm-3">
+                    <div class="widget widget-categories">
+                        <h4 class="widget-title"><i class="fa fa-support"></i> Yardım</h4>
+                        <ul>
+                            <li><a href='@Url.Action("AboutUs", "Home")'>@Resource.AboutUs</a></li>
+                            <li><a href='@Url.Action("Contact", "Home")'>@Resource.ContactUs</a></li>
+                            <li><a href='@Url.Action("SSS", "Home")'>Sıkça Sorulan Sorular</a></li>
+                            <li><a href="#">Teslimat</a></li>
+                            <li><a href="@Url.Action("MembershipAggreement", "Home")">Üyelik Sözleşmesi</a></li>
+                            <li><a href="#">Gizlilik Politikası</a></li>
+                            <li><a href="#">Site Haritası</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3">
+                    <div class="widget widget-tag-cloud">
+                        <h4 class="widget-title"><i class="fa fa-slack"></i> Sosyal Medya</h4>
+                        <ul class="social-icons">
+                            <li><a href="#" class="facebook"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#" class="twitter"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#" class="instagram"><i class="fa fa-instagram"></i></a></li>
+                            <li><a href="#" class="pinterest"><i class="fa fa-pinterest"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="footer-meta">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="mt10 copyright">Copyright @DateTime.Now.Year Aware LTD ŞTİ | All Rights Reserved</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="payments text-right">
+                        <ul>
+                            <li><img src="~/resource/img/App/visa.jpg" alt=""></li>
+                            <li><img src="~/resource/img/App/mastercard.jpg" alt=""></li>
+                            <li><img src="~/resource/img/App/paypal.jpg" alt=""></li>
+                            <li><img src="~/resource/img/App/american-express.jpg" alt=""></li>
+                            <li><img src="~/resource/img/App/visa-electron.jpg" alt=""></li>
+                            <li><img src="~/resource/img/App/maestro.jpg" alt=""></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<div class="scroll-to-top" title="Başa dön">
+    <i class="fa fa-angle-up"></i>
+</div>
+<div class="aware-toastr"></div>

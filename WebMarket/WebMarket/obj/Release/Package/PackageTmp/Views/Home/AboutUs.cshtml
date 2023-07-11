@@ -1,0 +1,116 @@
+﻿@{
+    ViewBag.Title = "Hakkımızda";
+    ViewBag.ActivePage = 7;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="mb20 container about-us">
+    @Html.ImageFor("App", "about-us2.jpg", "Hakkımızda", "mb20 about-us-header img-responsive")
+    <h4 class="block-title"><span>Biz Kimiz?</span></h4>
+    <p>
+        Türkiye’nin ilk sanal market uygulaması olan WebMarket.com Türkiye’nin marketçilik alanında en büyük e-ticaret sitesi
+        olma vizyonuyla, 2015 yılında siz değerli müşterilerine hizmet hayatına başlamıştır.
+    </p>
+    <p>
+        WebMarket.com sitesinde sunulan tüm ürünler, çeşitli marketlerde aynı fiyat ve
+
+        avantajlarla 7 gün 24 saat boyunca web üzerinden sipariş edilebilirsiniz. Pek çok
+
+        kategorideki seçkin markaları müşterilerimize özel avantajlı fiyatlarla sunuyoruz.
+
+        Çevrenizdeki yakın uzak mesafe fark etmeden hizmet veren rekabetçi fiyatları ile
+
+        marketleri ayağınıza getirdik.
+    </p>
+
+    <h4 class="mt20 block-title"><span>En Ucuz ve En Kaliteli Ürünler Kapınızda</span></h4>
+    <div class="row page-section">
+        <div class="col-md-3 col-sm-3">
+            <div class="box_home" id="one">
+                <h3>Semtini Seç</h3>
+                <p>
+                    Siz değil marketler ayağınıza gelsin
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3  col-sm-3">
+            <div class="box_home" id="two">
+                <h3>Ürünlere Göz At</h3>
+                <p>
+                    Marketler bi tıkla önünde, ürünleri incele, fiyatları karşılaştır
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3  col-sm-3">
+            <div class="box_home" id="three">
+                <h3>Siparişini Oluştur</h3>
+                <p>
+                    İhtiyacın olan ürünleri sepetine ekle, siparişini oluştur
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3  col-sm-3">
+            <div class="box_home" id="four">
+                <h3>Ürünler Kapınızda</h3>
+                <p>
+                    Hızlı ve keyifli alışveriş
+                </p>
+            </div>
+        </div>
+    </div>
+    <p>
+        WebMarket.com'un kurulma nedeni günümüzde insanlar kaliteli, güvenilir, hesaplı, kolay
+        erişilebilir , firmaları kıyaslama yapabilecek en hesaplı, ucuz ve taze ürün bulmak
+
+        konusunda sıkıntı çekiyor. WebMarket.com tüketicilerin bu sıkıntılarını gidermek amacıyla
+
+        kurulmuş bir web sitesidir. Aynı zamanda zaman kaybına da ortadan kaldırıyoruz.
+
+        Müşteriler ihtiyacı olan şeyleri sitemizden tıklıyor gelmenize gerek kalmadan biz sizin için
+
+        paket yapıp kapınıza kadar getiriyoruz. Siz değerli müşterilerimizin beklentilerini çok iyi
+
+        analiz ettiğimizden sizlere ürünlerin tazeliği ve en iyi fiyat garantisini veriyoruz.
+    </p>
+
+    <h4 class="mt20 block-title"><span>Memnuniyetiniz Bize Yeter</span></h4>
+    <p>
+        WebMarket.com ile müşterilerine artık daha iyi ve “güler yüzlü” hizmet vermek için
+
+        çalışıyoruz. Mutlu alışverişler WebMarket.com’ dan yapılır. Müşterilerinin yaptığı
+
+        alışverişten memnun ve mutlu ayrılmalarına çok önem veren
+
+        WebMarket bunu sağlamak için elinden geleni yapıyor.
+    </p>
+    <p class="mb20">
+        Ürünlerimizle ilgili her türlü istek ve şikayetinizde iletişim sayfasındaki irtibat
+
+        bilgilerimizden bize ulaşmanızı rica ederiz.
+    </p>
+</div>
+
+@section header
+{
+    <style>
+        .about-us{font-size: 16px;line-height: 1.8em;}
+        .about-us h4 { margin-top: 30px; }
+        .about-us img.img-responsive { width: 100%;}
+        .about-us .block-title{margin-bottom: 11px;}
+
+        .box_home { background: #fff; margin-bottom: 25px; padding: 15px; position: relative; font-size: 14px; color: #666; min-height: 235px; text-align: center; }
+        .box_home h3, .box_home span { font-size: 16px; font-weight: 600; }
+        .box_home#one { background: url('/resource/img/App/icon_home_1.svg') center 40px no-repeat #fff; }
+        .box_home#two { background: url('/resource/img/App/icon_home_2.svg') center 40px no-repeat #fff; }
+        .box_home#three { background: url('/resource/img/App/icon_home_3.svg') center 40px no-repeat #fff; }
+        .box_home#four { background: url('/resource/img/App/icon_home_4.svg') center 40px no-repeat #fff; }
+        .box_home h3 { margin-bottom: 5px; margin-top: 133px; }
+    </style>
+}

@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Open Api Demo</h2>
+
+@Html.Hidden("CitiBankAuthUrl", (string)ViewBag.CitiBankAuthUrl)
+
+<div class="col-md-6">
+    <input type="text" id="country" name="country" value="AU" placeholder="Ülke kodu" maxlength="20" class="form-control"/>
+    <select class="form-control sbx-state">
+        <option value="cusprofile&scope=customers_profiles">Customer Profile</option>
+        <option value="cusaccount&scope=accounts_details_transactions ">Customer Accounts</option>
+        <option value="cusaccountdetail&scope=accounts_details_transactions ">Customer Account Detail</option>
+        <option value="cuscards&scope=cards">Customer Cards</option>
+    </select>
+</div>
+<div class="col-md-6">
+    <button class="btn btn-success btn-call-api">Citibank Lets Test</button>
+</div>
+
+<div class="col-md-12">
+    <hr />
+    @Html.Raw(ViewBag.CachedData)
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).on("click", ".btn-call-api", {}, function () {
+            var url = $("#CitiBankAuthUrl").val();
+            var state = $(".sbx-state").val();
+            var countryCode = $("#country").val();
+
+            window.location.href = url + state + "&countryCode=" + countryCode;
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,64 @@
+﻿@using WebMarket.Admin.Helper
+@model List<Aware.ECommerce.Model.Brand>
+@{
+    ViewBag.Title = "Marka Yönetimi";
+    TempData["ActivePage"] = 9;
+}
+
+<section class="container-fluid brand-list">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card brand-management" ng-app="adminApp" ng-controller="brandCtrl">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="box box-primary">
+                            <div class="box-body">
+                                <p class="lead error-panel">
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    Markalar üzerinde işlem yapma yetkiniz yok!
+                                </p>
+
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="5%">#ID</th>
+                                                <th width="20%">Görsel</th>
+                                                <th width="20%">Marka</th>
+                                                <th>Durum</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var brand in Model)
+                                            {
+                                            <tr>
+                                                <td>@brand.ID</td>
+                                                <td>
+                                                    <img class="brand-image" src="/resource/img/@(brand.ImagePath)" alt="@brand.Name" />
+                                                </td>
+                                                <td>@brand.Name</td>
+                                                <td>@Html.StatusFor(brand.Status)</td>
+                                            </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-result-found danger">
+                            <i class="fa fa-info-circle"></i>
+                            <span>Tanımlı marka bulunamadı!</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

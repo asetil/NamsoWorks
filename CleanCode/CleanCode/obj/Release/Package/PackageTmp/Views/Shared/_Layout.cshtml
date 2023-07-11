@@ -1,0 +1,84 @@
+﻿@using CleanCode.Helper
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("_SeoMeta")
+    @Styles.Render(Constants.CommonCss)
+    @Scripts.Render(Constants.CommonScripts)
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700&amp;subset=latin-ext" rel="stylesheet">
+    @RenderSection("head", required: false)
+    
+    @Html.Partial("_TrackScripts")
+    @Html.Partial("_GoogleBanner", BannerType.Default)
+</head>
+<body>
+    <div class="container site-container">
+        <header>
+            <div class="col-md-12 mb20">
+                <div class="site-title col-md-3 col-sm-12 col-xs-12">
+                    <a href="#topMenu" data-toggle="collapse" class="visible-xs btn-top-menu">
+                        <i class="fa fa-navicon"></i>
+                    </a>
+                    <a href="@Url.RouteUrl(RouteNames.AboutUs)" class="visible-xs btn-about">
+                        <i class="fa fa-user"></i>
+                    </a>
+                    <a href="@Url.RouteUrl(RouteNames.Home)" class="logo">
+                        <img src="/res/img/logo.jpg" alt="osmansokuoglu.com" />
+                    </a>
+                </div>
+                <div class="hidden-xs col-md-6  col-sm-8  col-xs-8">
+                    <form class="search-form" action="/ara">
+                        <input type="text" placeholder="Ara.." name="q" class="form-control txt-search" aria-label="Makale Ara" />
+                        <button type="submit" class="btn-search"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="hidden-xs col-md-3 text-center">
+                    <a href="@Url.RouteUrl(RouteNames.AboutUs)" class="btn" style="margin-top: 30px; padding: 10px 28px;">Hakkımda</a>
+                </div>
+            </div>
+        </header>
+        <div class="site-content">
+            <div class="col-md-9">
+                @RenderBody()
+            </div>
+            <div class="col-md-3 left-panel">
+                <div class="left-panel-container">
+                    @RenderSection("leftpanel", required: false)
+
+                    @Html.Action("TopMenu", "Category")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="dn">
+        <div class="container-fluid top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <ul>
+                            <li><a href="@Url.RouteUrl(RouteNames.AboutUs)">Hakkımda</a></li>
+                            <li><a href="@Url.RouteUrl(RouteNames.SiteMapIndex)">Site Haritası</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid bottom">
+            <div class="container">Copyright © 2016 - 2017 osmansokuoglu.com</div>
+        </div>
+    </footer>
+
+    @{
+        var activeMenu = TempData["ActiveMenu"] != null ? (int)TempData["ActiveMenu"] : 0;
+        @Html.Hidden("ActiveMenu", activeMenu)
+    }
+
+    @Html.Partial("_CommonModals")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

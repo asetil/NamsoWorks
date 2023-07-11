@@ -1,0 +1,136 @@
+﻿@using Aware.Util
+@using Resources
+@model WebMarket.Models.SiteHeaderModel
+
+<div class="header">
+    <div class="hidden-xs quick-menu">
+        <div class="container">
+            <div class="fr top-bar-right">
+                <ul class="list-inline">
+                    <li class="hidden-xs"><a href="/marketler">@Resource.Stores</a></li>
+                    <li class="hidden-xs"><a href="/urunler">@Resource.Items</a></li>
+                    <li class="hidden-xs"><a href="/kampanyalar">@Resource.Campaigns</a></li>
+                    <li class="hidden-xs"><a href="@Url.Action("Index", "Basket")">@Resource.Basket_Title</a></li>
+                    <li class="hidden-xs"><a href="@Url.Action("MyOrders", "Order")">@Resource.Order_Title</a></li>
+                    <li class="hidden-xs"><a href="@Url.Action("Index", "Favorite")">@Resource.Basket_MyFavorites</a></li>
+
+                    <li class="hidden-xs dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@Resource.AboutUs <i class="fa fa-angle-down"></i></a>
+                        <ul role="menu" class="dropdown-menu">
+                            <li><a href='@Url.Action("AboutUs", "Home")'>@Resource.AboutUs</a></li>
+                            <li><a href='@Url.Action("SSS", "Home")'>@Resource.FAQ</a></li>
+                            <li><a href='@Url.Action("Contact", "Home")'>@Resource.ContactUs</a></li>
+                        </ul>
+                    </li>
+                    <li class="hidden-xs"><a href='@Url.Action("SelectRegion", "Home")'>@(Model.CurrentRegion.ID > 0 ? Model.CurrentRegion.Name + " -" : "") @Resource.SelectRegion</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container middle">
+        <div class="row" style="margin: 15px 0 20px 0;">
+            <div class="col-md-3 col-sm-3 col-xs-12 site-title">
+                <a href="/">
+                    @Html.ImageFor("App", "logo.png", "WebMarket.com", "img-responsive", "WebMarket.com")
+
+                    @*<img src="http://demandware.edgesuite.net/aban_prd/on/demandware.static/Sites-Markafoni-Site/-/default/dwee58d1d5/images/logo.svg" alt="Markafoni" width="178" height="50" onerror="this.onerror=null; this.src='http://demandware.edgesuite.net/aban_prd/on/demandware.static/Sites-Markafoni-Site/-/default/dw38cb3828/images/logo.png'">*@
+                </a>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12 search-panel collapse" id="pnlSearch">
+                <input type="text" class="search-box" placeholder="@Resource.SearchItem" maxlength="100" />
+                <button class="btn-search"><i class="fa fa-search"></i></button>
+                <div class="search-results"></div>
+            </div>
+
+            <div class="mt20 col-md-3 col-sm-3 col-member">
+                @Html.Partial("_MyAccount", Model)
+                <a href="@Url.Action("Index", "Favorite")" class="hidden-xs btn btn-favorites"><i class="fa fa-heart"></i></a>
+                <a href="#" class="btn btn-basket-summary">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span class="hidden-xs hidden-sm"> @Resource.Basket_Title </span>
+                    <span class="item-count">0</span>
+                </a>
+                <a href="javascript:void(0);" class="btn menu-toggle btn-top-menu"><i class="fa fa-bars"></i></a>
+                <a href="javascript:void(0);" class="visible-xs btn btn-search-xs collapsed" data-toggle="collapse" data-target="#pnlSearch"><i></i></a>
+
+                <div class="basket-summary-container" data-loaded="0">
+                    <div class="loading">
+                        <p class="lead">Yükleniyor..</p>
+                        <img src="/resource/img/Icons/processing.gif" class="mt10 process" alt="">
+                    </div>
+                    <div class="summary hide"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="top-menu">
+        <div class="container">
+            <nav class="navigation closed clearfix">
+                <div class="menu-toggle-close"><i class="fa fa-bars menu-toggle"></i> <span>Menü</span></div>
+                <ul class="nav sf-menu">
+
+                    @if (Model.IsLoggedIn)
+                    {
+                        <li class="megamenu visible-xs user"><a href="/bilgilerim">Merhaba, @Model.UserInfo</a></li>
+                    }
+                    else
+                    {
+                        <li class="megamenu visible-xs user"><a href="/uye-girisi">Üye Girişi</a></li>
+                    }
+
+                    <li class="megamenu visible-xs has-icon"><a href="/marketler"><i class="fa fa-tv"></i> &nbsp;Marketler</a></li>
+                    <li class="megamenu visible-xs has-icon"><a href="/urunler"><i class="fa fa-cubes"></i> &nbsp;Ürünler</a></li>
+                    <li class="megamenu visible-xs has-icon"><a href="/kampanyalar"><i class="fa fa-tags"></i> &nbsp;Kampanyalar</a></li>
+                    <li class="megamenu visible-xs has-icon"><a href="/sepetim"><i class="fa fa-shopping-cart"></i> &nbsp;Sepetim</a></li>
+                    <li class="megamenu visible-xs has-icon"><a href="/siparislerim"><i class="fa fa-truck"></i> &nbsp;Siparişlerim</a></li>
+                    <li class="megamenu visible-xs has-icon"><a href="/favorilerim"><i class="fa fa-heart"></i> &nbsp;Favorilerim</a></li>
+
+
+                    @foreach (var item in Model.TopMenuItems)
+                    {
+                        <li data-id="@item.ID" class="megamenu category">
+                            <a href='@Url.CategoryItemList(item.ID, item.Name)'>
+                                @*<i class="category-icon" style="background: url('/resource/img/Category/icon_@(item.ID).png') no-repeat;"></i>*@
+                                @item.Name
+                            </a>
+                            <ul>
+                                <li class="row">
+                                    <div class="col-md-12 menu-detail" data-id="@item.ID">
+                                        <h3 class="mb10 mb20 hidden-xs text-left">@item.Name</h3>
+                                        @foreach (var subItem in item.SubCategories)
+                                        {
+                                            <a class="sub-cat" href="@Url.CategoryItemList(subItem.ID, subItem.Name)" title="@subItem.Name">
+                                                <img class="subcat-img hidden-xs" src="/resource/img/Category/@(subItem.ID).png" alt="@subItem.Name" />
+                                                @subItem.Name.Short(16)
+                                            </a>
+                                        }
+                                        <img class="cat-img hidden-xs" src="/resource/img/Category/@(item.ID).png" alt="@item.Name" />
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+
+
+                    <li class="megamenu visible-xs has-icon"><a href="/semt-sec"><i class="fa fa-random"></i> &nbsp;Semt Değiştir</a></li>
+                    <li class="megamenu visible-xs has-icon"><a href="/iletisim"><i class="fa fa-phone"></i> &nbsp;İletişim</a></li>
+                    @if (Model.IsLoggedIn)
+                    {
+                        <li class="megamenu visible-xs logout"><a href="/oturumu-sonlandir">Oturumu Sonlandır</a></li>
+                    }
+
+                    <li data-id="0" class="megamenu hidden-xs">
+                        <a href="/kampanyalar">Kampanyalar</a>
+                    </li>
+                    <li class="megamenu visible-xs"><a href="#"></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_SiteModals", Model)
+@Html.Hidden("FavoriteProducts", Model.FavoriteProducts)
+@Html.Hidden("SiteLanguage", Aware.Common.Language == "en-US" ? 1 : 0)

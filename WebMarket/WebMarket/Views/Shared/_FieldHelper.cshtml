@@ -1,0 +1,35 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@model Aware.Util.View.FieldHelper
+@foreach (var field in Model.Fields)
+{
+    <div class="form-group @field.ParentCss">
+        @if (field.HasAffix || Model.Direction == FieldDirection.Inline)
+        {
+            if (Model.Direction != FieldDirection.Inline)
+            {
+                <label for="@field.ID" class="@Model.TitleCss">@field.Title</label>
+            }
+
+            <div class="@(field.HasAffix?"input-group":"") @(Model.Direction== FieldDirection.Horizantal ? "col-sm-"+(12 - Model.TitleColumnCount)+" horizantal":"")">
+                @Html.Partial("_Field", field)
+            </div>
+        }
+        else if (Model.Direction == FieldDirection.Horizantal)
+        {
+            <label for="@field.ID" class="@Model.TitleCss">@field.Title</label>
+            <div class="col-sm-@(12 - Model.TitleColumnCount)">
+                @Html.Partial("_Field", field)
+            </div>
+        }
+        else if (field.Type != FieldType.CheckBox)
+        {
+            <label for="@field.ID" class="@Model.TitleCss">@field.Title</label>
+            @Html.Partial("_Field", field)
+        }
+        else
+        {
+            @Html.Partial("_Field", field)
+        }
+    </div>
+}

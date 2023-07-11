@@ -1,0 +1,7 @@
+﻿@using WebMarket.Models
+@model List<MultiSliderModel>
+
+@foreach (var slider in Model)
+{
+   @Html.Partial("_MultiSlider",slider)
+}

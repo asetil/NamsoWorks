@@ -1,0 +1,39 @@
+﻿@model Aware.Util.Model.Slider
+@{
+    var isMain = (Model.ID == "main-carousel");
+}
+
+@if (Model != null && Model.Items.Any())
+{
+    <div id="@Model.ID" class="mt20 carousel slide @Model.Css" data-interval="@Model.SwitchTime" data-ride="carousel" data-type="@(isMain?"single":"multi")">
+        @if (isMain)
+        {
+            <ol class="carousel-indicators">
+                @for (var i = 0; i < Model.Items.Count; i++)
+                {
+                    <li data-target="#@Model.ID" data-slide-to="@i" class="@(i==0 ? "active":"")"></li>
+                }
+            </ol>
+        }
+
+        <div class="carousel-inner">
+            @foreach (var item in Model.Items)
+            {
+                <div class="@(Model.Items.IndexOf(item) == 0  ? "active" : "") item">
+                    @Html.Raw(item.Value)
+                </div>
+            }
+        </div>
+
+        @if (Model.Items.Count() > 1)
+        {
+            <a class="carousel-control left" href="#@Model.ID" data-slide="prev">
+                <i class="fa fa-2x fa-angle-left"></i>
+            </a>
+
+            <a class="carousel-control right" href="#@Model.ID" data-slide="next">
+                <i class="fa fa-2x fa-angle-right"></i>
+            </a>
+        }
+    </div>
+}

@@ -1,0 +1,150 @@
+﻿@using Aware.ECommerce.Model
+@using Aware.ECommerce.Search
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+
+@model OrderSearchResult
+@{
+    ViewBag.Title = "Siparişlerim";
+    TempData["ActivePage"] = 6;
+
+    var searchParams = Model != null ? (OrderSearchParams)Model.SearchParams : null;
+    var storeInfo = searchParams != null && searchParams.StoreIDs != null ? searchParams.StoreIDs.FirstOrDefault() : 0;
+}
+
+<section class="container-fluid order-list">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-table"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title"> @ViewBag.Title</h2>
+
+                    @if (Model!=null && Model.HasResult)
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#ID</th>
+                                        <th width="15%">Sipariş Veren</th>
+                                        <th width="8%">Tarih</th>
+                                        <th width="15%">Durum</th>
+                                        <th width="12%">Ödeme Şekli</th>
+                                        <th width="10%">İndirimler</th>
+                                        <th width="10%">Tutar</th>
+                                        <th width="12%">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in Model.Results)
+                                    {
+                                        <tr>
+                                            <td style="text-align: center;">@order.ID</td>
+                                            <td class="td-name">
+                                                <a href="#">@order.OrderDetail.User.Name</a><br />
+                                                <small>@order.OrderDetail.Store.DisplayName</small>
+                                            </td>
+                                            <td>@order.DateCreated.ToString("d")</td>
+                                            <td>
+                                                <span class="status status-@((int) order.Status)">
+                                                    <i class="fa fa-circle"></i>
+                                                    @Html.LookupValue(Model.OrderStatusList, (int)order.Status)
+                                                </span>
+                                            </td>
+                                            <td><span class="text-black">@Html.LookupValue(Model.PaymentTypes, order.PaymentType)</span></td>
+                                            <td class="text-right">@Html.ToPrice(order.DiscountTotal)</td>
+                                            <td class="text-right">@Html.ToPrice(order.GrossTotal)</td>
+                                            <td>
+                                                <a href="@Url.Action("Detail", new {id = order.ID})" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Görüntüle</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr />
+                        <div class="fl @(Model.TotalSize <= searchParams.Size ? "db mb10" : "")">
+                            @Html.PagingInfo(Model, "siparişten")
+                        </div>
+                        <div class="fr mt10 order-pager"></div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Kriterlerinize uygun sipariş bulunamadı.</h4>
+                            <p class="description">Kriterlerinizi değiştirerek tekrar filtreleyebilirsiniz.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (Model != null && searchParams != null)
+        {
+            var storeList = Model.StoreList != null ? Model.StoreList : new List<Store>();
+            var dataSource = storeList.Select(i => new Item(i.ID, i.DisplayName)).ToList();
+
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header card-header-icon"><i class="fa fa-filter"></i></div>
+                    <div class="card-content">
+                        <h2 class="card-title">Filtrele</h2>
+
+                        @using (Html.BeginForm("Index", "Order", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            var orderFilters = new FieldHelper(FieldDirection.Inline);
+                            orderFilters.Text("ids", "Sipariş ID/leri", searchParams.IDsString, "order-id", 200);
+                            orderFilters.Text("sdate", "Başlangıç Tarihi", (searchParams.StartDate > DateTime.MinValue ? searchParams.StartDate.ToString("dd.MM.yyyy") : string.Empty), "datepicker start-date", 30).SetAffix(string.Empty, "<i class='fa fa-calendar'></i>");
+                            orderFilters.Text("edate", "Bitiş Tarihi", (searchParams.EndDate > DateTime.MinValue ? searchParams.EndDate.ToString("dd.MM.yyyy") : string.Empty), "datepicker end-date", 30).SetAffix(string.Empty, "<i class='fa fa-calendar'></i>");
+                            orderFilters.Select("Market", "sid", dataSource, storeInfo, "store-selector", "-- Market Seçimi --");
+                            orderFilters.Select("Ödeme Şekli", "pt", Model.PaymentTypes, (int)searchParams.PaymentType, "payment-type-selector", "-- Ödeme Şekli Seçimi --");
+                            orderFilters.Select("Sipariş Durumu", "st", Model.OrderStatusList, (int)searchParams.OrderStatus, "status-selector", "-- Sipariş Durumu Seçimi --");
+
+                            @Html.Partial("_FieldHelper", orderFilters)
+
+                            <div class="field-row button-row">
+                                @Html.ButtonFor("Filtrele", "btn-success btn-search-order")
+                                @Html.ButtonFor("Temizle", "btn-danger btn-clean-form", "trash")
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section pageheader{
+    <link href="~/resource/css/jquery-ui.css" rel="stylesheet" />
+    <script src="~/resource/js/jquery-ui.js"></script>
+    <script src="~/resource/js/order.js"></script>
+
+    @if (Model != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setPager('.order-pager', '@Model.SearchParams.Size', '@Model.TotalSize');
+            });
+        </script>
+    }
+
+    <style>
+        .order-list .status i { margin-right: 6px; font-size: 12px; }
+        .order-list .status.status-1 i { color: #ffd700; }
+        .order-list .status.status-2 i { color: #5FCAFF; }
+        .order-list .status.status-3 i { color: #00ced1; }
+        .order-list .status.status-4 i { color: #41E28A; }
+        .order-list .status.status-5 i { color: yellowgreen; }
+        .order-list .status.status-6 i { color: #41b923; }
+        .order-list .status.status-7 i { color: #dc143c; }
+
+        .order-list .badge { background: transparent; border: 1px solid #5c5c5c; }
+        .order-list .badge.badge-2 { background: transparent; border: 1px solid #dc143c; color: #dc143c; }
+    </style>
+}

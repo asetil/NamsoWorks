@@ -1,0 +1,10 @@
+﻿@model Aware.ECommerce.Model.OrderViewModel
+
+@*@foreach (var item in Model.ShippingMethods)
+{
+    var shippingMethod = Util.Evaluate(item, Model.Basket);
+    <div class='shipping-method @(item.ID==Model.SelectedShippingMethod?"selected":"")' data-shipping-id="@item.ID" data-shipping-cost="@shippingMethod.Price.ToString().Replace(",",".")">
+        <i></i>
+        <span>@shippingMethod.Description</span>
+    </div>
+}*@

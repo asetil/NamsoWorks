@@ -1,0 +1,107 @@
+﻿@using Aware.ECommerce.Util
+@using Aware.Util
+@using WebMarket.Helper
+
+@model WebMarket.Models.ProductViewModel
+@{
+    var product = Model.Product;
+    var imagePath = Html.ImagePath(product.DefaultImage.Path, "m");
+    var zoomImagePath = Html.ImagePath(product.DefaultImage.Path, "l");
+    var images = product.ImageInfo.GetFiles();
+}
+
+<div class="image-container">
+    <div class="small-images">
+        @foreach (var img in images)
+        {
+            <img src="@Html.ImagePath(img.Path, "s")" alt="" title="" />
+        }
+    </div>
+
+    <div class="swiper-container medium-images">
+        <div class="swiper-wrapper">
+            @foreach (var img in images)
+            {
+                <div class="swiper-slide">
+                    <img class="product-image" src="@Html.ImagePath(img.Path, "m")" data-zoom-image="@Html.ImagePath(img.Path, "l")" alt="@product.Name" title="@product.Name">
+                </div>
+            }
+        </div>
+
+        @if (images.Count() > 1)
+        {
+            <div class="swiper-pagination"></div>
+            @*
+                <div class="swiper-button-next swiper-button-black"></div>
+                <div class="swiper-button-prev swiper-button-black"></div>
+            *@
+        }
+    </div>
+</div>
+
+
+
+@*<div class="image-container">
+        <img class="product-image" src="@imagePath" data-zoom-image="@zoomImagePath" alt="@product.Name" title="@product.Name">
+        <div class="small-images">
+            @foreach (var img in images)
+            {
+                <img src="@Html.ImagePath(img.Path, "s")" alt="" title="" />
+            }
+        </div>
+    </div>*@
+
+<script>
+    var imageCount = 0;
+    $(document).ready(function () {
+        imageCount = $(".image-container .medium-images .product-image").length;
+        if (window.outerWidth >= 720) {
+            $('.small-images img').click(function () {
+                $('.small-images img').removeClass('selected');
+                $(this).addClass('selected');
+
+                var zoomedImg = $(".image-container .medium-images .product-image.active");
+                $.removeData(zoomedImg, 'elevateZoom');//remove zoom instance from image
+                $('.zoomContainer').remove();// remove zoom container from DOM
+
+                var index = $(this).index();
+                $(zoomedImg).removeClass("active");
+                $(".image-container .medium-images .product-image:eq(" + index + ")").addClass("active");
+                $(".swiper-pagination .swiper-pagination-bullet:eq(" + index + ")").click();
+
+                setTimeout(function () {
+                    $('.product-image.active').elevateZoom({
+                        cursor: "crosshair",
+                        //zoomType: "inner",
+                        zoomWindowFadeIn: 500,
+                        zoomWindowFadeOut: 500,
+                        scrollZoom: true,
+                        zoomWindowWidth: 450,
+                        zoomWindowHeight: 640,
+                        tint: true,
+                        tintColour: '#232323',
+                        tintOpacity: 0.8,
+                        responsive: true
+                    });
+                }, 300);
+
+                //var smallImage = $(this).attr('src');
+                //$('#product-image').data('zoom-image', smallImage.replace("/s/", "/l/"));
+                //$('#product-image').attr('src', smallImage.replace("/s/", "/m/"));
+            });
+            $('.small-images img:eq(0)').click();
+        }
+
+        if (imageCount > 1) {
+            var swiper = new Swiper('.medium-images', {
+                //nextButton: '.swiper-button-next',
+                //prevButton: '.swiper-button-prev',
+                spaceBetween: 10,
+                pagination: '.swiper-pagination',
+                paginationClickable: true,
+                //preloadImages: false,
+                //lazyLoading: true
+            });
+        }
+    });
+</script>

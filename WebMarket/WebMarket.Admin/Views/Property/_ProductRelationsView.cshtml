@@ -1,0 +1,114 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.ECommerce.Model.Custom.ProductRelationsModel
+
+@if (Model != null && Model.HasProperty)
+{
+    <table class="table table-properties">
+        <thead>
+            <tr>
+                <th width="5%">#ID</th>
+                <th width="15%">Özellik</th>
+                <th width="35%">Değer</th>
+                <th width="15%">Sıra</th>
+                @if (Model.ViewMode == ViewTypes.Editable)
+                {
+                    <th width="25%">İşlemler</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model.PropertyList)
+            {
+                var relation = Model.GetRelation(property.ID);
+                var value = Model.GetRelationValue(property, relation.Value);
+                var isAdded = relation.ID > 0 && relation.Status == Statuses.Active;
+
+                if (Model.ViewMode == ViewTypes.Editable)
+                {
+                    <tr class="@(isAdded?"":"new")" data-property-id="@property.ID" data-relation-id="@relation.ID">
+                        <td>@property.ID</td>
+                        <td>@property.Name</td>
+                        <td>
+                            <span class="viewable lbl-value">@Html.Raw(value)</span>
+                            @if (property.Type == PropertyType.Text)
+                            {
+                                <input type="text" class="form-control validate relation-value" value="@value" placeholder="Değer" maxlength="250" />
+                            }
+                            else if (property.Type == PropertyType.Html)
+                            {
+                                <textarea class="form-control validate relation-value" placeholder="Değer" maxlength="250">
+                                    @Html.Raw(value)
+                                </textarea>
+                            }
+                            else if (property.Type == PropertyType.Selection)
+                            {
+                                var itemList = Model.SelectionList.Where(i => i.ParentID == property.ID).Select(i => new Item(i.ID, i.Name)).ToList();
+                                var selecto = new Selecto(string.Empty, itemList, relation.Value.Int(), "form-control  validate sbx-check relation-value", string.Empty, "Seçiniz..");
+                                @Html.Raw(selecto.Draw())
+                            }
+                            else if (property.Type == PropertyType.YesNo)
+                            {
+                                var selecto = new Selecto(string.Empty, Model.HasNoOptionList, relation.Value.Int(), "form-control  validate sbx-check relation-value", string.Empty, "Seçiniz..");
+                                @Html.Raw(selecto.Draw())
+                            }
+                        </td>
+                        <td>
+                            <span class="viewable lbl-sort-order">@relation.SortOrder</span>
+                            <input type="text" class="form-control validate sort-order" value="@relation.SortOrder" placeholder="Sıra" maxlength="3" />
+                        </td>
+                        <td>
+                            @if (isAdded)
+                            {
+                                @Html.ButtonFor("Güncelle", "btn-success btn-edit-relation", "edit")
+                            }
+                            else
+                            {
+                                @Html.ButtonFor("Ekle", "btn-info btn-edit-relation", "plus")
+                            }
+
+                            @Html.ButtonFor("Kaydet", "btn-success btn-save-relation")
+                            @Html.ButtonFor("Sil", "ml10 btn-danger btn-remove-relation", "remove")
+                            @Html.ButtonFor("Vazgeç", "ml10 btn-default btn-cancel-relation", string.Empty)
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td>@property.ID</td>
+                        <td>@property.Name</td>
+                        <td><span class="viewable">@Html.Raw(value)</span></td>
+                        <td><span class="viewable">@relation.SortOrder</span></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="badge badge-noitem">
+        <i class="fa fa-info-circle"></i> Sistemde tanımlı özellik bulunamadı!
+    </div>
+}
+
+<style>
+    .table-properties tr .relation-value, .table-properties tr .sort-order { display: none; }
+    .table-properties tr .btn-save-relation { display: none; }
+    .table-properties tr .btn-cancel-relation { display: none; }
+    .table-properties tr span.viewable { width: 100%; display: block; height: 34px; padding: 6px 10px;background: #eee; }
+
+    .table-properties tr.edit-mode .relation-value, .table-properties tr.edit-mode .sort-order { display: inline-block; }
+    .table-properties tr.edit-mode span.viewable { display: none; }
+    .table-properties tr.edit-mode .btn-save-relation { display: inline-block; }
+    .table-properties tr.edit-mode .btn-cancel-relation { display: inline-block; }
+    .table-properties tr.edit-mode .btn-edit-relation { display: none; }
+    .table-properties tr.edit-mode .btn-remove-relation { display: none; }
+    .table-properties tr.edit-mode span.viewable { display: none; }
+    .table-properties tr.new .btn-remove-relation { display: none; }
+</style>

@@ -1,0 +1,74 @@
+﻿@using Aware.ECommerce
+@using Aware.Util
+@using Aware.ECommerce.Util
+@using WebMarket.Helper
+@model Aware.ECommerce.Model.Store
+@{
+    ViewBag.Title = Model.DisplayName;
+    ViewBag.ActivePage = 1;
+    ViewBag.HasProduct = true;
+    var workInfo = Model.GetWorkTimeInfo().FirstOrDefault(i => i.Key.Contains("*"));
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@Model.DisplayName</h1>
+        </div>
+    </div>
+</section>
+
+<div class="container store">
+    @Html.Hidden("store-id", Model.ID)
+
+    <div class="col-md-3">
+        @Html.ImageFor(string.Empty, Model.DefaultImage.Path, Model.DisplayName, "image", Model.DisplayName)
+    </div>
+
+    <div class="col-md-9">
+        <p class="text-justify description">@Model.Description</p>
+    </div>
+
+    <div class="col-md-9">
+        <table class="table table-condensed table-bordered">
+            <tr>
+                <th>Minimum Tutar</th>
+                <th>Servis Saatleri</th>
+                <th>Servis Bölgeleri</th>
+            </tr>
+            <tr>
+                <td>@Model.MinOrderAmount.ToPrice()</td>
+                <td>Bugün @workInfo.Value</td>
+                <td>@(string.Join(", ", Model.ServiceRegions.Select(i => i.Name)))</td>
+            </tr>
+        </table>
+    </div>
+    <hr class="page-divider">
+
+
+    <!--Ürün filtesinde market filtre seçiminin korunması için-->
+    <div class="dn" id="filterByStore" data-id="@Model.ID">@Model.DisplayName.ToSeoUrl()</div>
+
+    <div class="items-panel">
+        @Html.Action("Search", "Product", new { sid = Model.ID })
+    </div>
+</div>
+
+@section header{
+    <style>
+        .store .image { width: 100%; height: 320px; display: block; margin-right: 20px; border: 1px solid #ccc; margin-bottom: 20px; }
+        .store .description { font-size: 18px; line-height: 1.8em; margin-bottom: 20px; font-weight: 300; }
+        .store .store-field { margin-top: 10px; float: left; width: 600px; clear: inherit; }
+        .store .store-field .field-title { font-weight: bold; width: auto; }
+        .store .store-field .field-label { display: inline-block; margin-top: 6px; }
+        .store .store-field .store-title { color: #40BAEB; }
+        .store .isopen { padding: 20px; font-weight: bold; position: absolute; right: 0px; }
+        .store .info { display: block; padding: 5px 10px; font-weight: bold; color: #000; margin-right: 10px; margin-top: 0px; }
+        .store .info.open, .store .info.closed { color: #dc143c; }
+        .store .info.region { color: #9932cc; }
+
+        @@media screen and (max-width:740px) {
+            .store .description { font-size: 15px; font-weight: 400; }
+        }
+    </style>
+}

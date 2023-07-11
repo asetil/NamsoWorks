@@ -1,0 +1,92 @@
+﻿@using Aware.Util
+@using CleanFramework.Business.Model;
+@using CleanCode.Helper;
+
+@model Aware.Search.SearchResult<Entry>
+@{
+    var searchParams = Model != null ? Model.SearchParams as EntrySearchParams : new EntrySearchParams();
+    var pageTitle = searchParams != null ? searchParams.GetTitle("Yazılım Makaleleri") : "Yazılım Makaleleri";
+    ViewBag.SeoModel = Html.GetHomePageSeoModel(pageTitle);
+    TempData["ActiveMenu"] = searchParams.CategoryID;
+}
+
+<div class="ml10 mt20 entry-list">
+    <h1 class="dn text-capitalize">@pageTitle</h1>
+    @if (Model != null && Model.HasResult)
+    {
+        var cnt = 0;
+        foreach (var entry in Model.Results)
+        {
+            var entryUrl = Url.Action("Detail", "Entry", new { name = entry.Name.ToSeoUrl(true), id = entry.ID });
+            var imgInfo = !string.IsNullOrEmpty(entry.ImageInfo) ? entry.ImageInfo : "/res/img/entry/no-image.png";
+            cnt++;
+
+            <div class="entry">
+                <h2 class="name">
+                    <a href="@entryUrl">@entry.Name</a>
+                </h2>
+
+                <div class="summary">
+                    @Html.Raw(entry.Summary)
+                    <p class="mt20">
+                        <a class="btn btn-continue" href="@entryUrl">Görüntüle</a>
+
+                        <div class="entry-info">
+                            <span class="info date">
+                                <i class="fa fa-calendar"></i> @entry.DateCreated.ToString("dd MMM yyyy")
+                            </span>
+
+                            @if (entry.Category != null)
+                            {
+                            <span class="info"><i class="fa fa-tag"></i> @entry.Category.Name</span>
+                            }
+
+                            @if (!string.IsNullOrEmpty(entry.Author))
+                            {
+                            <span class="info user"><i class="fa fa-user"></i> @entry.Author</span>
+                            }
+                        </div>
+                    </p>
+                </div>
+
+                <div class="img-container">
+                    <img src="@imgInfo" alt="@entry.Name" />
+                </div>
+            </div>
+            <hr />
+
+            if (cnt == 4)
+            {
+                @Html.Partial("_GoogleBanner", BannerType.BannerFeed)
+                <hr />
+            }
+        }
+        <div class="mb20 bottom-pager"></div>
+    }
+    else
+    {
+        <div class="panel-warn no-search-result">
+            <p>
+                <i class="fa fa-4x fa-search"></i>
+            </p>
+            <h2>Sonuç Bulunamadı</h2>
+            <p class="lead">Arama kriterlerinize uygun sonuç bulamadık!</p>
+        </div>
+    }
+</div>
+
+@section scripts{
+    @if (Model != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setPager('.bottom-pager', '@Model.SearchParams.Size', '@Model.TotalSize');
+            });
+        </script>
+    }
+}
+
+@section leftpanel
+{
+    @Html.Partial("_GoogleBanner", BannerType.BannerLeftPanel)
+}

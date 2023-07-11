@@ -1,0 +1,83 @@
+﻿@using Aware.Util.Enums
+@using Aware.Util.Lookup
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.ECommerce.Model.Custom.SiteModel
+@{
+    TempData["ActivePage"] = 26;
+    ViewBag.Title = "Site Ayarları";
+}
+
+<section class="container-fluid site-settings">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    
+                    @using (Html.BeginForm("SiteSettings", "Common", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                    {
+                        var info = "<i title='Ürün detayında taksit seçeneklerinin gösterilip gösterilmeyeceğini belirler. Eğer tanımlı sanal pos yoksa bu ayar devre dışı kalır!' data-toggle='tooltip' class='fa fa-info-circle'></i>";
+                        var languageInfo = "<i title='Sitenizde birden fazla dil kullanmak isterseniz bu ayarı aktif hale getirin!' data-toggle='tooltip' class='fa fa-info-circle'></i>";
+                        var yesNoList = ViewBag.YesNoOptions as List<Lookup>;
+
+                        var fields = new FieldHelper(FieldDirection.Horizantal, 3);
+                        fields.BtnGroup("Yorum Listeleme?", "DisplayComments", yesNoList, Model.DisplayComments ? "1" : "0").SetAsBool();
+                        fields.BtnGroup("Yeni Yorum Ekleme?", "AllowNewComment", yesNoList, Model.AllowNewComment ? "1" : "0").SetAsBool();
+                        fields.BtnGroup("Sosyal Ağ Üyelik?", "AllowSocialLogin", yesNoList, Model.AllowSocialLogin ? "1" : "0").SetAsBool();
+                        fields.BtnGroup("Sosyal Ağ Paylaşım?", "AllowSocialShare", yesNoList, Model.AllowSocialShare ? "1" : "0").SetAsBool();
+                        fields.BtnGroup("Ürün Karşılaştırma?", "AllowProductCompare", yesNoList, Model.AllowProductCompare ? "1" : "0").SetAsBool();
+                        fields.BtnGroup(info + " Ürün Taksit Seçenekleri?", "ShowProductInstallments", yesNoList, Model.ShowProductInstallments ? "1" : "0").SetAsBool();
+                        fields.BtnGroup(languageInfo + " Çoklu Dil?", "UseMultiLanguage", yesNoList, Model.UseMultiLanguage ? "1" : "0").SetAsBool();
+
+                        var configFields = new FieldHelper(FieldDirection.Horizantal);
+                        configFields.Text("FacebookApiKey", "Facebook Api Key", Model.FacebookApiKey, "", 500);
+                        configFields.Text("FacebookApiSecret", "Facebook Api Secret", Model.FacebookApiSecret, "", 500);
+                        configFields.Text("GoogleApiKey", "Google Api Key", Model.GoogleApiKey, "", 500);
+                        configFields.Text("GoogleApiSecret", "Google Api Secret", Model.GoogleApiSecret, "", 500);
+                        configFields.Text("ReCaptchaSecret", "ReCaptcha Secret", Model.ReCaptchaSecret, "", 500);
+
+                        var mailFields = new FieldHelper(FieldDirection.Horizantal);
+                        mailFields.Text("MailHost", "Host", Model.MailHost, "validate", 20);
+                        mailFields.Text("MailPort", "Port", Model.MailPort, "validate", 6);
+                        mailFields.Text("MailUser", "Kullanıcı Adı", Model.MailUser, "validate", 50);
+                        mailFields.Pasword("MailPassword", "Şifre", Model.MailPassword, "validate", 20);
+
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab_general" data-toggle="tab" aria-expanded="false">Genel Ayarlar</a></li>
+                                <li class=""><a href="#tab_mail" data-toggle="tab" aria-expanded="false">Mail Ayarları</a></li>
+                                <li class=""><a href="#tab_other" data-toggle="tab" aria-expanded="false">Diğer Ayarlar</a></li>
+                                <li><a href="/kullanici-izinleri">Kullanıcı İzinleri</a></li>
+                                <li><a href="/slider-ogeleri">Anasayfa Manşet</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_general">
+                                    @Html.Partial("_FieldHelper", fields)
+                                </div>
+                                <div class="tab-pane" id="tab_mail">
+                                    @Html.Partial("_FieldHelper", mailFields)
+                                </div>
+                                <div class="tab-pane" id="tab_other">
+                                    <p class="lead">Bu ayarlar sitede kullanıcıların sosyal ağlarla giriş yapabilmesi için gerekli bilgiyi tutar.</p>
+                                    @Html.Partial("_FieldHelper", configFields)
+                                </div>
+                            </div>
+                            <hr/>
+                            @Html.ButtonFor("Değişiklikleri Yayınla", "mr10 btn-info btn-clear-cache", "history", "data-cache-key='SITE_SETTINGS'")
+                            @Html.ButtonFor("Kaydet", "btn-success btn-save-settings")
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <style type="text/css">
+        .site-settings div.cbx { margin-top: 9px; }
+    </style>
+}

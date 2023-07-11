@@ -1,0 +1,180 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util.Enums
+@using Aware.Util.View
+@using WebMarket.Helper;
+@using Resource = Resources.Resource
+@model WebMarket.Models.SiteHeaderModel
+
+<div class="modal fade login-modal" id="loginModal">
+    <div class="modal-dialog">
+        <div class="modal-body wrapper-box pr">
+            <button type="button" class="close pa" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="col-md-12 login-dialog">
+                <h2 class="modal-title mb10">@Resource.Account_LoginTitle</h2>
+
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                {
+                    var fields = new FieldHelper(FieldDirection.Vertical);
+                    fields.Text("Email", Resource.Email, string.Empty, "validate email-check", 30);
+                    fields.Pasword("Password", Resource.Password, string.Empty, "validate", 10);
+                    //fields.CheckBox("RememberMe", Resource.Account_RememberMe, true);
+
+                    <div class="login-description">@Resource.Account_LoginMessage</div>
+
+                    @Html.AntiForgeryToken()
+                    @Html.Partial("_FieldHelper", fields)
+                }
+
+                <div class="field-row">
+                    @Html.ButtonFor(Resource.Account_Login, "btn-green btn-login", string.Empty)
+                </div>
+
+                <div class="field-row">
+                    <a href="javascript:void(0);" class="fl nav-link hover btn-forgot-password-dialog">@Resource.Account_ForgotPassword</a>
+                    <a href="@Url.Action("Register", "Account")" class="fr nav-link btn-signup dib">@Resource.Account_Register</a>
+                </div>
+
+                <div class="dbfl social-container">
+                    <hr />
+                    <a href="javascript:void(0)" class="btn btn-facebook facebook-login"><i class="fa fa-facebook"></i> Facebook</a>
+                    <a href="javascript:void(0)" class="ml10 btn btn-google google-login"><i class="fa fa-google-plus"></i> Google</a>
+                </div>
+            </div>
+
+            <div class="col-md-12 forgot-password-dialog text-center">
+                <div style="text-align: center;">
+                    <i class="fa  fa-unlock-alt" style="font-size: 100px;"></i>
+                </div>
+                <h2 class="modal-title">@Resource.Account_ForgotPassword</h2>
+                <p class="mb20">Üyeliğinize ait <b>e-posta</b> adresinizle yeni şifre oluşturma linki talep edebilirsiniz.</p>
+
+                @using (Html.BeginForm("ForgotPassword", "Account"))
+                {
+                    var fields = new FieldHelper(FieldDirection.Inline);
+                    fields.Text("Username", Resource.Email, string.Empty, "validate email-check", 30);
+
+                    @Html.AntiForgeryToken()
+                    @Html.Partial("_FieldHelper", fields)
+                }
+
+                <div class="db">
+                    @Html.ButtonFor("Şifremi Sıfırla", "btn-green btn-forgot-password", string.Empty)
+                </div>
+
+                <div class="db mt10 mb20">
+                    <a class="nav-link btn-login-dialog" href="javascript:void();"><i class="fa fa-arrow-left"></i> Üye Girişi</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="message-dialog">
+    <h2 class="title">İşlem Başarılı</h2>
+    <img src="/resource/img/Icons/processing.gif" class="mt10 process">
+    <div class="md mt10 message-content">Ürün başarıyla sepete eklendi.</div>
+    <p>@Html.ButtonFor(Resource.OK, "md mt20 btn btn-red btn-close-dialog", string.Empty)</p>
+</div>
+
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <h2 class="mt20 mb10 title"><i class="fa fa-exclamation-circle"></i> <span>Lütfen Onaylayın</span></h2>
+            <p class="lead mb10 message msg"></p>
+
+            <div class="button-row">
+                @Html.ButtonFor(Resource.Yes, "md btn btn-red btn-yes", string.Empty)
+                @Html.ButtonFor(Resource.No, "ml10 md btn btn-gray btn-no", string.Empty, "data-dismiss='modal'")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div onclick="return false;" class="PopupFade" id="progressPopupFade"></div>
+<div id="progressPopup" class="Popup">
+    <div class="wait-info">
+        <span class="message">@Resource.PleaseWait</span>
+        @Html.ImageFor("Icons", "bar-loading.gif")
+    </div>
+</div>
+
+<div class="modal fade product-view-modal product" tabindex="100" id="ProductViewModal">
+    <div class="modal-dialog">
+        <div class="modal-body wrapper-box free product-view" data-pid="0">
+            <button type="button" class="close pa" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="col-md-6 col-sm-6 gutter-0 mb20 image">
+                <div class="swiper-container popup-images">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="/resource/img/Icons/notfound.jpg" class="img-responsive" alt="" />
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <h1 class="name"></h1>
+                <p class="mb10 description"></p>
+                <div class="dbfl mt10 mb10 items"></div>
+                <div class="mb10 mt10 fl formatted-price">
+                    <span class="lp">0 TL</span>
+                    <span class="rp">0 TL/adet</span>
+                    <span class="ml10 list-price">0 TL/adet</span>
+                </div>
+
+                <div class="mb10 mt10 pnl-button quantity-row">
+                    <div class="quantity">
+                        @Html.QuantityBox("Quantity", "quantity-box", 1, MeasureUnits.Unit, string.Empty)
+                        <button type="submit" class="btn btn-green btn-add-to-basket">Sepete Ekle</button>
+                    </div>
+                    <button class="btn btn-warn btn-no-stock">Tükendi</button>
+                </div>
+
+                <div class="mb20 mt10 pnl-button">
+                    <span class="mr10 btn-favorite"><i class="fa fa-heart"></i> Favorilerime Ekle</span>
+
+                    @if (Model.AllowProductCompare)
+                    {
+                        <span class="btn-compare-product"><i class="fa fa-random"></i> Karşılaştır</span>
+                    }
+                </div>
+                <hr class="page-divider" />
+
+                <p class="lead text-center items-info"></p>
+                <p class="lead text-center">
+                    @Html.ButtonFor(string.Empty, "btn-gray btn-preview prev", "chevron-left", "title='Önceki ürünü görüntüle'")
+                    <a href="javascript:void(0);" class="btn btn-green-border btn-detail" target="_blank">Detaylı İncele</a>
+                    @Html.ButtonFor(string.Empty, "btn-gray btn-preview next", "chevron-right", "title='Sonraki ürünü görüntüle'")
+                </p>
+            </div>
+
+            <div class="hidden-xs pa" style="bottom: 9px;">
+                <span style="font-size: 12px;"><i class="fa fa-info-circle"></i> Klavyenin sağ/sol tuşları ile ürünler arasında gezinebilirsiniz.</span>
+            </div>
+            <input type="hidden" id="SelectedItemID" value="0" />
+        </div>
+    </div>
+</div>
+
+@if (Model.AllowProductCompare)
+{
+    <div class="product-compare-panel">
+        <div class="container">
+            <div class="fl mt20 mr10 text-bold">Seçilen Ürünler</div>
+            <div class="compare-list"></div>
+            <div class="actions">
+                <a href="/urun-karsilastir" class="ml10 mt20 btn btn-green btn-compare-selected disabled">Karşılaştır</a>
+                <button type="button" class="close pa btn-close-compare">×</button>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="userNotificationModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <button type="button" class="close pa" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <div class="notification-content"> </div>
+        </div>
+    </div>
+</div>

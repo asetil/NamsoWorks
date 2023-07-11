@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Sayfa Bulunamadı";
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 error-page">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-binoculars"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    <div class="text-center">
+                        <p>
+                            <img src="/resource/img/App/not_found.png" alt=""/>
+                        </p>
+                        <p class="mt20 description">
+                            Üzgünüz erişmek istediğiniz sayfayı bulamadık!
+                            <br/> Sayfa yada kaynak silinmiş olabilir. Lütfen adresi kontrol edip tekrar deneyin.
+                        </p>
+                        <p class="mt20">
+                            <a href="/" class="btn btn-info"><i class="fa fa-home"></i> &nbsp;Anasayfaya Git</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,54 @@
+﻿@using WebMarket.Admin.Helper
+<div class="variant-selections">
+    <p class="error-panel text-danger" ng-hide="variantSelections.length>0">
+        Bu öğe/ürün için henüz varyant kombinasyonu seçmediniz!
+    </p>
+
+    <input type="text" class="form-control txt-selection-filter" ng-model="fname" maxlength="20" placeholder="Ara.." ng-show="variantSelections.length>8" />
+    <table class="mt20 table variant-selections" ng-show="variantSelections.length>0">
+        <thead>
+            <tr>
+                <th width="30%">Kombinasyon</th>
+                <th width="20%">Stok</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="selection in variantSelections | filter:{Name:fname}">
+                <td class="name">{{selection.Name}}</td>
+                <td><input type="text" class="form-control text-right validate" name="Stock" ng-model="selection.Stock" maxlength="10" /></td>
+                <td>
+                    @Html.ButtonFor("Güncelle", "btn-sm btn-success", "check", "ng-click='updateVariantSelection(selection)'")
+                    @Html.ButtonFor("Sil", "ml10 btn-sm btn-danger", "remove", "ng-click='removeVariantSelection(selection)'")
+                </td>
+            </tr>
+            <tr ng-show="(variantSelections | filter:{Name:fname}).length==0">
+                <td colspan="3" class="text-red">Aramanıza uygun sonuç bulunamadı!</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th width="15%" ng-repeat="property in selectionProps">{{property.name}}</th>
+                <th width="15%">Stok</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="variant-selection-row">
+                <td ng-repeat="property in selectionProps">
+                    <select ng-model="newSelection.props[property.id]" class="form-control validate sbx-check">
+                        <option value="0">Seçiniz</option>
+                        <option ng-repeat="opt in property.options" ng-value="opt.id">{{opt.name}}</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control text-right validate" name="Stock" ng-model="newSelection.Stock" maxlength="10" /></td>
+                <td>
+                    @Html.ButtonFor("Yeni Kombinasyon Ekle", "btn-info", "plus", "ng-click='saveVariantSelection(newSelection)'")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

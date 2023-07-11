@@ -1,0 +1,124 @@
+﻿@{
+    ViewBag.Title = "AngularJS Demo";
+}
+
+<div class="pl20">
+    <h2>AngularJS - Directive Scope Isolation Demo</h2>
+    <div ng-app="demoApp" ng-controller="demoCntrl">
+        <h4>One Way Text Binding Demo</h4>
+        <pre class="language-javascript"><code>var demoApp = angular.module('demoApp', ['ngResource', 'ngRoute']);
+demoApp.controller('demoCntrl', function ($scope, $filter) {
+    $scope.colortext = "yellow";
+});
+    
+//Isolated scope using @@
+demoApp.directive('colorMe', function () {
+    return {
+        scope: {
+            pattern: '@@colorPattern',
+            color: '@@'
+        },
+        restrict: 'AE',
+        replace: true,
+        template: '&lt;p style="background-color:{{color}};padding:5px 10px;"&gt;Grilen renk : {{color}}, pattern : {{pattern}}&lt;/p&gt;',
+    };
+});
+        
+//Html Kullanımı
+&lt;input type="text" ng-model="colortext" placeholder="Renk adı. Ör: red, #f00 .."  class="form-control" /&gt;
+&lt;color-me class="mt10" color="{{colortext}}" color-pattern="hexadecimal"&gt;&lt;/color-me&gt;</code></pre>
+
+        <div class="mt10 demo-row" id="oneWayBinding">
+            <input class="form-control" type="text" ng-model="colortext" placeholder="Renk adı. Ör: red, blue, #f00, #dc143c" />
+            <color-me class="mt10" color="{{colortext}}" color-pattern="hexadecimal"></color-me>
+        </div>
+
+        <h4>Two Way Binding Demo</h4>
+        <pre class="language-javascript"><code>var demoApp = angular.module('demoApp', ['ngResource', 'ngRoute']);
+demoApp.controller('demoCntrl', function ($scope, $filter) {
+     $scope.newcolortext = "green";
+     $scope.customer = { name: "Osman", company: "Aware.co" };
+});
+    
+//Isolated scope = example
+demoApp.directive('newColorMe', function () {
+    return {
+        scope: {
+            color: '=',
+            title: '@@'
+        },
+        restrict: 'AE',
+        replace: true,
+        template: '&lt;div class="mt20"&lt;&gt;p&lt;Directive isolated scope : &lt;/p&gt;' +
+                    '&lt;input type="text" class="form-control" ng-model="color" placeholder="Enter a color for isolated scope" /&gt;' +
+                    '&lt;p class="mt10" style="background-color:{{color}};padding:10px;"&gt;I was colored by {{title}}&lt;/p&gt;&lt;/div&gt;',
+    };
+});
+        
+//Html Kullanımı
+&lt;p&gt;Parent scope :&lt;/p&gt;
+&lt;type="text" ng-model="newcolortext" placeholder="Renk adı. Ör: red, #f00 .." class="form-control" /&gt;
+&lt;new-color-me color="newcolortext" title="{{customer.company}}"&gt;&lt;/new-color-me&gt;</code></pre>
+
+        <div class="mt10 demo-row" id="twoWayBinding">
+            <p>Parent scope : </p>
+            <input type="text" class="form-control" ng-model="newcolortext" placeholder="Renk adı. Ör: red, blue, #f00, #dc143c" />
+            <new-color-me color="newcolortext" title="{{customer.company}}"></new-color-me>
+        </div>
+
+        <h4>&amp; ile Parent Scope Metoduna Erişim</h4>
+        <pre class="language-javascript"><code>var demoApp = angular.module('demoApp', ['ngResource', 'ngRoute']);
+demoApp.controller('demoCntrl', function ($scope, $filter) {
+    $scope.reverseMe = function (msg) {
+        //msg = $filter('reverseText')(msg);
+        alert($filter('reverseText')(msg));
+    };
+});
+    
+//& Example
+demoApp.directive("reversable", function () {
+    return {
+        restrict: 'E',
+        scope: {
+            reverse: "&reversemethod"
+        },
+        template: '&lt;input type="text" ng-model="message" class="form-control" /&gt;'+
+                  '&lt;button class="btn btn-success" ng-click="reverse({msg:message})"&gt;Terse Çevir&lt;/button&gt;'
+    };
+});
+demoApp.filter('reverseText', function () {
+    return function (input) {
+        return input.split("").reverse().join("");
+    };
+});
+        
+//Html Kullanımı
+&lt;reversable reversemethod="reverseMe(msg)"&gt;&lt;/reversable&gt;</code></pre>
+
+        <div class="mt10 demo-row" id="parentScopeMethod">
+            <reversable reversemethod="reverseMe(msg)"></reversable>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular-resource.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.3/angular-route.min.js" type="text/javascript"></script>
+    <script src="/res/js/angular/angular-demo.js"></script>
+
+    <script src="/res/js/prism.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (Prism) {
+                Prism.highlightAll(true);
+            }
+        });
+    </script>
+
+    <style>
+        h4 { margin-top: 40px; }
+        .demo-row { border: 1px solid #ddd; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+    </style>
+}

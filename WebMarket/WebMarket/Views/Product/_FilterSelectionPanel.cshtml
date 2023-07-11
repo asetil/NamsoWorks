@@ -1,0 +1,60 @@
+﻿@using Aware.ECommerce.Search
+@using Aware.Util.Enums
+
+@model WebMarket.Models.ProductSearchViewModel
+@{
+    var searchResult = Model.SearchResult ?? new ProductSearchResult(new ItemSearchParams());
+    var isVerticalFilter = Model.FilterDirection == LayoutDirection.Vertical;
+    var searchParams = searchResult.SearchParams;
+    var filters = Model.GetFilters();
+}
+
+@*@if (!string.IsNullOrEmpty(Model.Title))
+{
+    <div class="title @(Model.SearchParams.>0 ? "category-title" : "")">
+            @if (Model.SearchParams.CategoryID > 0)
+                {
+                @Html.ImageFor("Category", Model.SearchParams.CategoryID + ".png", Model.Title, "cat-img")
+                }
+        </div>
+}*@
+
+@if (filters != null && filters.Any())
+{
+    <div class="filter-panel">
+        <div class="pnl-filter-ico">
+            <i></i>
+        </div>
+
+        <p class="text-center visible-xs filter-title">Filtrele</p>
+        <div class="wrp">
+            @if (isVerticalFilter)
+            {
+                <div class="category-hierarchy">
+                    <a href="/">Anasayfa</a> <i class="fa fa-angle-right"></i>
+                    @Html.GetSearchNavigation(searchParams.CategoryIDs.ToList())
+                    <span>@searchResult.TotalSize sonuç bulundu.</span>
+                </div>
+            }
+
+            <div class="@(isVerticalFilter ? "fr view-mode" : "")">
+                @foreach (var filter in filters)
+                {
+                    @Html.Raw(filter.Draw())
+                }
+
+                @if (searchResult.TotalSize > 0)
+                {
+                    <div class="view-selection">
+                        <span title="Liste Görünümü" class="btn-dsp btn-dsp-list"></span>
+                        <span title="Dörderli Gör" class="btn-dsp btn-dsp4"></span>
+                        <span title="Üçerli Gör" class="btn-dsp btn-dsp3 active"></span>
+                    </div>
+                }
+
+            </div>
+            <p class="text-center">@Html.ButtonFor("Tamam", "dn btn-black pnl-filter-ico", "")</p>
+        </div>
+        <div class="filter-selections"></div>
+    </div>
+}

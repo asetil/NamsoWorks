@@ -1,0 +1,28 @@
+﻿using FluentValidation;
+using ZFR.BAL.Enum;
+using ZFR.BAL.Model.Entities;
+using ZFR.Web.Dtos.BaseDtos;
+
+namespace ZFR.Web.Dtos
+{
+    public class Create#Entity#Request : RequestBase
+    {
+        #FIELDS#
+
+        public #Entity# MapTo()
+        {
+            return new #Entity#
+            {
+                #DTO_FIELDS#
+            };
+        }
+    }
+
+    public class Create#Entity#RequestValidator : AbstractValidator<Create#Entity#Request>
+    {
+        public Create#Entity#RequestValidator()
+        {
+            //RuleFor(x => x.Adi).NotEmpty().WithMessage("#Entity# adı boş olamaz!");
+        }
+    }
+}

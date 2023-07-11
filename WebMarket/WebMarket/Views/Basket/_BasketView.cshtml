@@ -1,0 +1,135 @@
+﻿@using Aware
+@using Aware.Util
+@using Res = Resources.Resource
+
+@model Aware.ECommerce.Model.Basket
+
+<div class="col-md-9">
+    <table class="table table-condensed my-basket">
+        <thead>
+            <tr class="header-row hidden-xs">
+                <th colspan="2" style="width: 33%">Ürün</th>
+                <th class="" style="width:10%">Miktar</th>
+                <th class="text-center" style="width:15%">Satış Fiyatı</th>
+                <th class="text-center" style="width:12%">Tutar</th>
+                <th class="text-right" style="width:10%">İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                var product = item.Product;
+                <tr class="item-row" data-item-id="@item.ID">
+                    <td class="image" style="width: 50px;">
+                        <a href="@Url.StoreItemDetail(item.StoreID, string.Empty, product.ID, product.Name)">
+                            @Html.ImageFor("", product.DefaultImage.Path, product.Name)
+                        </a>
+                    </td>
+                    <td class="name" style="width: 250px;">
+                        <a href="@Url.StoreItemDetail(item.StoreID, string.Empty, product.ID, product.Name)">@item.Product.Name.Short(30)</a>
+                        @if (item.VariantCode > 0 && !string.IsNullOrEmpty(item.VariantDescription))
+                        {
+                            <div class="mt10 variant">@item.VariantDescription</div>
+                        }
+
+                        <div class="mt10 visible-xs sales-price ">@item.Price.ToPrice()/@product.UnitDescription.Short(2, "")</div>
+
+                        <div>
+                            @Html.QuantityBox("Quantity", "fl mt10 visible-xs quantity-box", item.Quantity, product.Unit)
+                            <button class="visible-xs btn btn-red btn-delete-confirm" data-item-id='@item.ID' data-role='delete-item'>Sil</button>
+                        </div>
+                    </td>
+                    <td class="hidden-xs">
+                        @Html.QuantityBox("Quantity", "quantity-box", item.Quantity, product.Unit)
+                    </td>
+                    <td class="hidden-xs item-price text-right">
+                        <span class="hidden-xs list-price">@item.ListPrice.ToPrice()/@product.UnitDescription.Short(2, "")</span>
+                        <span class="sales-price">@item.Price.ToPrice()/@product.UnitDescription.Short(2, "")</span>
+                    </td>
+                    <td class="hidden-xs item-price text-right">
+                        <div class="sales-price ">@item.GrossTotal.ToPrice()</div>
+                    </td>
+                    <td class="hidden-xs text-right">
+                        <a href="javascript:void(0)" class="btn-delete-confirm" data-item-id='@item.ID' data-role='delete-item'><i class="fa fa-remove"></i> Kaldır</a>
+                    </td>
+                </tr>
+            }
+
+            @if (Model.Discounts != null && Model.Discounts.Any())
+            {
+                foreach (var discount in Model.Discounts)
+                {
+                    <tr class="item-row discount-row">
+                        <td class="image">
+                            <a href="@Url.CampaignDetail(discount.Name, discount.CampaignID)">
+                                <img src="~/resource/img/Campaign/@(discount.CampaignID).png" title="@discount.Name">
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@Url.CampaignDetail(discount.Name, discount.CampaignID)">@discount.Name</a>
+                            <p class="mt10 visible-xs">@discount.Description</p>
+                            <p class="mt10 visible-xs">@(discount.Total > 0 ? (-1 * discount.Total).ToPrice() : string.Empty)</p>
+                        </td>
+                        <td class="hidden-xs text-right" colspan="2">
+                            <span>@discount.Description</span>
+                        </td>
+                        <td class="hidden xs item-price text-right">
+                            <span class="sales-price">@(discount.Total > 0 ? (-1 * discount.Total).ToPrice() : string.Empty)</span>
+                        </td>
+                        <td class="hidden xs"></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="col-md-3 ms-col-0">
+    <div class="basket-summary">
+        <h3 class="block-title text-center"><span>@Res.Basket_SummaryTitle</span></h3>
+
+        <div class="totals-row">
+            <div class="basket-total-desc">Sepet Toplamı : </div>
+            <div class="basket-total mb10">@Model.Total.ToPrice()</div>
+        </div>
+
+        <div class="totals-row mb10">
+            <div class="basket-total-desc">İndirimler Toplamı :</div>
+            <div class="basket-total mb10">@Model.DiscountTotal.ToPrice()</div>
+        </div>
+
+        <div class="totals-row mb10">
+            <div class="basket-total-desc">@Res.Basket_TaxAddedTotal</div>
+            <div class="basket-total mb10">@Model.GrossTotal.ToPrice()</div>
+        </div>
+
+        <div class="complete-purchase">
+            <a href='@Url.Action("CompletePurchase")' class="fr mt10 btn btn-red">
+                @Res.Basket_CompletePurchasing
+            </a>
+        </div>
+
+        <div class="mt20 dbfl coupon-usage">
+            <div class="title">Hediye Kuponum Var</div>
+            <div class="form">
+                <div class="field-row">
+                    @Html.TextBox("CouponCode", string.Empty, new { @class = "text field-box validate", title = "Kupon Kodu", placeholder = "Kupon kodu", maxlength = 30 })
+                    @Html.ButtonFor("Kullan", "btn btn-sm btn-green btn-use-coupon",string.Empty)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media screen and (max-width: 740px) {
+        body .basket-container { margin-top: 0 !important; }
+        body .my-basket .item-row td { border-top: 0 none; border-bottom: 1px dashed #ddd; padding-bottom: 20px; padding-top: 20px; }
+        body .my-basket .item-row:first-child td { padding-top: 0px; }
+        body .my-basket .item-row td.image { width: 100px !important; }
+        body .my-basket .item-row td.name { padding-left: 14px; position: relative; }
+        body .my-basket .item-row td.name a { font-weight: bold; font-size: 16px; }
+        body .my-basket .item-row td.name .sales-price { font-weight: bold; font-size: 15px; color: #dc143c; }
+        body .my-basket .btn-delete-confirm { border-color: #ff3b62; background: #ff3b62; float: left; display: inline-block; margin-top: 11px; margin-left:8px; }
+    }
+</style>

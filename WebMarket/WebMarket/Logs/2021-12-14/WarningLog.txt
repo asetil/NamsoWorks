@@ -1,0 +1,62 @@
+16:32:59:147|SQL : select category0_.ID as ID8_,
+	 category0_.Name as Name8_,
+	 category0_.ImageInfo as ImageInfo8_,
+	 category0_.ParentID as ParentID8_,
+	 category0_.SortOrder as SortOrder8_,
+	 category0_.Status as Status8_ from [Category] category0_ where category0_.ID>? order by category0_.SortOrder asc
+16:32:59:175|-----------------------------------------------------------------------------
+
+16:32:59:394|SQL : select simpleitem0_.ID as ID29_,
+	 simpleitem0_.Title as Title29_,
+	 simpleitem0_.Value as Value29_,
+	 simpleitem0_.Url as Url29_,
+	 simpleitem0_.SubType as SubType29_,
+	 simpleitem0_.Cost as Cost29_,
+	 simpleitem0_.SortOrder as SortOrder29_,
+	 simpleitem0_.Type as Type29_,
+	 simpleitem0_.Status as Status29_ from [SimpleItem] simpleitem0_ where simpleitem0_.Type = ? order by simpleitem0_.SortOrder asc
+16:32:59:395|-----------------------------------------------------------------------------
+
+16:32:59:419|SQL : select language0_.ID as ID16_,
+	 language0_.Name as Name16_,
+	 language0_.Abbreviate as Abbreviate16_,
+	 language0_.ImageInfo as ImageInfo16_,
+	 language0_.SortOrder as SortOrder16_,
+	 language0_.IsDefault as IsDefault16_,
+	 language0_.Status as Status16_ from [Language] language0_ where language0_.Status = ?
+16:32:59:419|-----------------------------------------------------------------------------
+
+16:32:59:473|SQL : select languageva0_.ID as ID17_,
+	 languageva0_.LangID as LangID17_,
+	 languageva0_.RelationID as RelationID17_,
+	 languageva0_.FieldName as FieldName17_,
+	 languageva0_.Content as Content17_,
+	 languageva0_.RelationType as Relation6_17_ from [LanguageValue] languageva0_ where languageva0_.RelationType = ? and languageva0_.LangID = ? and (languageva0_.RelationID in (? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ?))
+16:32:59:473|-----------------------------------------------------------------------------
+
+16:32:59:494|SQL : select region0_.ID as ID27_,
+	 region0_.Name as Name27_,
+	 region0_.ParentID as ParentID27_,
+	 region0_.SortOrder as SortOrder27_,
+	 region0_.Type as Type27_,
+	 region0_.Status as Status27_ from [Region] region0_ where region0_.Status = ?
+16:32:59:494|-----------------------------------------------------------------------------
+

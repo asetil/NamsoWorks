@@ -1,0 +1,1 @@
+﻿var webmarketApp = angular.module('webmarketApp', ['ngResource']);

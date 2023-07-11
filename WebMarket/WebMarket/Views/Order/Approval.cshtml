@@ -1,0 +1,104 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.ECommerce.Model
+@using Aware.Util
+
+@model OrderViewModel
+@{
+    ViewBag.Title = "Sipariş Onay";
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.Order != null && Model.Basket != null)
+{
+    var payment = Model.Settings.PaymentTypes.FirstOrDefault(i => i.SubType == (int)Model.Order.PaymentType) ?? new SimpleItem();
+
+    @Html.Partial("_OrderProcess", 2)
+
+    <div class="container order-summary">
+        <div class="mb20 col-md-8">
+            <div class="mb20 order-step">
+                <h3>Sipariş Bilgileri</h3>
+                <div class="order-sub-field">
+                    <label>Teslimat Adresi</label>
+                    <p class="lead"><span><i class="fa fa-check"></i> @Html.Raw(Model.ShippingAddress.DisplayText)</span></p>
+                </div>
+
+                <div class="order-sub-field">
+                    <label>Fatura Adresi</label>
+                    <p class="lead"><span><i class="fa fa-check"></i> @Html.Raw(Model.BillingAddress.DisplayText)</span></p>
+                </div>
+            </div>
+
+            <div class="mb20 order-step">
+                @if (Model.Settings.AllowShipping)
+                {
+                    <div class="order-sub-field">
+                        <label>Kargo Seçimi</label>
+                        <p class="lead">
+                            <i class="fa fa-check"></i>
+                            <span>@Model.ShippingMethod.Name</span>
+                            <span>@Model.ShippingMethod.Price.ToPrice()</span>
+                            <span>@Model.ShippingMethod.Description</span>
+                        </p>
+                    </div>
+                }
+
+                <div class="order-sub-field">
+                    <label>Ödeme Yöntemi</label>
+                    <p class="lead"><i class="fa fa-check"></i> @payment.Title</p>
+                    @if (Model.Order.PaymentType == (int)OrderSettingsType.PaymentWithRemittance)
+                    {
+                        var bank = Model.Settings.BankList.FirstOrDefault(i => i.ID == Model.Order.SubPaymentType);
+                        if (bank != null)
+                        {
+                            <p class="lead">@bank.Name (@bank.BranchName)</p>
+                            <p class="lead">IBAN : @bank.IBAN</p>
+                            <p class="lead">Hesap No : @bank.AccountNumber</p>
+                            <p class="lead text-green mb10">
+                                <u>Havalenizi yaparken işlem açıklamasında mutlaka sipariş numarasını belirtiniz.</u>
+                            </p>
+                        }
+                    }
+                </div>
+
+                <div class="order-sub-field">
+                    <label>Sipariş Notu</label>
+                    <p class="lead">@(!string.IsNullOrEmpty(Model.Order.Note) ? Model.Order.Note : "Belirtilmemiş")</p>
+                </div>
+            </div>
+
+            <hr />
+            <div class="mb10 mr10 ml10 wm-cbx cbx-sales-aggreement">
+                <i class="mr10 fa fa-check-square"></i>
+                <span>
+                    <a href="#preNotificationModal" data-toggle="modal" class="annotate">Ön Bilgilendirme Formu</a>nu ve
+                    <a href="#distanceSalesModal" data-toggle="modal" class="annotate">Mesafeli Satış Sözleşmesi</a>ni okudum, onaylıyorum.
+                </span>
+            </div>
+
+            <div class="mb10 mr10 ml10">
+                <button class="mt20 fr btn btn-lg btn-warn btn-approve-order">Siparişi Onayla</button>
+                <a href="@Url.Action("Index", "Order")" class="fr mt20 mr10 btn btn-lg btn-back"> Geri</a>
+            </div>
+        </div>
+
+        @Html.Partial("_OrderSummary", Model)
+    </div>
+
+    @Html.Partial("_OrderModals")
+    @Html.Hidden("orderID", Model.Order.ID)
+}
+
+
+@section header
+{
+    <link href="@Html.CssPath("order.css")" rel="stylesheet" />
+    <script src="~/resource/js/order-approve.js"></script>
+}

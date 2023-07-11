@@ -1,0 +1,9 @@
+﻿using Aware.Manager;
+using ZFR.BAL.Model.Entities;
+
+namespace ZFR.BAL.Manager
+{
+    public interface I#Entity#Manager : IBaseManager<#Entity#>
+    {
+    }
+}

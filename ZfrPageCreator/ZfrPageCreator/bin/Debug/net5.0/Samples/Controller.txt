@@ -1,0 +1,46 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Aware.BL.Model;
+using ZFR.BAL.Model.Entities;
+using ZFR.BAL.Manager;
+using ZFR.Web.Dtos;
+using Aware.Search;
+
+namespace ZFR.Web.Controllers
+{
+    public class #Entity#Controller : BaseApiController<#Entity#, #Entity#ItemDto, SearchParams<#Entity#>>
+    {
+        public #Entity#Controller(I#Entity#Manager _manager) : base(_manager)
+        {
+        }
+
+        [HttpPost("Create")]
+        public OperationResult<#Entity#ItemDto> Create([FromBody] Create#Entity#Request model)
+        {
+            return Save(model?.MapTo());
+        }
+
+        [HttpPost("Update")]
+        public OperationResult<#Entity#ItemDto> Update([FromBody] Update#Entity#Request model)
+        {
+            return Save(model?.MapTo());
+        }
+
+        protected override #Entity#ItemDto ToDto(#Entity# model)
+        {
+            if (model != null)
+            {
+                return new #Entity#ItemDto
+                {
+                    Id = model.Id,
+                    #DTO_FIELDS#
+                    Status = (int)model.Status,
+                    UpdatedDate = model.UpdatedDate,
+                    UpdatedUserId = model.UpdatedUserId,
+                    CreatedDate = model.CreatedDate,
+                    CreatedUserId = model.CreatedUserId
+                };
+            }
+            return null;
+        }
+    }
+}

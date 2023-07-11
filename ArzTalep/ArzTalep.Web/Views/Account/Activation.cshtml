@@ -1,0 +1,73 @@
+﻿@using Aware.Util.Enum
+@model Aware.BL.Model.OperationResult<ActivationResultType>
+@{
+    ViewBag.Title = "Üyelik Aktivasyonu";
+    var displayForm = false;
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1>@ViewBag.Title</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="mt20 mb20 col-md-12 activation-dialog">
+            @if (!Model.Ok)
+            {
+                displayForm = true;
+                <h3 class="text-danger mb20">
+                    <i class="fa fa-exclamation-triangle"></i> Aktivasyon Başarısız
+                </h3>
+                <p class="lead mb20">@Model.Code</p>
+            }
+            else if (Model.Value == ActivationResultType.WaitingActivation)
+            {
+                displayForm = true;
+                <h3 class="text-success mb20">
+                    <i class="fa fa-check"></i> Üyeliğiniz Başarıyla Oluşturuldu.
+                </h3>
+                <p class="lead mb20">
+                    Üyeliğinizi aktifleştirmeniz için belirttiğiniz e-posta adresine bir aktivasyon maili gönderdik.
+                    Aktivasyon e-postası tarafınıza ulaşmadıysa veya yeni bir aktivasyon kodu almak isterseniz aşağıdaki formu kullanabilirsiniz.
+                </p>
+            }
+            else if (Model.Value == ActivationResultType.ActivationSuccessfull)
+            {
+                <h3 class="text-success mb20">
+                    <i class="fa fa-check"></i> Aktivasyon Başarılı
+                </h3>
+                <p class="lead mb20">Üyeliğiniz başarıyla aktifleştirildi.</p>
+                <a href="@Url.Action("Index", "User")" class="mt20 btn btn-info">Üye Girişi</a>
+            }
+            else if (Model.Value == ActivationResultType.ActivationSend)
+            {
+                <h3 class="text-success mb20">
+                    <i class="fa fa-check"></i> Aktivasyon Gönderildi
+                </h3>
+                <p class="lead mb20">Belirttiğiniz e-posta adresine yeni bir aktivasyon linki gönderildi.</p>
+            }
+
+            @if (displayForm)
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">E-posta</label>
+                            <input type="text" class="form-control validate email-check" id="email" name="email" placeholder="E-posta" maxlength="30">
+                        </div>
+
+                        <div class="mt10 form-group">
+                            <button type="button" class="fr btn btn-primary btn-green btn-new-activation">Aktivasyon Kodu Gönder</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/js/user.js"></script>
+}

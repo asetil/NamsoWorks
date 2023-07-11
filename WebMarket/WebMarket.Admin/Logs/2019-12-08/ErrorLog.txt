@@ -1,0 +1,38 @@
+20:48:12:555|Stack Trace: 
+   konum: System.Linq.Enumerable.Select[TSource,TResult](IEnumerable`1 source, Func`2 selector)
+   konum: WebMarket.Admin.Controllers.CampaignController.GetViewModel(Int32 id, Nullable`1 templateID) d:\WM\WebMarket\WebMarket.Admin\Controllers\CampaignController.cs içinde: satýr 99
+   konum: WebMarket.Admin.Controllers.CampaignController.Detail(Int32 id, Nullable`1 templateID) d:\WM\WebMarket\WebMarket.Admin\Controllers\CampaignController.cs içinde: satýr 42
+   konum: lambda_method(Closure , ControllerBase , Object[] )
+   konum: System.Web.Mvc.ReflectedActionDescriptor.Execute(ControllerContext controllerContext, IDictionary`2 parameters)
+   konum: System.Web.Mvc.ControllerActionInvoker.InvokeActionMethod(ControllerContext controllerContext, ActionDescriptor actionDescriptor, IDictionary`2 parameters)
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass42.<BeginInvokeSynchronousActionMethod>b__41()
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass37.<>c__DisplayClass39.<BeginInvokeActionMethodWithFilters>b__33()
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass4f.<InvokeActionMethodFilterAsynchronously>b__49()
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethodWithFilters(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass25.<>c__DisplayClass2a.<BeginInvokeAction>b__20()
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass25.<BeginInvokeAction>b__22(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeAction(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.Controller.<>c__DisplayClass1d.<BeginExecuteCore>b__18(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.Async.AsyncResultWrapper.<>c__DisplayClass4.<MakeVoidDelegate>b__3(IAsyncResult ar)
+   konum: System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.Async.AsyncResultWrapper.<>c__DisplayClass4.<MakeVoidDelegate>b__3(IAsyncResult ar)
+   konum: System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.MvcHandler.<>c__DisplayClass8.<BeginProcessRequest>b__3(IAsyncResult asyncResult)
+   konum: System.Web.Mvc.Async.AsyncResultWrapper.<>c__DisplayClass4.<MakeVoidDelegate>b__3(IAsyncResult ar)
+   konum: System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   konum: System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   konum: System.Web.HttpApplication.ExecuteStepImpl(IExecutionStep step)
+   konum: System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)InnerException:  -- Deðer null olamaz.
+Parametre adý: source|
+20:48:12:657|------------------------------------------------------------------------
+
+|
+20:49:53:733|WebRequester > DoRequest - failed -- Uzak ad çözülemedi: 'site.aware.com'|
+20:49:53:733|------------------------------------------------------------------------
+
+|
+20:49:53:733|WebRequester > DoRequest - failed -- Uzak ad çözülemedi: 'site.aware.com'|
+20:49:53:733|------------------------------------------------------------------------
+
+|

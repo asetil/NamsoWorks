@@ -1,0 +1,55 @@
+﻿@using Aware.Util
+@using Aware.ECommerce.Util
+@using WebMarket.Helper
+@model Aware.ECommerce.Model.Store
+@{
+    ViewBag.Title = Model.DisplayName;
+    ViewBag.ActivePage = 1;
+    ViewBag.HasProduct = true;
+    var workInfo = Model.GetWorkTimeInfo().FirstOrDefault(i => i.Key.Contains("*"));
+}
+
+@Html.DrawPageTitle(Model.DisplayName)
+<div class="container store">
+    @Html.Hidden("store-id", Model.ID)
+
+    <div class="col-md-3">
+        @Html.ImageFor(string.Empty, Model.ImageInfo, Model.DisplayName, "image", Model.DisplayName)
+    </div>
+
+    <div class="col-md-9">
+        <p class="text-justify description">@Model.Description</p>
+    </div>
+
+    <div class="col-md-9">
+        <table class="table table-condensed">
+            <tr>
+                <th>Minimum Tutar</th>
+                <th>Servis Saatleri</th>
+                <th>Servis Bölgeleri</th>
+            </tr>
+            <tr>
+                <td>@Model.MinOrderAmount.ToPrice()</td>
+                <td>Bugün @workInfo.Value</td>
+                <td>@(string.Join(", ", Model.ServiceRegions.Select(i => i.Name)))</td>
+            </tr>
+        </table>
+    </div>
+
+    <!--Ürün filtesinde market filtre seçiminin korunması için-->
+    <div class="dn">
+        @Html.Hidden("filterByStore",Model.ID)
+        <span class="preview">@Model.DisplayName.ToSeoUrl()</span>
+    </div>
+    <div class="mb20 page-seperator">&nbsp;</div>
+
+    <div class="mt20 items-panel">
+        @Html.Action("Search", "Product", new { sid = Model.ID })
+    </div>
+</div>
+
+@section header{
+    @Scripts.Render(WebMarket.Helper.Constants.ProductListPageScripts)
+    <link href="~/resource/css/store.css" rel="stylesheet" />
+    <link href="~/resource/css/swiper.min.css" rel="stylesheet" />
+}

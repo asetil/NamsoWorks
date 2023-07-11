@@ -1,0 +1,85 @@
+﻿@using Resources
+@model Aware.Library.Model.Slider
+
+@{
+    ViewBag.Title = Resource.HomePage;
+    ViewBag.HasProduct = true;
+}
+
+<div class="container home-page">
+    <div class="row page-section mt10">
+        @Html.Partial("_CarouselSliderView", Model)
+        <div class="mt20 mb20 col-md-12 hidde-xs" style="height:1px;"></div>
+        <div class="col-md-3 col-sm-3 hidden-xs">
+            <div class="box_home" id="one">
+                <h3>Semtini Seç</h3>
+                <p>
+                    Siz değil marketler ayağınıza gelsin
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3  col-sm-3 hidden-xs">
+            <div class="box_home" id="two">
+                <h3>Ürünlere Göz At</h3>
+                <p>
+                    Marketler bi tıkla önünde, ürünleri incele, fiyatları karşılaştır
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3  col-sm-3 hidden-xs">
+            <div class="box_home" id="three">
+                <h3>Siparişini Oluştur</h3>
+                <p>
+                    İhtiyacın olan ürünleri sepetine ekle, siparişini oluştur
+                </p>
+            </div>
+        </div>
+        <div class="col-md-3  col-sm-3 hidden-xs">
+            <div class="box_home" id="four">
+                <h3>Ürünler Kapınızda</h3>
+                <p>
+                    Hızlı ve keyifli alışveriş
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @Html.Action("MainCampaigns", "Home")
+    </div>
+</div>
+
+@section header{
+    @Scripts.Render(Constants.HomePageScripts)
+    <link href="@Html.CssPath("product.css")" rel="stylesheet" />
+
+    @if (TempData["SocialLoginError"] != null)
+    {
+        <script type="text/javascript">
+            aware.showError('@TempData["SocialLoginError"]', 'Bilgi', 'remove');
+        </script>
+    }
+
+    <style>
+        .home-page { margin-bottom: 100px; }
+        .home-page .page-section { padding-top: 0; margin-top: 0; }
+        #main-carousel .carousel-control { width: 80px; background: transparent !important; opacity: 1; }
+        #main-carousel .carousel-control i { position: absolute; top: 47%; font-size: 40pt; left: 15px; padding: 0px 14px; text-shadow: none; color: #dedede; font-weight: 300; }
+        #main-carousel .carousel-control i:hover { background: #000; color: #fff; }
+        #main-carousel .carousel-control.right i { left: auto; right: 15px; }
+        #main-carousel .carousel-indicators .active { background-color: #f00; }
+        #main-carousel .carousel-indicators li { border: 1px solid #DCDCDC; background: #efefef; }
+        #main-carousel .carousel-inner img { width: 100%; }
+
+        .main-campaign { margin-top: 60px; }
+        .main-campaign .block-title { font-weight: 400; font-size: 22px; margin-bottom: 10px; }
+
+        .box_home { background: #fff; margin-bottom: 25px; padding: 15px; position: relative; font-size: 14px; color: #666; min-height: 235px; text-align: center; }
+        .box_home h3, .box_home span { font-size: 16px; font-weight: 600; }
+        .box_home#one { background: url('/resource/img/App/icon_home_1.svg') center 40px no-repeat #fff; }
+        .box_home#two { background: url('/resource/img/App/icon_home_2.svg') center 40px no-repeat #fff; }
+        .box_home#three { background: url('/resource/img/App/icon_home_3.svg') center 40px no-repeat #fff; }
+        .box_home#four { background: url('/resource/img/App/icon_home_4.svg') center 40px no-repeat #fff; }
+        .box_home h3 { margin-bottom: 5px; margin-top: 133px; }
+    </style>
+}

@@ -1,0 +1,99 @@
+﻿@using Aware.Util;
+@using Aware.Util.Enums
+@using CleanCode.Helper;
+
+@model CleanFramework.Business.Model.EntryDisplayModel
+@{
+    var hasModel = Model != null && Model.Entry != null;
+    if (hasModel)
+    {
+        ViewBag.SeoModel = Html.ToSeoModel(Model.Entry, Request.Url.AbsoluteUri);
+        TempData["ActiveMenu"] = Model != null ? Model.Entry.CategoryID : 0;
+    }
+}
+
+<div class="entry-detail" ng-app="osmanApp">
+    <div class="content-box">
+        @if (hasModel)
+        {
+            var hierarchy = string.Join("/", Model.CategoryHierarchy.Select(i => string.Format("<a href='{0}'>{1}</a>",
+                Url.RouteUrl(RouteNames.CategoryDetail, new { name = i.Name.ToSeoUrl(true), categoryID = i.ID }), i.Name)));
+
+            <h1>@Model.Entry.Name</h1>
+            <div class="mt20 entry-info">
+                <span class="info date">
+                    <i class="fa fa-calendar"></i> @Model.Entry.DateCreated.ToString("dd MMMM yyyy")
+                </span>
+                <span class="info category-hierarchy"><i class="fa fa-tag"></i> @Html.Raw(hierarchy)</span>
+
+                @if (!string.IsNullOrEmpty(Model.Entry.Author))
+                {
+                    <span class="info user"><i class="fa fa-user"></i> @Model.Entry.Author</span>
+                }
+            </div>
+
+            if (Model.Entry.Status == Statuses.WaitingApproval)
+            {
+                <div class="mt20 alert alert-warning" style="padding: 7px 14px;">
+                    <i class="fa fa-exclamation-triangle"></i> Bu makale henüz onaylanmadığı için ön izlemesini görüntülüyorsunuz!  
+                </div>
+            }
+
+            <div class="mb10 mt20 addthis_inline_share_toolbox_5ztr"></div>
+
+            @Html.Partial("_GoogleBanner", BannerType.BannerEntry)
+
+            <div>
+                @Html.Raw(Model.Entry.Content)
+            </div>
+
+            if (!string.IsNullOrEmpty(Model.Entry.Keywords))
+            {
+                <div class="tag-list">
+                    @foreach (var tag in Model.Entry.Keywords.Split(','))
+                    {
+                        <a href="/ara?tag=@tag.Trim().ToSeoUrl().Replace("-"," ")">@tag.Trim()</a>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <div class="panel-warn no-search-result">
+                <p><i class="fa fa-4x fa-search"></i></p>
+                <h2>Erişmeye çalıştığınız makaleyi bulamadık!</h2>
+                <p class="lead">Makale bulunamadı veya sistemden kaldırıldı. Adresi kontrol ederek tekrar deneyin.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section leftpanel{
+    @if (hasModel && Model.RelatedEntries != null && Model.RelatedEntries.Count > 1)
+    {
+        <div class="related-entries">
+            <div class="left-menu-title mt20">Benzer Yazılar</div>
+            <ul class="left-menu">
+                @foreach (var item in Model.RelatedEntries)
+                {
+                    <li class="@(item.ID==Model.Entry.ID?"active":"")">
+                        <a href="@Url.RouteUrl(RouteNames.EntryDetail, new { name = item.Value.ToSeoUrl(true), id = item.ID })">@item.Value</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+}
+
+@section scripts{
+    <link href="~/res/css/prism.css" rel="stylesheet" />
+    @Scripts.Render(Constants.EntryScripts)
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (Prism) {
+                Prism.highlightAll(true);
+            }
+        });
+    </script>
+}
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-542d2add4ecfb3d2"></script> 

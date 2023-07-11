@@ -1,0 +1,64 @@
+﻿@using Aware.Language.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model LanguageValueDisplayModel
+
+@if (Model != null && Model.LanguageList != null && Model.LanguageList.Any())
+{
+    var firstID = Model.LanguageList.FirstOrDefault().ID;
+    var fieldNames = Model.FieldHelper.Fields.Select(i => i.ID).ToList();
+    var index = 0;
+
+    <div class="col-md-8">
+        <form class="language-form form-horizontal" enctype="multipart/form-data" method="post">
+            @Html.Hidden("RelationID", Model.RelationID)
+            @Html.Hidden("RelationType", Model.RelationType)
+
+            <div class="col-md-4">
+                <ul class="language-list">
+                    @foreach (var language in Model.LanguageList)
+                    {
+                        <li class="@(firstID == language.ID ? "active" : "")" data-id="@language.ID">
+                            <img src="/resource/img/Lang/@language.ImageInfo" alt="" /> @language.Name
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="col-md-8">
+                @foreach (var language in Model.LanguageList)
+                {
+                    foreach (var fieldName in fieldNames)
+                    {
+                        @Html.Hidden("LanguageValue[" + index + "].LangID", language.ID)
+                        @Html.Hidden("LanguageValue[" + index + "].FieldName", fieldName)
+
+                        var field = Model.FieldHelper.Fields.FirstOrDefault(i => i.ID == fieldName || i.ParentCss == "field-" + fieldName);
+                        var value = Model.ValueList.FirstOrDefault(i => i.LangID == language.ID && i.FieldName == fieldName) ?? new LanguageValue();
+
+                        field.ParentCss = "field-" + fieldName;
+                        field.ID = "LanguageValue[" + index + "].Content";
+                        field.Value = value.Content;
+                        index++;
+                    }
+
+                    <div class="language-fields @(firstID == language.ID ? "active" : "")" data-id="@language.ID">
+                        <p class="lead">@language.Name Değerleri</p>
+                        @Html.Partial("_FieldHelper", Model.FieldHelper)
+                    </div>
+                }
+
+                <div class="box-footer">
+                    @Html.ButtonFor("Kaydet", "fr btn-success btn-save-language-value")
+                </div>
+            </div>
+        </form>
+    </div>
+}
+else
+{
+    <div class="callout callout-info col-md-8">
+        <h4><i class="icon fa fa-info-circle"></i> Sistemde tanımlı herhangi bir dil bulunamadı.</h4>
+        <p><a href="/dil-yonetimi" style="color: yellowgreen; text-decoration: underline;">Dil Yönetimi</a> bölümünden yeni dil tanımlayabilirsiniz.</p>
+    </div>
+}

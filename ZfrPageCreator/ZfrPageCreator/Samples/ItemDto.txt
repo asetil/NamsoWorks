@@ -1,0 +1,10 @@
+﻿using ZFR.BAL.Enum;
+using ZFR.Web.Dtos.BaseDtos;
+
+namespace ZFR.Web.Dtos
+{
+    public class #Entity#ItemDto : DtoBase
+    {
+        #FIELDS#
+    }
+}

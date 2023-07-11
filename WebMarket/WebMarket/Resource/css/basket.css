@@ -1,0 +1,49 @@
+﻿.my-basket { color: #000; background: #fff; }
+table.table td { vertical-align: middle !important; }
+.my-basket .image img { width: 50px; height: 50px; }
+.my-basket .name .variant { font-size: 12px; color: #5c5c5c; }
+.my-basket .item-price .sales-price { font-size: 14pt; display: block; text-align: right; }
+.my-basket .btn-delete-confirm:hover { color: #dc143c; }
+.basket-container .complete-purchase .btn { color: #fff; border-color: #97be0d; background-color: #97be0d; line-height: 41px; height: 43px; border-radius: 4px; padding: 0 46px; font-size: 16px; }
+.basket-container .complete-purchase .btn:hover { color: #fff; background-color: #718e0a; border-color: #718e0a; }
+
+.my-basket.small .item-price .list-price { font-size: 13px; }
+.my-basket.small .item-price .sales-price { font-size: 13pt; }
+
+.basket-container { position: relative; }
+.basket-container .basket-content { min-height: 445px; }
+.basket-container .basket-summary { position: absolute; right: 20px; background: #fff; max-width: 239px; border: 0 none; padding: 20px 15px; margin-top: 0; border: 3px solid #eee; border-radius: 10px; }
+.basket-container .basket-summary .totals-row .basket-total-desc { font-size: 13px; color: #5c5c5c !important; float: right; line-height: 1.4; }
+.basket-container .basket-summary .totals-row .basket-total { font-size: 24pt; line-height: 1.4; float: right; width: 100%; text-align: right; }
+.basket-container .quantity-box div span.txt { height: 21px; }
+
+.complete-purchase .btn-success { float: right; text-align: left; margin-top: 10px; color: #fff !important; }
+.complete-purchase .btn-success span { background: url('/resource/img/Icons/right-arrow.png') no-repeat 121px 0; width: 135px; display: block; }
+.empty-basket, .empty-list { font-size: 12pt; text-align: center; display: block; padding: 25px 0; font-weight: bold; color: #5c5c5c; }
+
+/* COUPON USAGE */
+.coupon-usage { width: 100%; }
+.coupon-usage .title { font-weight: bold; text-align: left; font-size: 15px; background-color: transparent; margin-bottom: 10px; border-top: 1px dashed #c7c7c7; padding-top: 14px; }
+.coupon-usage .field-row .field-box { width: 135px; border: 2px solid #D0D0D0; padding: 3px 10px; font-size: 13px; }
+.coupon-usage .field-row .btn { margin-left: 2px; margin-top: -3px; padding: 10px; }
+
+.list-height { max-height: 600px; }
+.basket-summary th { padding: 10px 10px; }
+.basket-summary td { padding: 5px 10px; }
+.basket-summary .item-row img { width: 40px; height: 40px; }
+.basket-summary .item-price .list-price { font-size: 12px; text-decoration: line-through; clear: both; display: block; text-align: right; color: #ad2131; margin-top: -4px; }
+.basket-summary .item-price .sales-price { font-size: 12pt; }
+
+.basket-summary .totals-row .basket-total { font-size: 21pt; margin: 0; }
+.basket-summary .totals-row .basket-total.rp { font-size: 15pt; }
+.basket-summary .scrollContent { max-height: 450px; }
+.basket-summary .totals-row td { text-align: right; padding: 8px 10px; color: #000; font-size: 13pt; border-bottom: 1px solid #ccc; vertical-align: middle; }
+
+.basket-summary h3.block-title { margin-top: 0; margin-bottom: 25px; font-size: 20px; font-weight: 400; line-height: 20px; color: #232323; overflow: hidden; border-bottom: 0 none; padding-bottom: 0; }
+.basket-summary h3.block-title span { display: inline-block; position: relative; }
+.basket-summary h3.block-title span:after { content: ""; position: absolute; height: 1px; width: 2000px; background-color: #a5abb7; top: 10px; left: 100%; margin-left: 15px; }
+.basket-summary h3.block-title.text-center span:before { content: ""; position: absolute; height: 1px; width: 2000px; background-color: #a5abb7; top: 10px; right: 100%; margin-right: 15px; }
+
+@media screen and (max-width: 740px) {
+    .basket-container .basket-summary { position: relative; float: left; width: 100%; max-width: 100%; right: inherit; border: 0 none; }
+}

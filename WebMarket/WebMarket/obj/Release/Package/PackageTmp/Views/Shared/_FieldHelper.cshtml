@@ -1,0 +1,30 @@
+﻿@using Aware.Util
+@model Aware.View.FieldHelper
+@foreach (var field in Model.Fields)
+{
+    <div class="form-group @field.ParentCss">
+        @if (field.HasAffix || Model.Direction == Enums.FieldDirection.Inline)
+        {
+            if (Model.Direction != Enums.FieldDirection.Inline)
+            {
+                <label for="@field.ID" class="@Model.TitleCss">@field.Title</label>
+            }
+
+            <div class="@(field.HasAffix?"input-group":"") @(Model.Direction== Enums.FieldDirection.Horizantal ? "col-sm-10 horizantal":"")">
+                @Html.Partial("_Field", field)
+            </div>
+        }
+        else if (Model.Direction == Enums.FieldDirection.Horizantal)
+        {
+            <label for="@field.ID" class="@Model.TitleCss">@field.Title</label>
+            <div class="col-sm-10">
+                @Html.Partial("_Field", field)
+            </div>
+        }
+        else
+        {
+            <label for="@field.ID" class="@Model.TitleCss">@field.Title</label>
+            @Html.Partial("_Field", field)
+        }
+    </div>
+}

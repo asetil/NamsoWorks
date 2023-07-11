@@ -1,0 +1,112 @@
+﻿@using Aware.Util.Enums
+@using Aware.Util.View
+@using Resources
+
+@model Aware.ECommerce.Model.ContactModel
+@{
+    ViewBag.Title = "İletişim";
+    ViewBag.ActivePage = 7;
+    var mapUrl = "https://goo.gl/maps/7WPnW";
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="page-section container contact-us">
+    <div class="mb20 col-md-6  detail">
+        <h3 class="block-title"><span>Ünvan</span></h3>
+        <p><b>AWARE ELEKTRONİK HİZMETLER VE TİCARET ANONİM ŞİRKETİ</b></p>
+        <p>
+            <b>Adres :</b> Hasanpaşa Mah. Hürriyet Sok. Ayşe Hanım apt. <br>No:76/4 Kadıköy/İstanbul
+        </p>
+        <p>
+            <b>Ticaret Sicil No:</b> *****
+        </p>
+        <p>
+            <b>Vergi Dairesi:</b> ****
+        </p>
+        <p>
+            <b>Vergi No:</b> ***********
+        </p>
+        <p>
+            <b>Mersis No:</b> *************
+        </p>
+        <p>
+            <div class="phoneDivBg">
+                <span>&nbsp;&nbsp;Sipariş ve Destek Hattı : 444 0 999</span>
+            </div>
+        </p>
+        <p class="text-justify">
+            Aware hakkında her türlü sorunuz için bize hafta içi 08:00 - 00:00 saatleri arası,
+            hafta sonu ise 09:00 - 00:00 saatleri arasında 444 0 999 No'lu sipariş ve destek hattımızdan veya
+            yan tarafta yer alan iletişim formunu kullanarak iletebilirsiniz.
+        <p>
+            Dilerseniz bize
+            <a class="annotate" href="mailto:info@webmarket.com">info@webmarket.com</a> e-posta adresimizden de ulaşabilirsiniz.
+        </p>
+    </div>
+    <div class="mb20 col-md-6 form-wrapper">
+        <h3 class="block-title"><span>Bize Ulaşın</span></h3>
+        <p>
+            Size daha iyi hizmet verebilmemiz için lütfen iletmek istediklerinizi aşağıdaki forma yazıp bize gönderin.
+            İlgili arkadaşlarımız size en kısa sürede geri dönüş yapacaktır.
+        </p>
+        <p class="mt20">
+            @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+            {
+                var fields = new FieldHelper(FieldDirection.Inline);
+                fields.Text("Name", "İsim", Model.Name, "validate", 50);
+                fields.Text("Email", Resource.Email, Model.Email, "validate email-check", 30);
+                fields.Text("Subject", "Konu", Model.Subject, "validate", 50);
+                fields.TxtArea("Message", "Mesaj", Model.Message, "validate", 500);
+
+                @Html.AntiForgeryToken()
+                @Html.Partial("_FieldHelper", fields)
+    <div class="g-recaptcha" data-sitekey="6LcmxRYUAAAAABoKXIvUuWwNU0NOzElrk19sBu22"></div>
+
+                <div class="mt10 field-row">
+                    @Html.ButtonFor("Gönder", "fr btn-green btn-contact-us", string.Empty)
+                </div>
+            }
+        </p>
+    </div>
+</div>
+
+<div class="mb20 mt20 container">
+    <div class=" col-md-12 contact-us">
+        <h3 class="block-title"><span>Ulaşım</span></h3>
+        <div class="map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6022.529354974611!2d29.046742453544596!3d40.99757971938835!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab80a497891ef%3A0x1a17c538c6df4e62!2zVWh1dnZldCBTay4gTm86NDAsIEhhc2FucGHFn2EsIDM0NzIyIEthZMSxa8O2eS_EsHN0YW5idWwsIFTDvHJraXll!5e0!3m2!1str!2sus!4v1435044750584" width="100%" height="388" frameborder="0" style="border: 0" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+
+@section header
+{
+    <script src='https://www.google.com/recaptcha/api.js?hl=tr'></script>
+    @if (Model.Result != null && !string.IsNullOrEmpty(Model.Result.Message))
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                @if (Model.Result.OK) {
+                    <text>aware.showMessage('İşlem Başarılı', '@Model.Result.Message', '', 'fa-check');</text>
+                }
+                else {
+                    <text>aware.showError('@Model.Result.Message', 'İşlem Başarısız', 'fa-minus-circle');</text>
+                }
+            });
+        </script>
+    }
+
+    <style>
+        .contact-us .detail .phoneDivBg { text-align: center; margin: 10px 0; border-radius: 5px; color: #ffffff; padding: 9px 0; font-size: 19px; background: #000000; }
+        .contact-us .detail .phoneDivBg span:before { content: "\f095 "; font-family: FontAwesome; font-style: normal; font-weight: normal; text-decoration: inherit; margin-top: 3px; }
+        .contact-us p { text-align: justify; }
+    </style>
+}

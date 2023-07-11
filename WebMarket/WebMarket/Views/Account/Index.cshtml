@@ -1,0 +1,46 @@
+﻿@using Aware.Util.View
+@using Aware.Util.Enums
+@using Resource = Resources.Resource
+
+@{
+    ViewBag.Title = "Üye Girişi";
+}
+
+<div class="page-section container login-dialog-for-page">
+    <div class="mt20 col-md-6 col-sm-6">
+        <h1 class="mb20">@ViewBag.Title</h1>
+        <p class="lead error hidden-xs">@Resource.Account_LoginMessage</p>
+
+        @using (Html.BeginForm("Login", "Account"))
+        {
+            var fields = new FieldHelper(FieldDirection.Inline);
+            fields.Text("Email", Resource.Email, string.Empty, "validate email-check", 30);
+            fields.Pasword("Password", Resource.Password, string.Empty, "validate", 10);
+            fields.CheckBox("RememberMe", Resource.Account_RememberMe, true);
+
+            @Html.AntiForgeryToken()
+            @Html.Partial("_FieldHelper", fields)
+
+            <div class="form-group text-right">
+                <a href="#loginModal" class="mt10 mr10 btn-forgot-password-dialog" data-toggle="modal">@Resource.Account_ForgotPassword</a>
+                @Html.ButtonFor(Resource.Account_Login, "btn btn-green btn-login-for-page", string.Empty)
+            </div>
+        }
+    </div>
+
+    <div class="col-md-6  col-sm-6 text-center sm-section-top">
+        <div class="panel-user-info">
+            <i class="mb10 fa fa-4x fa-users" style="color:#dc143c;"></i>
+            <div class="lead mt10">
+                <p>
+                    Hesabın yok mu?<br />
+                    Hemen üye ol, Webmarket'in sana özel hizmetlerinden faydalanmaya başla.
+                </p>
+                <hr style="border-top:1px dashed #ccc !important;" />
+                <a class="btn btn-green" href="@Url.Action("Register", "Account")"><i class="fa fa-user"></i> Üye Ol</a>
+                <a href="javascript:void(0)" class="ml10 btn btn-facebook facebook-login"><i class="fa fa-facebook"></i> Facebook</a>
+                <a href="javascript:void(0)" class="ml10 btn btn-google google-login"><i class="fa fa-google-plus"></i> Google</a>
+            </div>
+        </div>
+    </div>
+</div>

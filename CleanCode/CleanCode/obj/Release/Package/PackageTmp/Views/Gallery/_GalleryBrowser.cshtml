@@ -1,0 +1,100 @@
+﻿@using CleanCode.Helper
+@using CleanCode.Helper.Model
+@model FileBrowserModel
+@if (Model != null)
+{
+    var pathList = Model.CurrentPath.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+    var dir = "";
+
+    @Html.HiddenFor(x => x.CurrentPath)
+    @Html.HiddenFor(x => x.BasePath)
+    @Html.Hidden("SiteUrl",Aware.Util.Config.SiteUrl)
+
+    <div class="col-md-12">
+        <div class="path-hierarchy">
+            <ul>
+                @foreach (var item in pathList)
+                {
+                    var current = dir + "/" + item;
+                    <li class="hierarchy-item" data-path="@(current != Model.BasePath && Model.BasePath.IndexOf(current) > -1 ? "" : current)">
+                        @item <i class="ml10 fa fa-angle-right"></i>
+                    </li>
+
+                    dir += "/" + item;
+                }
+            </ul>
+
+            <div class="action-panel dib fr">
+                @if (Model.CanDeleteDirectory)
+                {
+                    <i class="fa fa-trash btn-remove-directory" title="Sil" style="color:#ff0059;"></i>
+                }
+                
+                <i class="fa btn-view-mode fa-th" data-mode="0"></i>
+                <i class="fa btn-view-mode fa-list" data-mode="1"></i>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-12">
+        @foreach (var item in Model.DirectoryList)
+        {
+            <div class="directory-item" data-path="@item.Name">
+                <img src="~/res/img/app/folder.png" class="img-responsive" />
+                <span>@item.Name</span>
+            </div>
+        }
+
+        @if (Model.CanCreateDirectory)
+        {
+            <div class="directory-item create">
+                <img src="~/res/img/app/folder-add.png" class="img-responsive" />
+                <span>Dizin Ekle</span>
+
+                <div class="new-directory-panel">
+                    <input type="text" id="directoryName" class="form-control" placeholder="Dizin Adı" maxlength="50" />
+                    <i class="fa fa-check-circle-o btn-new-directory"></i>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-12">
+        <div class="upload-panel">
+            <span>Yeni dosya yükleme için </span>
+            @Html.ButtonFor("Dosya Yükle", "ml20 btn-success btn-single-upload", "plus")
+            @Html.ButtonFor("Çoklu Yükle", "ml20 btn-primary btn-multi-upload", "list")
+
+            <input name="SingleFile" id="SingleFile" class="dn upload-single-file" type="file" accept=".jpg,.jpeg,.gif,.png">
+            <input name="MultiFile" id="MultiFile" class="dn upload-multi-file" type="file" multiple="multiple" accept=".jpg,.jpeg,.gif,.png">
+            <div class="dn selections"></div>
+            @Html.ButtonFor("Geçerli Dosyaları Yükle", "dn mt20 btn-red btn-save-files", "upload")
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        @foreach (var item in Model.FileList)
+        {
+            <div class="file-item" data-path="@item.Name">
+                <img src="@(Model.CurrentPath+"/"+item.Name)" class="img-responsive inspectable" />
+                <span>@item.Name</span>
+                <span class="create-date">@item.CreationTime.ToString("dd.MM.yyyy hh:mm")</span>
+
+                <div class="file-actions">
+                    <i class="fa fa-search btn-inspect" title="Görüntüle"></i>
+                    <i class="fa fa-link btn-copy-link" title="Dosya yolunu kopyala"></i>
+                    <i class="fa fa-trash btn-remove-file" title="Sil"></i>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <hr />
+    <div class="no-result-found">
+        <i class="fa fa-warning"></i>
+        <h4>Listelenecek öğe bulunamadı!</h4>
+        <p class="description">&nbsp;</p>
+    </div>
+}

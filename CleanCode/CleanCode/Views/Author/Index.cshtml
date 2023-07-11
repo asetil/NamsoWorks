@@ -1,0 +1,63 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@using CleanCode.Helper
+@model List<Aware.Authenticate.Model.User>
+@{
+    ViewBag.Title = "Yazarlar";
+    ViewBag.ActiveMenu = 4;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="wrapper-box active">
+    <div class="content-box">
+        <div class="col-md-12">
+            <h2 class="mb20">
+                Yazarlar <a href="@Url.RouteUrl(RouteNames.AuthorDetail, new { name = "yeni-yazar", id = 0 })" class="ml10 btn btn-blue"><i class="fa fa-plus"></i> Yeni Ekle</a>
+            </h2>
+        </div>
+
+        <div class="mb20 col-md-9">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th width="5%">#ID</th>
+                            <th width="40%">İsim</th>
+                            <th width="40%">E-posta</th>
+                            <th width="40%">Rolü</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var author in Model)
+                        {
+                            <tr>
+                                <td>@author.ID</td>
+                                <td>@author.Name</td>
+                                <td>@author.Email</td>
+                                <td>
+                                    @if (author.Role == UserRole.SuperUser)
+                                    {
+                                        <span>SuperUser</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Yazar</span>
+                                    }
+                                </td>
+                                <td><a href="@Url.RouteUrl(RouteNames.AuthorDetail, new { name = author.Name.ToSeoUrl(), id = author.ID })" class="btn btn-sm btn-blue"><i class="fa fa-eye"></i><span class="hidden-xs">&nbsp;Görüntüle</span></a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <h4 class="text-danger">
+                    <i class="fa fa-exclamation-triangle"></i> Listelenecek öğe bulunamadı!
+                </h4>
+            }
+        </div>
+    </div>
+</div>

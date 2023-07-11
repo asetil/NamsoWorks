@@ -1,0 +1,79 @@
+﻿@using Aware.Util.Enums
+@using WebMarket.Admin.Helper
+@model IEnumerable<Aware.Authority.Model.AuthorityDefinition>
+@{
+    var allowSave = (bool)ViewBag.AllowSave;
+}
+
+@if (Model != null && Model.Any() && (allowSave || Model.Any(i => i.HasUsage)))
+{
+    <div class="authority-list">
+        <table class="m0 table">
+            <thead>
+                <tr>
+                    <th width="60%">Yetki Tipi</th>
+                    <th width="15%">Kota</th>
+                    <th width="25%">Son Kullanım</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    if (allowSave)
+                    {
+                        <tr>
+                            <td colspan="@(item.Mode == AuthorityMode.WithQuota ? 1 : 3)">
+                                <label class="cbx-authority @(item.HasUsage ? "selected" : "")" data-authority-id="@((int) item.Type)">
+                                    <i class="fa fa-@(item.HasUsage ? "check-square" : "square-o")"></i> @item.Title
+                                </label>
+                            </td>
+
+                            @if (item.Mode == AuthorityMode.WithQuota && item.HasUsage)
+                            {
+                                <td>@Html.TextBox("Quota", item.Usage.Quota, new { @class = "fl mr10 form-control txt-quota", placeholder = "Kota", maxlength = "4" })</td>
+                                <td>@Html.TextBox("ExpireDate", item.Usage.ExpireDate.ToShortDateString(), new { @class = "fl form-control txt-expire-date  datepicker", placeholder = "Bitiş Tarihi", maxlength = "10" })</td>
+                            }
+                            else if (item.Mode == AuthorityMode.WithQuota && !item.HasUsage)
+                            {
+                                <td>@Html.TextBox("Quota", 0, new { @class = "fl mr10 form-control txt-quota", placeholder = "Kota", maxlength = "4", disabled = "disabled" })</td>
+                                <td>@Html.TextBox("ExpireDate", "", new { @class = "fl form-control txt-expire-date datepicker", placeholder = "Bitiş Tarihi", maxlength = "10", disabled = "disabled" })</td>
+                            }
+                        </tr>
+                    }
+                    else if (item.HasUsage)
+                    {
+                        <tr>
+                            <td colspan="@(item.Mode == AuthorityMode.WithQuota ? 1 : 3)">
+                                <i class="fa fa-check"></i> @item.Title
+                            </td>
+
+                            @if (item.Mode == AuthorityMode.WithQuota)
+                            {
+                                <td>@item.Usage.Quota</td>
+                                <td>@item.Usage.ExpireDate.ToShortDateString()</td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        @if (allowSave)
+        {
+            <hr style="margin-top: 0px;" />
+            @Html.Hidden("RelationID", (int)ViewBag.RelationID)
+            @Html.Hidden("RelationType", (int)ViewBag.RelationType)
+            @Html.ButtonFor("Kaydet", "btn-success btn-save-authority")
+        }
+    </div>
+}
+else
+{
+    <div class="callout callout-danger">
+        <h4>Görüntülenecek yetki bulunamadı!</h4>
+        @if (allowSave)
+        {
+            <p><a href="/yetkiler">Yetki Tanımları</a> sayfasından yeni yetki tanımlayabilirsiniz.</p>
+        }
+    </div>
+}

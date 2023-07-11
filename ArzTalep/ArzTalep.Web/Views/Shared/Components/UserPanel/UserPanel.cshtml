@@ -1,0 +1,62 @@
+﻿@model Aware.Model.SessionDataModel
+
+<div class="user-panel header_account_list">
+    @if (Model != null && Model.IsValid)
+    {
+        <div class="header_wishlist">
+            <a href="/hesap/uye-bilgileri">
+                <span class="lnr lnr-user"></span> <span>@Model.Name</span>
+            </a>
+        </div>
+
+        <div class="header_account_list campaing-wizard">
+            <ul>
+                <li><a href="#" class="btn" data-bs-toggle="modal" data-bs-target="#campaignWizardModal">Kampanya Oluştur</a></li>
+            </ul>
+        </div>
+
+        <partial name="~/Views/Campaign/_CampaignWizard.cshtml"/>
+    }
+    else
+    {
+        <div class="header_account_list register">
+            <ul>
+                <li><a href="/hesap/uye-ol">Üye Ol</a></li>
+                <li><span>/</span></li>
+                <li><a href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Giriş Yap</a></li>
+            </ul>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="loginModal2" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...Osman
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Understood</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade login-modal" id="loginModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body wrapper-box pr">
+                        <button type="button" class="close pa" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+                        <partial name="_LoginPanel" model="12" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

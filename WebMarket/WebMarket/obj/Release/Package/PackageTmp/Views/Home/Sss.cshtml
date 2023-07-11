@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Yardım & Destek";
+    ViewBag.ActivePage = 7;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="ms-col-0 page-section container">
+    <div class="mb20 container">
+        <div class="tabs-wrapper content-tabs">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#membership" data-toggle="tab" aria-expanded="true">Üyelik</a></li>
+                <li><a href="#campaign" data-toggle="tab" aria-expanded="true">Kampanyalar</a></li>
+                <li><a href="#order" data-toggle="tab" aria-expanded="true">Siparişler</a></li>
+                <li><a href="#deliver" data-toggle="tab" aria-expanded="true">Teslimat</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="membership">
+                    <h4><span>Üyelik ücretli mi?</span></h4>
+                    <p class="lead">
+                        Webmarket.com'a bireysel üyelik daima ücretsizdir.
+                    </p>
+                    <h4><span>Nasıl üye olurum?</span></h4>
+                    <p class="lead">
+                        Üyelik formunu doldurarak siteye kolay ve güvenli bir şekilde kaydolabilirsiniz.
+                        Üye olmak için sitenin sağ üst köşesinde yer alan "Üye Ol" butonunu kullabilir yada buraya
+                        <a href="/uye-ol" target="_blank">tıkla</a>yabilirsiniz.
+
+                        Tek adımda adınızı, e-postanızı ve şifrenizi belirttikten sonra üyelik formunun altında yer alan
+                        "Üye Ol" butonunu kullanarak hızlıca üyelik işleminizi tamamlayabilirsiniz.
+
+                        Not : Üyeliğinizi başalatabilmeniz için üyelik sözleşmesini onaylamanız gerekmektedir.
+
+                        Üyeliğinizin tamamlanmasını takiben belirtmiş olduğunuz e-posta adresinize bir aktivasyon e-postası alacaksınız.
+                    </p>
+                    <h4><span>Üyelik aktivasyonumu nasıl yaparım?</span></h4>
+                    <p class="lead">
+                        Sistemde yer alan e-posta adresinize gönderilmiş aktivasyon postasında yer alan bağlantıya tıklayarak aktivasyon işleminizi tamamlayabilirsiniz.
+                    </p>
+                </div>
+
+                <div class="tab-pane fade" id="campaign">
+                    <h4><span>Kampanya edir?</span></h4>
+                    <p class="lead">
+                        Webmarket.com'a bireysel üyelik daima ücretsizdir.
+                    </p>
+                </div>
+
+                <div class="tab-pane fade" id="order">
+                    <h4><span>Kampanya edir?</span></h4>
+                    <p class="lead">
+                        Webmarket.com'a bireysel üyelik daima ücretsizdir.
+                    </p>
+                </div>
+
+                <div class="tab-pane fade" id="deliver">
+                    <h4><span>Kampanya edir?</span></h4>
+                    <p class="lead">
+                        Webmarket.com'a bireysel üyelik daima ücretsizdir.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section header{
+    <style>
+        .tab-pane h4 { color: #333; margin-bottom: 10px; }
+        .tab-pane p{font-size: 18px;}
+    </style>
+}

@@ -1,0 +1,57 @@
+﻿@using WebMarket.Models
+@model Aware.ECommerce.Model.Campaign
+@{
+    ViewBag.Title = "Kampanya Detay";
+    ViewBag.ActivePage = 3;
+    var itemsUrl = "/urunler";
+
+    if (Model != null)
+    {
+        ViewBag.Title = Model.Name;
+        itemsUrl = string.Format("/urunler?{0}", Model.FilterInfo).Trim('?');
+    }
+}
+
+@if (Model != null)
+{
+    <div class="container campaign-wrapper detail mt20">
+        <div class="mb20 pr">
+            @Html.ImageFor(string.Empty, Model.DefaultImage.Path, string.Empty, "image")
+            <span class="remained-time"><i class="mr10 fa fa-hourglass-end"></i> <span class="countdown" data-remained="@Model.RemainedTime"></span></span>
+        </div>
+
+        <h1>@ViewBag.Title</h1>
+        <p class="lead mt20"> @Model.Description </p>
+        <p class="mt20" style="background: #eee; padding: 10px 15px; border-radius: 5px;">
+            <i class="fa fa-check"></i> Kampanya @Model.PublishDate.ToShortDateString()-@Model.PublishDate.AddDays(Model.ExpireDays).ToShortDateString() tarihleri arasında geçerlidir.
+        </p>
+        <p class="mt20 mb20">
+            <a href="@itemsUrl" class="btn btn-warn active">Alışverişe Başla</a>
+        </p>
+    </div>
+}
+else
+{
+    <section class="page-section breadcrumbs">
+        <div class="container">
+            <div class="page-header">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </section>
+
+    <div class="container campaign-wrapper detail mt20">
+        <div class="col-md-12 mb20">
+            <div class="no-result-found" style="background: #fff; border: 0 none;color:#dc143c;">
+                <i class="fa fa-tags  fa-4x"></i>
+                <h3 class="mt20">Görüntülemeye çalıştığınız kampanya mevcut değil ya da yayından kaldrılmış.</h3>
+            </div>
+        </div>
+    </div>
+}
+
+@section header
+{
+    @Scripts.Render(Constants.CampaignScripts)
+    <link href="@Html.CssPath("campaign.css")" rel="stylesheet" />
+}

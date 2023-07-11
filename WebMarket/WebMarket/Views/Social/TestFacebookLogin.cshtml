@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Facebook";
+}
+
+<script>
+
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '155231898222948',
+            cookie: true, // enable cookies to allow the server to access
+            // the session
+            xfbml: true, // parse social plugins on this page
+            version: 'v2.6' // use graph api version 2.5
+        });
+    };
+
+    // Load the SDK asynchronously
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!--
+Below we include the Login Button social plugin. This button uses
+the JavaScript SDK to present a graphical Login button that triggers
+the FB.login() function when clicked.
+-->
+@*<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+    </fb:login-button>*@
+
+
+<script src="~/resource/js/social.js"></script>
+@Html.ButtonFor("Facebook Giriş", "btn-success fb-client-login", "check")
+
+<div id="status"></div>

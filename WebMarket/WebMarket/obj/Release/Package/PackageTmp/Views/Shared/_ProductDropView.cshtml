@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Aware.ECommerce.Model.Basket>
+
+<div class="drop-elem-wrapper">
+    <div class="title"><h4>Seçiminiz : </h4></div>
+    <div class="drop-elem basket-elem">Sepete At</div>
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var list in Model)
+        {
+            <div class="drop-elem list-elem" data-list-id="@list.ID" data-list-name="@list.Name">@list.Name Listesine Ekle</div>
+        }
+    }
+
+    <div class="drop-elem new-list-elem">Yeni Listeye At</div>
+</div>

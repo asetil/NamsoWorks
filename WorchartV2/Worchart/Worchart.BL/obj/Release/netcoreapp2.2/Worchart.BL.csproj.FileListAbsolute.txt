@@ -1,0 +1,9 @@
+D:\WM\WorchartV2\Worchart\Worchart.BL\bin\Release\netcoreapp2.2\Worchart.BL.deps.json
+D:\WM\WorchartV2\Worchart\Worchart.BL\bin\Release\netcoreapp2.2\Worchart.BL.dll
+D:\WM\WorchartV2\Worchart\Worchart.BL\bin\Release\netcoreapp2.2\Worchart.BL.pdb
+D:\WM\WorchartV2\Worchart\Worchart.BL\obj\Release\netcoreapp2.2\Worchart.BL.csprojAssemblyReference.cache
+D:\WM\WorchartV2\Worchart\Worchart.BL\obj\Release\netcoreapp2.2\Worchart.BL.csproj.CoreCompileInputs.cache
+D:\WM\WorchartV2\Worchart\Worchart.BL\obj\Release\netcoreapp2.2\Worchart.BL.AssemblyInfoInputs.cache
+D:\WM\WorchartV2\Worchart\Worchart.BL\obj\Release\netcoreapp2.2\Worchart.BL.AssemblyInfo.cs
+D:\WM\WorchartV2\Worchart\Worchart.BL\obj\Release\netcoreapp2.2\Worchart.BL.dll
+D:\WM\WorchartV2\Worchart\Worchart.BL\obj\Release\netcoreapp2.2\Worchart.BL.pdb

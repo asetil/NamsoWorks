@@ -1,0 +1,49 @@
+﻿@model SelectorModel
+
+<div class="selections">
+    @foreach (var item in Model.SelectedItems)
+    {
+        <span data-id="@item.ID">@item.Value <i class="fa fa-remove"></i></span>
+    }
+
+    @Html.Hidden(Model.ControlID,string.Join(",",Model.SelectedIDs))
+    <a href="#@(Model.ControlID)SelectorModal" data-toggle="modal" data class="fr btn-sm btn btn-green">
+        <i class="fa fa-check"></i> EKLE
+    </a>
+</div>
+
+<div class="modal fade selector-modal" tabindex="-1" role="dialog" id="@(Model.ControlID)SelectorModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-body">
+            <div class="wrapper-box">
+                <div class="left-side col-md-6">
+                    <h4>@Model.Title Listesi</h4>
+                    <span class="description">Listeden seçim yapınız.</span>
+
+                    @Html.TextBox("namso", string.Empty, new { @class = "mt10 form-control txt-search", placeholder = "Arama" })
+                    <div class="item-list drop-elem left">
+                        @foreach (var item in Model.LookupList)
+                        {
+                            var isActive = Model.SelectedItems.Any(i => i.ID == item.ID);
+                            <div data-id="@item.ID" class="@(isActive ? "active" : "") drag-elem">@item.Value <i class="fr"></i></div>
+                        }
+                    </div>
+                </div>
+                <div class="right-side  col-md-6">
+                    <h4>Seçilen @Model.Title Listesi</h4>
+                    <span class="description">Eklediğiniz alanları listeden silebilir veya sıralamasını değiştirebilirsiniz.</span>
+                    <div class="mt10 item-list drop-elem right">
+                        @foreach (var item in Model.SelectedItems)
+                        {
+                            <div data-id="@item.ID" class="drag-elem">@item.Value <i class='fr fa fa-remove'></i></div>
+                        }
+                    </div>
+                </div>
+                <div class="fr mt20">
+                    <button type="button" class="mr10 btn btn-sm btn-border" data-dismiss="modal">Vazgeç</button>
+                    <button type="button" class="btn btn-sm btn-black">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

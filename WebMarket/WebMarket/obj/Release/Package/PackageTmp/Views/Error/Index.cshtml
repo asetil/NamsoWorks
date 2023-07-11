@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "İşlem Başarısız";
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="page-section container">
+    <p class="text-center lead">
+        İşleminiz gerçekleştirilirken bir hatayla karşılaştık.
+    </p>
+
+    <p class="text-center lead">
+        Yaşadığınız sorun için özür dileriz. Sorunu sistem yöneticilerimize ilettik. En kısa sürede bir çözüm geliştirmeye çalışacağız.
+        Sorunun sürekli tekrarladığını ve üzerinden süre geçmesine rağmen bir çözüm geliştirilemediğini düşünüyorsanız
+         lütfen aşağıdaki <i class="annotate">Sorun Bildir</i> linki üzerinden karşılaştığınız sorunu detaylarıyla birlikte tarafımıza iletiniz.
+    </p>
+    <hr class="page-divider"/>
+
+    <p class="text-center lead">
+        <a href="@Url.Action("Contact","Home")" class="btn btn-warn">Sorun bildir</a> <a href="/" class="ml10 btn">Anasayfaya git</a>
+    </p>
+</div>

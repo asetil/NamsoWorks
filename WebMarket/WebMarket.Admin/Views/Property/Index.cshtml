@@ -1,0 +1,70 @@
+﻿@using Aware.Util
+@using Aware.Util.Lookup
+@using WebMarket.Admin.Helper;
+@model List<Aware.ECommerce.Model.PropertyValue>
+@{
+    ViewBag.Title = "Ürün Özellikleri";
+    TempData["ActivePage"] = 10;
+}
+
+<section class="content-header product-list">
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        @if (ViewBag.IsSuper)
+                        {
+                            <a href="@Url.Action("Detail", new {name = "yeni-özellik", id = 0})" class="btn btn-info btn-round btn-fab btn-fab-mini ml20" title="Yeni Ekle"><i class="fa fa-plus"></i></a>
+                        }
+                    </h2>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        var propertyTypes = ViewBag.PropertyTypes as List<Lookup>;
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#ID</th>
+                                        <th>Özellik</th>
+                                        <th>Özellik Tipi</th>
+                                        <th width="6%">Durumu</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var property in Model)
+                                    {
+                                        <tr>
+                                            <td>@property.ID</td>
+                                            <td class="td-name">@property.Name</td>
+                                            <td>@Html.LookupValue(propertyTypes, (int)property.Type)</td>
+                                            <td class="text-center">
+                                                @Html.StatusFor(property.Status)
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Detail", new {name = property.Name.ToSeoUrl(), id = property.ID})" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Görüntüle</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="callout callout-gray">
+                            <p>
+                                <i class="icon fa fa-commenting-o"></i> Listelenecek özellik bulunamadı..
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,169 @@
+﻿@using Aware.Util.Enums
+@using Aware.Util
+@using Aware.Util.Model
+@using WebMarket.Models
+
+@model WebMarket.Models.BasketSummaryModel
+@{
+    var items = Model.Basket == null || Model.Basket.Items == null ? null :
+        Model.Basket.Items.Where(i => i.Status != Statuses.Deleted);
+}
+
+@if (items == null || !items.Any())
+{
+    <div class="alert alert-danger text-center">
+        <i class="fa fa-3x fa-shopping-bag"></i>
+        <p class="mt20"><b>Sepetiniz Boş</b></p>
+    </div>
+}
+else if (Model.DrawMode != BasketDrawMode.ForOrder)
+{
+    var pricer = new Pricer(Model.Basket.GrossTotal);
+
+    <div class="basket-summary order-basket-summary">
+        <div class="items-wrapper @(items.Count() > 5 && Model.DrawMode != BasketDrawMode.ForOrderDetail ? "scrollContent list-height" : "")">
+            <table class="table">
+                <thead>
+                    <tr class="header-row">
+                        <th colspan="2" width="40%" class="hidden-xs">Ürün</th>
+                        <th width="10%" class="tar hidden-xs">Miktar</th>
+                        <th width="15%" class="tar hidden-xs">Satış Fiyatı</th>
+                        @if (Model.DrawMode != BasketDrawMode.ForOrderDetail)
+                        {
+                            <th width="15%" class="tar hidden-xs">Liste Fiyatı</th>
+                        }
+                        <th width="20%" class="tar hidden-xs">Tutar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        var product = item.Product;
+                        <tr class="item-row">
+                            <td style="width: 8%;">
+                                <img src="~/resource/img/@product.DefaultImage.Path" alt="@product.Name" title="@product.Name">
+                            </td>
+                            <td style="width: 40%;">
+                                <a href="@Url.StoreItemDetail(item.StoreID, string.Empty, product.ID, product.Name)" title="@product.Name">@product.Name.Short(30)</a>
+                                <p class="visible-xs">
+                                    <b>@item.QuantityDescription X @item.Price.ToPrice()</b>
+                                </p>
+                            </td>
+                            <td class="hidden-xs">
+                                <span>@item.QuantityDescription</span>
+                            </td>
+                            @if (Model.DrawMode == BasketDrawMode.ForOrderDetail)
+                            {
+                                <td class="item-price text-right hidden-xs" style="width: 20%;">
+                                    <span class="list-price">@item.ListPrice.ToPrice()</span>
+                                    <span class="sales-price">@item.Price.ToPrice()/@product.UnitDescription.Short(2, "")</span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="item-price text-right hidden-xs">
+                                    <span class="sales-price">@item.Price.ToPrice()/@product.UnitDescription.Short(2, "")</span>
+                                </td>
+                                <td class="item-price text-right hidden-xs">
+                                    <span class="sales-price">@item.ListPrice.ToPrice()</span>
+                                </td>
+                            }
+
+                            <td class="item-price text-right hidden-xs">
+                                <div class="sales-price ">@item.GrossTotal.ToPrice()</div>
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.Basket != null && Model.Basket.Discounts != null && Model.Basket.Discounts.Any())
+                    {
+                        foreach (var discount in Model.Basket.Discounts)
+                        {
+
+                            <tr class="item-row">
+                                <td>
+                                    <a href="@Url.CampaignDetail(discount.Name, discount.CampaignID)">
+                                        <img src="~/resource/img/Campaign/@(discount.CampaignID).jpg" title="@discount.Name" alt="">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="@Url.CampaignDetail(discount.Name, discount.CampaignID)">@discount.Name</a>
+                                    <p class="visible-xs">
+                                        <b>@discount.Description</b>
+                                    </p>
+                                </td>
+                                <td colspan="2" class="tar hidden-xs">
+                                    <span>@discount.Description</span>
+                                </td>
+                                <td class="tar item-price hidden-xs">
+                                    <div class="total sales-price">@(discount.Total > 0 ? (-1 * discount.Total).ToPrice() : string.Empty) </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+            </table>
+        </div>
+
+        @if (Model.DrawMode != BasketDrawMode.ForOrderDetail)
+        {
+            <div class="fr mt10 mr20 totals-row">
+                <span class="basket-total-desc">KDV Dahil Sepet Toplamı :</span>
+                <span class="basket-total lp">@pricer.Left</span>
+                <span class="basket-total rp">,@pricer.Right TL </span>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="basket-summary order-basket-summary">
+        <div class="items-wrapper @(items.Count() > 5 && Model.DrawMode != BasketDrawMode.ForOrderDetail ? "scrollContent list-height" : "")">
+            <table class="table">
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        var product = item.Product;
+                        <tr class="item-row">
+                            <td style="width: 20%;">
+                                <img src="~/resource/img/@product.DefaultImage.Path" alt="@product.Name" title="@product.Name">
+                            </td>
+                            <td style="width: 80%;">
+                                <div class="name">
+                                    <a href="@Url.StoreItemDetail(item.StoreID, string.Empty, product.ID, product.Name)" title="@product.Name">@product.Name.Short(26)</a>
+                                </div>
+                                @if (item.VariantCode > 0 && !string.IsNullOrEmpty(item.VariantDescription))
+                                {
+                                    <span class="variant" title="@item.VariantDescription">(@item.VariantDescription.Short(50))</span>
+                                }
+                                <p>@product.Brand</p>
+                                <p>
+                                    <span>@item.QuantityDescription X</span>
+                                    <span class="sales-price">@item.Price.ToPrice()</span>
+                                </p>
+                            </td>
+                        </tr>
+                    }
+
+                    @if (Model.Basket != null && Model.Basket.Discounts != null && Model.Basket.Discounts.Any())
+                    {
+                        foreach (var discount in Model.Basket.Discounts)
+                        {
+
+                            <tr class="item-row">
+                                <td>
+                                    <a href="@Url.CampaignDetail(discount.Name, discount.CampaignID)">
+                                        <img src="~/resource/img/Campaign/@(discount.CampaignID).jpg" title="@discount.Name">
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="@Url.CampaignDetail(discount.Name, discount.CampaignID)">@discount.Name.Short(26)</a>
+                                    <p><span>@discount.Description</span></p>
+                                    <div class="total sales-price">@(discount.Total > 0 ? (-1 * discount.Total).ToPrice() : string.Empty) </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+            </table>
+        </div>
+    </div>
+}

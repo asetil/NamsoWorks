@@ -1,0 +1,37 @@
+﻿@using Aware.Library.Payment
+@using Aware.Util
+@using Resources
+@model Aware.Model.Result
+@{
+    ViewBag.Title = "Online Ödeme Sonucu";
+    Layout = "~/Views/Shared/_EmptyLayout.cshtml";
+    var payment = Model.ValueAs<OnlineSales>() ?? new OnlineSales();
+    var success = Model.OK && (Model.ResultCode == -1 || payment != null && payment.IsSuccess);
+}
+
+<div class="page-section container">
+    <div class="secure-payment-result @(success ? "" : "has-error")">
+        @if (Model.ResultCode != -1)
+        {
+            if (success)
+            {
+                <h2 class="mb20">@Resource.Order_ApprovedMessage</h2>
+                <i class="mb20 mt20 fa fa-check"></i>
+                <p><b>Sipariş tutarı @payment.Amount.ToPrice() @(payment.Installment <= 1 ? "tek çekimle" : payment.Installment + " taksitle") kredi kartınızdan başarıyla çekildi.</b></p>
+                @Html.ButtonFor("Tamam", "mt10 btn-green", "", "onclick='window.parent.closePaymentModal(true)'")
+            }
+            else
+            {
+                <i class="mb20 fa fa-remove"></i>
+                <h2 class="mb20 mt20">Ödeme İşlemi Başarısız</h2>
+                <p><b>@Html.Raw(Model.Message.Trim('-').Trim())</b></p>
+                @Html.ButtonFor("Tamam", "mt10 btn-green", "", "onclick='window.parent.closePaymentModal(false)'")
+            }
+        }
+    </div>
+</div>
+
+@section header
+{
+    <link href="@Html.CssPath("order.css")" rel="stylesheet" />
+}

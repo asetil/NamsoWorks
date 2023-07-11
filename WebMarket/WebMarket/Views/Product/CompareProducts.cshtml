@@ -1,0 +1,171 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.ECommerce.Model
+@using Aware.ECommerce.Util
+@using Aware.Util
+@model WebMarket.Models.ProductSearchViewModel
+@{
+    ViewBag.Title = "Ürünleri Karşılaştır";
+    var searchResult = Model != null ? Model.SearchResult : null;
+    var products = searchResult != null ? searchResult.Results.ToArray() : null;
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="mb20 container">
+    @if (products != null && products.Any())
+    {
+        var propertyIDs = products.SelectMany(i => i.Properties.Select(p => p.ID)).Distinct();
+        var propertyData = ViewBag.PropertyData != null ? (List<PropertyValue>)ViewBag.PropertyData : new List<PropertyValue>();
+        var width = 100 / (products.Length + 1);
+
+        <div class="mb20 mt20 compare-products" style="width:@((products.Length + 1)*240)px;">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th width="@Math.Max(10, width)%">Özellik</th>
+                        @foreach (var product in products)
+                        {
+                            <th width="@Math.Max(10, width)%" class="text-center">
+                                <div>@Html.ImageFor(string.Empty, product.DefaultImage.Path, "", "image")</div>
+                                <div class="mt10">@product.Name</div>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody class="items-wrapper">
+                    @if (products.Any(i => !string.IsNullOrEmpty(i.Description)))
+                    {
+                        <tr class="hidden-xs">
+                            <th class="title">Açıklama</th>
+                            @foreach (var product in products)
+                            {
+                                <td>
+                                    <div class="description">@product.ShortDescription.Short(150)</div>
+                                </td>
+                            }
+                        </tr>
+                    }
+
+                    <tr>
+                        <th class="title">Yorum</th>
+                        @foreach (var product in products)
+                        {
+                            <td class="comment">
+                                @product.CommentRating.DecString("N1") <i class="fa fa-star"></i> <span>(@product.CommentCount Yorum)</span>
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <th class="title">Fiyat Bilgisi</th>
+                        @foreach (var product in products)
+                        {
+                            <td class="price-info">
+                                <div>
+                                    <select class="mb10 form-control store-selector">
+                                        @foreach (var item in product.Items)
+                                        {
+                                            <option value="@item.ID" @(item.ID == product.DefaultItem.ID ? "checked='checked'" : "")
+                                                    data-forsale="@(item.HasStock(1)?1:0)" data-price="@item.SalesPrice.ToPrice()" data-list-price="@item.ListPrice.ToPrice()">
+                                                @item.Store.Name
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="list-price">@product.DefaultItem.ListPrice.ToPrice()</div>
+                                <div class="sales-price">@product.DefaultItem.SalesPrice.ToPrice()</div>
+
+                                <div class="mt20">
+                                    @Html.ButtonFor("Sepete At", (product.HasStock(1) ? "" : "dn") + "btn-sm btn-green btn-add-to-basket", "shopping-basket")
+                                    <div class="@(product.HasStock(1) ?"dn":"") btn-no-stock">Tükendi</div>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+
+                    @foreach (var propertyID in propertyIDs)
+                    {
+                        var property = propertyData.FirstOrDefault(i => i.ID == propertyID);
+                        if (property != null)
+                        {
+                            <tr>
+                                <th class="title">@property.Name</th>
+                                @foreach (var product in products)
+                                {
+                                    var productProperty = product.Properties.FirstOrDefault(i => i.ID == propertyID);
+                                    if (productProperty != null && property.Type == PropertyType.Selection)
+                                    {
+                                        var option = propertyData.FirstOrDefault(i => i.ID == productProperty.Value.Int());
+                                        <td>@(option != null ? option.Name : "-")</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@(productProperty != null ? productProperty.Value : "-")</td>
+                                    }
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12 mb20">
+            <div class="no-result-found" style="background: #fff; border: 0 none;">
+                <i class="fa fa-commenting  fa-4x"></i>
+                <h3 class="mt20">Karşılaştırma listenizde hiç ürün yok. </h3>
+                <p class="mt20 lead">İstediğiniz ürünü detay sayfasında bulunan karşılaştır butonunu<br /> kullanarak listenize ekleyebilirsiniz.</p>
+            </div>
+        </div>
+    }
+</div>
+
+@section header
+{
+    <style>
+        .store-selector, .store-selector:active, .store-selector:focus { box-shadow: none; border: 1px solid #ddd; outline: none; cursor: pointer; padding: 0px 4px; }
+        .compare-products { margin-bottom: 80px; max-width: 100%; margin: 0 auto; }
+        .compare-products thead tr th { vertical-align: bottom; font-size: 18px; }
+        .compare-products th, .compare-products td { padding: 15px 10px !important; }
+        .compare-products td { border: 1px solid #eee; }
+        .compare-products th { color: #325276; font-size: 15px; }
+        .compare-products .image { max-width: 100%; }
+        .compare-products .btn-no-stock { background: #ff2743; color: #fff; border-radius: 5px; padding: 7px 0px; width: 93px; text-align: center; }
+
+        .items-wrapper .description { overflow-y: hidden; max-height: 120px; font-size: 12px; }
+        .items-wrapper .sales-price { font-size: 23px; color: #5c5c5c; }
+        .items-wrapper .list-price { font-size: 17px; text-decoration: line-through; color: #dc143c; font-style: italic; }
+        .items-wrapper .comment { font-size: 23px; color: #ffc124; }
+        .items-wrapper .comment span { font-size: 12px; color: #232323; font-style: italic; white-space: nowrap; }
+    </style>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(document).on("click", ".compare-products .store-selector", {}, function () {
+                var opt = $(this).find("option:selected");
+                var parent = $(this).parents("td.price-info:eq(0)");
+                $(parent).find(".sales-price").html($(opt).data("price"));
+                $(parent).find(".list-price").html($(opt).data("list-price"));
+
+                if ($(opt).data("forsale") == 1) {
+                    $(parent).find(".btn-add-to-basket").removeClass("dn");
+                    $(parent).find(".btn-no-stock").addClass("dn");
+                } else {
+                    $(parent).find(".btn-add-to-basket").addClass("dn");
+                    $(parent).find(".btn-no-stock").removeClass("dn");
+                }
+                return false;
+            });
+        });
+    </script>
+}

@@ -1,0 +1,42 @@
+﻿@model List<Aware.ECommerce.Model.Category>
+@{
+    ViewBag.Title = "Kategoriler";
+    ViewBag.ActiveMenu = 2;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="wrapper-box active">
+    <div class="content-box">
+        <div class="col-md-12">
+            <h2 class="mb20">
+                Kategori Yönetimi
+            </h2>
+        </div>
+
+        <div class="col-md-3 category-list">
+            @if (Model != null && Model.Any())
+            {
+                <ul>
+                    @foreach (var category in Model.OrderBy(i => i.SortOrder))
+                    {
+                        <li class="category-item" data-id="@category.ID" style="margin-left:@((category.Level-1)*30)px;">@category.Name</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <h4 class="text-danger">
+                    <i class="fa fa-exclamation-triangle"></i> Sonuç bulunamadı!
+                </h4>
+            }
+        </div>
+        <div class="col-md-9">
+            <div class="category-panel"></div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="/res/js/category.js"></script>
+}

@@ -1,0 +1,138 @@
+﻿@using Aware.ECommerce.Search
+@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+
+@model Aware.ECommerce.Model.ProductListModel
+@{
+    ViewBag.Title = "Ürün Kataloğu";
+    TempData["ActivePage"] = 7;
+    var searchResult = Model != null ? Model.SearchResult : null;
+}
+
+<section class="container-fluid product-list">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        @if (ViewBag.IsSuper)
+                        {
+                            <a href="@Url.Action("Detail", new {name = "yeni-urun", id = 0})" class="btn btn-info btn-round btn-fab btn-fab-mini ml20" title="Yeni Market Ekle"><i class="fa fa-plus"></i></a>
+                        }
+                    </h2>
+
+                    @if (searchResult != null && searchResult.Success && searchResult.HasResult)
+                    {
+
+                        <div class="table-responsive">
+                            <div class="fl @(searchResult.TotalSize <= searchResult.SearchParams.Size ? "db mb10" : "")">
+                                @Html.PagingInfo(searchResult, "üründen")
+                            </div>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#ID</th>
+                                        <th colspan="2">Ürün</th>
+                                        <th>Kategori</th>
+                                        <th>Marka</th>
+                                        <th>Birim</th>
+                                        <th width="6%">Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in searchResult.Results)
+                                    {
+                                        <tr>
+                                            <td>@product.ID</td>
+                                            <td style="width: 5%;">@Html.ImageFor("", product.DefaultImage.Path, product.Name, "product-image", product.Name)</td>
+                                            <td class="td-name">
+                                                @product.Name<br />
+                                                @if (!string.IsNullOrEmpty(product.Barcode))
+                                                {
+                                                    <i>#@product.Barcode</i>
+                                                }
+                                            </td>
+                                            <td>@product.Category.Name</td>
+                                            <td>@product.Brand</td>
+                                            <td>@product.UnitDescription</td>
+                                            <td>@product.Barcode</td>
+                                            <td class="text-center">
+                                                @Html.StatusFor(product.Status)
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Detail", "Product", new {name = product.Name.ToSeoUrl(), id = product.ID})" class="btn btn-sm btn-success" target="_blank"><i class="fa fa-eye"></i> Görüntüle</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="float: right; margin-top: 10px;" class="product-pager"></div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Listelenecek Ürün Bulunamadı!</h4>
+                            <p class="description">Filtreleme kriterlerinizi gözden geçirin!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (searchResult != null)
+        {
+            <div class="col-md-3">
+                <div class="card search-panel">
+                    <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                    <div class="card-content">
+                        <h2 class="card-title">Filtrele</h2>
+
+                        @using (Html.BeginForm("Index", "Product", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            var searchParams = searchResult.SearchParams as ProductSearchParams;
+                            var dataSource = Model.Categories.Select(i => new Item(i.ID, i.Name)).ToList();
+                            var categoryID = searchParams.CategoryIDs.FirstOrDefault();
+                            var filterFields = new FieldHelper();
+
+                            filterFields.Text("ids", "Ürün ID", string.Join(",", searchParams.IDsString));
+                            filterFields.Text("q", "Ürün Adı", searchParams.Keyword);
+                            filterFields.Text("b", "Barkod", searchParams.Barcode);
+                            filterFields.Select("Kategori", "cid", dataSource, categoryID, "category-selector");
+                            filterFields.Select("Durum", "st", Model.StatusList, (int)searchParams.Status, "status-selector");
+
+                            @Html.Partial("_FieldHelper", filterFields)
+                            @Html.ButtonFor("Ara", "btn-success btn-search", "search")
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section pageheader
+{
+    <script src="~/resource/js/product.js"></script>
+    @if (searchResult != null)
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setPager('.product-pager', '@searchResult.SearchParams.Size', '@searchResult.TotalSize');
+            });
+        </script>
+    }
+    <style>
+        .product-image { cursor: pointer; }
+    </style>
+}

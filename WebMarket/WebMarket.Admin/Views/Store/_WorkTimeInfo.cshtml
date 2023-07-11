@@ -1,0 +1,51 @@
+﻿@using WebMarket.Admin.Helper;
+@model string
+@{
+    var dayList = new Dictionary<string, string>();
+    dayList.Add("1", "Pazartesi");
+    dayList.Add("2", "Salı");
+    dayList.Add("3", "Çarşamba");
+    dayList.Add("4", "Perşembe");
+    dayList.Add("5", "Cuma");
+    dayList.Add("6", "Cumartesi");
+    dayList.Add("7", "Pazar");
+}
+
+<div class="modal fade" id="workTimesModal" role="dialog" aria-labelledby="workTimesModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 class="modal-title" id="myModalLabel">Çalışma Saatlerini Düzenle</h3>
+
+                <div class="work-times-dialog slider-panel">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="width: 15%">Gün</th>
+                            <th colspan="2" style="width: 85%;">Çalışma Saatleri</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in dayList)
+                        {
+                            <tr>
+                                <td>@item.Value</td>
+                                <td style="width: 600px;">
+                                    <div data-index="@item.Key" class="slider-range"></div></td>
+                                <td style="width: 200px;">
+                                    <div data-index="@item.Key" class="something"></div></td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class='btn btn-default' data-dismiss="modal">Vazgeç</button>
+                @Html.ButtonFor("Kaydet", "btn-info btn-save-work-time", "check")
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Hidden("WorkTimesInfo", Model)

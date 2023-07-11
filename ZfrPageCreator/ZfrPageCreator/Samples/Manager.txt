@@ -1,0 +1,22 @@
+﻿using Aware.BL.Model;
+using Aware.Data;
+using Aware.Manager;
+using Aware.Util.Cache;
+using Aware.Util.Log;
+using ZFR.BAL.Model.Entities;
+
+namespace ZFR.BAL.Manager
+{
+    public class #Entity#Manager : BaseManager<#Entity#>, I#Entity#Manager
+    {
+        public #Entity#Manager(IRepository<#Entity#> repository, IAwareLogger logger, IAwareCacher cacher) : base(repository, logger, cacher)
+        {
+        }
+
+        protected override OperationResult<#Entity#> OnBeforeUpdate(ref #Entity# existing, #Entity# model)
+        {
+            #UPDATE_FIELDS#
+            return Success();
+        }
+    }
+}

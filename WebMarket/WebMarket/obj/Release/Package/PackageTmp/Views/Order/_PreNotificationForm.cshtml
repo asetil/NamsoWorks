@@ -1,0 +1,124 @@
+﻿@using Aware.Util
+@using Aware.ECommerce.Model
+@model Aware.ECommerce.Model.OrderViewModel
+@{
+    var payment = Model.Settings.PaymentTypes.FirstOrDefault(i => i.SubType == (int)Model.Order.PaymentType) ?? new SimpleItem();    
+}
+
+<h2 class="s18">1. SATICIYA İLİŞKİN BİLGİLER</h2>
+<table class="tbl-basket">
+    <tbody>
+        <tr>
+            <td valign="top"><strong>Ticari Ünvan</strong></td>
+            <td>WebMarket Elektronik Hizmetler ve Ticaret Anonim Şirketi (Bundan böyle “SATICI” olarak anılacaktır)</td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Adres</strong></td>
+            <td>Ertuğrul Gazi Cad. No: 4 Küçükköy 34250 İstanbul</td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Telefon</strong></td>
+            <td>0850 300 18 47</td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>Fax</strong></td>
+            <td>(212) 453 16 16</td>
+        </tr>
+        <tr>
+            <td valign="top"><strong>E-posta adresi</strong></td>
+            <td>satis@webmarket.com</td>
+        </tr>
+        <tr>
+            <td valign="top" width="120"><strong>Ürün iade adresi</strong></td>
+            <td> Anadolu Mah. Kanuni Cad. No:18 Orhanlı/Tuzla 34956 İstanbul</td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<h2 class="s18">2. SÖZLEŞME KONUSU ÜRÜN BİLGİLERİ</h2>
+<p>İşbu kısımda sözleşme konusu ürün ya da ürünlerin temel özellikleri açıklanmaktadır.</p>
+<table border="1" cellpadding="4" cellspacing="0" width="100%" class="tbl-basket">
+    <tbody>
+        <tr>
+            <th align="left">Açıklama</th>
+            <th>Adet</th>
+            <th>KDV Dahil Fiyatı</th>
+            <th>Ara Toplam</th>
+        </tr>
+
+        @foreach (var item in Model.Basket.Items)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td align="center">@item.QuantityDescription</td>
+                <td align="center">@item.Price.ToPrice()</td>
+                <td align="right">@item.GrossTotal.ToPrice()</td>
+            </tr>
+        }
+
+        @if (Model.Basket != null && Model.Basket.Discounts != null && Model.Basket.Discounts.Any())
+        {
+            foreach (var discount in Model.Basket.Discounts)
+            {
+                <tr>
+                    <td colspan="3">@discount.Name</td>
+                    <td class="tar item-price">
+                        <div class="total sales-price">@(discount.Total > 0 ? (-1 * discount.Total).ToPrice() : string.Empty) </div>
+                    </td>
+                </tr>
+            }
+        }
+
+
+    @if (Model.Settings.AllowShipping)
+        {
+            <tr>
+                <td colspan="3"><i>Sipariş İşlem ve gönderim ücretleri</i></td>
+                <td align="right">@Model.ShippingMethod.Description</td>
+            </tr>
+        }
+
+        <tr>
+            <td colspan="3"><i>İndirimler toplamı</i></td>
+            <td align="right">@Model.Order.DiscountTotal.ToPrice()</td>
+        </tr>
+
+        <tr>
+            <td colspan="3">Ödeme Şekli</td>
+            <td align="right"><strong>@payment.Title</strong></td>
+        </tr>
+
+        <tr>
+            <td colspan="3"><strong>Toplam (KDV Dahil)</strong></td>
+            <td align="right"><strong>@Model.Order.GrossTotal.ToPrice()</strong></td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<p><i>Siparişiniz 6502 sayılı Tüketicinin Korunması Hakkında Kanun hükümlerine uygun olarak sipariş tarihinden itibaren en geç 30 (otuz) gün içinde <strong>@Model.User.Name</strong> adına kargo firmasına teslim edilir ve/veya indirim kodunuz elektronik olarak size ulaştırılır. Kargo gönderi kodunuz sisteme yansıdıktan sonra en geç 2 gün içerisinde siparişiniz kargo firması tarafından teslim edilecektir.</i></p>
+<h2 class="s18">3. GEÇERLİLİK SÜRESİ</h2>
+<p>İşbu formda yer alan ürün ya da hizmete ilişkin olarak tüketiciye sunulan tüm bilgiler ve vaatler kampanya yayın süresi kadar geçerli olup bu günden sonra Satıcı tarafından işbu formda verilen bilgi ve vaatlerle bağlı kalınmadığı ihtar olunur. Kampanya yayın süresi sonunda Tüketici tarafından satın alınmış ürün ya da hizmetin Satıcı’nın tedarikçi firma stoklarında olmaması ve eşit kalitede ve fiyatta muadil ürünün de bulunmaması halinde Satıcı’nın Tüketici’nin ödemiş olduğu bedeli iade etme hakkı saklıdır.</p>
+<h2 class="s18">4. CAYMA HAKKI</h2>
+<p>Tüketici; mal satışına ilişkin mesafeli sözleşmelerde, teslim aldığı tarihten itibaren 14 gün içerisinde hiçbir hukuki ve cezai sorumluluk üstlenmeksizin ve hiçbir gerekçe göstermeksizin malı reddederek sözleşmeden cayma hakkına sahiptir. Hizmet sunumuna ilişkin mesafeli sözleşmelerde ise, bu süre sözleşmenin imzalandığı tarihte başlar. Sözleşmede, hizmetin ifasının 14 günlük süre dolmadan yapılması kararlaştırılmışsa, tüketici ifanın başlayacağı tarihe kadar cayma hakkını kullanabilir. Cayma hakkının kullanımından kaynaklanan masraflar satıcıya aittir.</p><p>Cayma hakkının kullanılması için 14 günlük süre içinde Satıcıya yukarıda bildirilen faks, telefon veya eposta ile bildirimde bulunulması ve ürünün Mesafeli Satış Sözleşmesi’nin 6. madde hükümleri çerçevesinde kullanılmamış olması şarttır. Cayma Hakkı kapsamında yer alan iade usulleri Mesafeli Satış Sözleşmesinde yer almaktadır. Süresi içerisinde herhangi bir nedenle iade edilen ürünün kargo bedeli SATICI tarafından karşılanacaktır.</p>
+<h2 class="s18">5. GEÇERLİLİK</h2>
+<p>İşbu ön bilgilendirme formu, elektronik ortamda Tüketici tarafından okunarak kabul edildikten sonra tüketici sözleşmesi kurulması aşamasına geçilecektir.</p>
+<h2 class="s18">6. YETKİLİ MAHKEME</h2>
+<p>Tüketici; şikâyet ve itirazları konusunda başvurularını, Gümrük ve Ticaret Bakanlığı tarafından her yıl Aralık ayında belirlenen parasal sınırlar dâhilinde tüketicinin mal veya hizmeti satın aldığı veya ikametgâhının bulunduğu yerdeki tüketici sorunları hakem heyetine veya tüketici mahkemesine yapabilir.</p>
+<h2 class="s14">TÜKETİCİ;</h2>
+<p>
+    <strong>Ad soyad:</strong> @Model.User.Name
+</p>
+<p>
+    <strong>Eposta:</strong> @Model.User.Email
+</p>
+<p>
+    <strong>Tarih:</strong> @Model.Order.DateCreated.ToShortDateString()
+</p>
+<style>
+    .s14 { font-size: 14px; }
+
+    .s18 { font-size: 18px; }
+
+    .s24 { font-size: 24px; }
+    .tbl-basket td,.tbl-basket th{border:1px solid #eee;padding: 5px 10px;}
+</style>

@@ -1,0 +1,58 @@
+﻿@model Aware.ECommerce.Model.OrderViewModel
+@{
+    var addressCount = 0;
+    var columnwidth = ViewBag.DrawMode == 1 ? "col-md-6 col-sm-6" : "col-md-6 col-sm-6";
+}
+
+@if (Model != null && Model.AddressList != null && Model.AddressList.Any())
+{
+    addressCount = Model.AddressList.Count();
+    foreach (var address in Model.AddressList)
+    {
+        var regionInfo = string.Format("{0}_{1}_{2}", address.CityID, address.CountyID, address.DistrictID);
+        <div class="@columnwidth">
+            <div class="address-container" data-address-id="@address.ID" data-region-info="@regionInfo">
+                @if (Model.AllowAddressSelection)
+                {
+                    <div class="selection">
+                        <span class="address-type shipping @(address.ID == Model.SelectedShippingAddress ? "selected" : "")" title="Bu adresi teslimat adresi olarak kullan."><i class="fa fa-check"></i> Teslimat Adresi</span>
+                        <span class="address-type billing @(address.ID == Model.SelectedBillingAddress ? "selected" : "")" title="Bu adresi fatura adresi olarak kullan."><i class="fa fa-check"></i> Fatura Adresi</span>
+                    </div>
+                    
+                }
+
+                <div class="body">
+                    <span>@Html.Raw(address.DisplayText)</span><br />
+                    <a href="javascript:void(0)" class="btn-address btn-delete-address" data-role="delete-address">Sil <i class="fa fa-remove"></i></a>
+                    <a href="javascript:void(0)" class="btn-address btn-show-address">Düzenle <i class="fa fa-edit"></i></a>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<div class="@columnwidth">
+    <div class="address-container new-address @(addressCount < 5 ? "" : "dn")" data-address-id="0">
+        <a href="javascript:void(0);" class="btn-show-address">
+            <span><i class="fa fa-plus"></i> Yeni Ekle</span>
+        </a>
+    </div>
+</div>
+
+<div class="modal fade" id="addressModal">
+    <div class="modal-dialog" style="width: 100%;max-width: 440px;">
+        <div class="modal-body wrapper-box">
+            <button type="button" class="close pa" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h2 class="mb10 modal-title">Adres Düzenleme</h2>
+            <div class="address-form"> Lütfen bekleyiniz...</div>
+            <div class="db mt10">
+                @Html.ButtonFor("Kaydet", "fr btn-green btn-edit-address", string.Empty)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.Hidden("ShippingAddress", Model.SelectedShippingAddress)
+@Html.Hidden("BillingAddress", Model.SelectedBillingAddress)
+@Html.Hidden("selectedAddress", 0)

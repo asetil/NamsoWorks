@@ -1,0 +1,69 @@
+﻿@using Aware.Util.Enums
+@using Aware.Util.View
+@using CleanCode.Helper
+
+@model Aware.Util.View.Field
+
+@if (!string.IsNullOrEmpty(Model.Prefix))
+{
+    <span class="input-group-addon">@Html.Raw(Model.Prefix)</span>
+}
+
+@if (Model.Type == FieldType.TextBox || Model.Type == FieldType.Password || Model.Type == FieldType.NumberBox)
+{
+    <input type="@Model.TypeString" class="form-control text @Model.Css" id="@Model.ID.Replace(".", "_")" name="@Model.ID" placeholder="@Model.Placeholder" value="@Model.Value" @Html.Raw(Model.Attributes) />
+}
+else if (Model.Type == FieldType.Textarea)
+{
+    <textarea id='@Model.ID.Replace(".", "_")' name='@Model.ID' class='form-control text area @Model.Css' placeholder='@Model.Placeholder' @Html.Raw(Model.Attributes)>@Model.Value</textarea>
+}
+else if (Model.Type == FieldType.Label)
+{
+    <label class='@Model.Css' @Html.Raw(Model.Attributes)>@Model.Value</label>
+}
+else if (Model.Type == FieldType.CheckBox)
+{
+    <div class="checkbox checkbox-success @Model.Css" @Html.Raw(Model.Attributes)>
+        @if (Model.Value == "true")
+        {
+            <input id="@Model.ID" type="checkbox" class="styled" checked="checked">
+        }
+        else
+        {
+            <input id="@Model.ID" type="checkbox" class="styled">
+        }
+        <label for="@Model.ID">@Model.Title </label>
+    </div>
+}
+else if (Model.Type == FieldType.Image)
+{
+    <div class="image-wrapper @Model.Css">
+        <div class="thumbnail">
+            <img src="@Model.Value" />
+        </div>
+        <div class="selector">
+            @Html.ButtonFor("Seç", "btn-sm btn-info btn-select-image", string.Empty)
+            <span>@Model.Extra</span>
+            <input name="@Model.ID" id="@Model.ID" class="image upload-file" type="file" @Html.Raw(Model.Attributes)>
+        </div>
+    </div>
+}
+else if (Model.Type == FieldType.Select)
+{
+    var selectField = Model as SelectField;
+    <select id='@Model.ID.Replace(".", "_")' name='@Model.ID' class='sbx  @Model.Css' @Html.Raw(Model.Attributes) @(selectField.IsMulti ? "multiple='multiple'" : "") data-selected="@Model.Value">
+        @if (!string.IsNullOrEmpty(selectField.BlankOption))
+        {
+            <option value='0'>@selectField.BlankOption</option>
+        }
+        @foreach (var item in selectField.DataSource)
+        {
+            <option value='@item.ID' @(selectField.IsSelected(item.ID) ? "selected='selected'" : "")>@item.Value</option>
+        }
+    </select>
+}
+
+@if (!string.IsNullOrEmpty(Model.Suffix))
+{
+    <span class="input-group-addon">@Html.Raw(Model.Suffix)</span>
+}

@@ -1,0 +1,209 @@
+﻿@using Aware.Util
+@using Aware.ECommerce.Util
+@using Aware.Util.Model
+@using Aware.Util.View
+@model Aware.ECommerce.Model.FavoritesViewModel
+
+@{
+    ViewBag.Title = "Favori Ürünlerim";
+    ViewBag.ActivePage = 6;
+    var hasFavorite = Model != null && Model.Products != null && Model.Products.Any();
+}
+
+
+@if (hasFavorite)
+{
+    <section class="page-section breadcrumbs">
+        <div class="container">
+            <div class="page-header">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </section>
+}
+
+<div class="container mb20">
+    @if (hasFavorite)
+    {
+        var dataSource = Model.Stores.Select(i => new Item(i.ID, i.Name)).ToList();
+        var marketFilter = new Selecto(string.Empty, dataSource, default(int), "fr select-store mb10", "filterByStore");
+        marketFilter.BlankOption = "Market Seçimi :";
+
+        <div class="favorite-container">
+            <div class="filter-panel">
+                <div class="fl">
+                    <div class="wm-cbx cbx-favorite cbx-header">
+                        <i class="fa fa-check-square"></i>
+                    </div>
+
+                    <div class="dbfl">
+                        <span>Seçtiklerimi </span>
+                        <a href="javascript:void(0)" class="ml10 btn btn-red btn-remove-favorites">Favorilerden Kaldır</a>
+                        <a href="javascript:void(0)" class="dn btn btn-green ml10 btn-order-favorites">Sepete At</a>
+                    </div>
+                </div>
+                <div class="fr">
+                    @Html.TextBox("search-favorite", string.Empty, new { @class = "txt-search-favorite mr10", placeholder = "Ürün ara" })
+                    @Html.Raw(marketFilter.Draw())
+                </div>
+            </div>
+            <div class="mt20 mb20 my-basket">
+                @foreach (var product in Model.Products)
+                {
+                    var storeInfo = string.Join(",", product.Items.Select(i => i.StoreID)).S();
+                    <div class="col-md-6 col-xs-12 product-wrp active" data-product-id="@product.ID" data-stores="@storeInfo">
+                        <div class="wm-cbx cbx-favorite">
+                            <i class="fa fa-check-square"></i>
+                        </div>
+                        <div class="ml20 col-md-4">
+                            <a href="@Url.ProductDetail(product.Name, product.ID.ToString())" class="product-info" title="@product.Name">
+                                <img class="product-img" src="~/resource/img/@product.DefaultImage.Path" alt="@product.Name" title="@product.Name" />
+                            </a>
+                        </div>
+                        <div class="col-md-7">
+                            <a href="@Url.ProductDetail(product.Name, product.ID.ToString())" class="product-info" title="@product.Name">
+                                <p class="name">@product.Name.Short(30)</p>
+                            </a>
+                            @if (product.ItemCount > 1)
+                            {
+                                <p>Bu ürün @product.ItemCount farklı markette</p>
+                            }
+                            else
+                            {
+                                var store = Model.Stores.FirstOrDefault(i => i.ID == product.DefaultItem.StoreID);
+                                if (store != null)
+                                {
+                                    <p>Sadece @store.DisplayName'de</p>
+                                }
+                            }
+
+                            <div class="item-info">
+                                @if (product.ItemCount == 1)
+                                {
+                                    if (product.DefaultItem.DiscountRate > 0)
+                                    {
+                                        <p class="slprice">@product.DefaultItem.ListPrice.ToPrice("TL")</p>
+                                    }
+                                    <p class="sprice">@product.DefaultItem.SalesPrice.ToPrice("TL")</p>
+
+                                    if (product.DefaultItem.HasStock(1))
+                                    {
+                                        <a href="javascript:void(0)" class="mt10 btn btn-green btn-order-favorite">
+                                            <span>Sepete At</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <button class="mt10 hidden-xs btn btn-sm btn-red btn-opt stock-info">Tükendi</button>
+                                    }
+                                }
+                                else if (product.Items != null && product.Items.Any())
+                                {
+                                    <ul class="mt10 list-inline store-list">
+                                        <li class="dropdown">
+                                            <ul role="menu" class="dropdown-menu">
+                                                @foreach (var item in product.Items)
+                                                {
+                                                    var store = Model.Stores.FirstOrDefault(i => i.ID == item.StoreID);
+                                                    <li class="pr info" data-store-id="@store.ID">
+                                                        <img class="simage img-responsive" src="~/resource/img/@store.ImageInfo" alt=""/>
+                                                        <div class="ml10 store-detail">
+                                                            <p class="sname">@store.DisplayName.Short(30)</p>
+
+                                                            @if (item.DiscountRate > 0)
+                                                            {
+                                                                <p class="slprice">@item.ListPrice.ToPrice("TL")</p>
+                                                            }
+                                                            else
+                                                            { <p>&nbsp;</p>}
+
+                                                            <p class="sprice">@item.SalesPrice.ToPrice("TL")</p>
+                                                            @if (item.HasStock(1))
+                                                            {
+                                                                <a href="javascript:void(0)" class="btn btn-green btn-order-favorite">
+                                                                    <i class="visible-xs fa fa-shopping-basket"></i>
+                                                                    <span>Sepete At</span>
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button class="btn btn-sm btn-red btn-opt stock-info">Tükendi</button>
+                                                            }
+                                                        </div>
+                                                    </li>
+                                                }
+                                            </ul>
+                                            <a href="#" class="dropdown-toggle btn btn-green" data-toggle="dropdown">
+                                                Fiyatları İncele
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+                            </div>
+
+                            <a href="javascript:void(0)" class="btn btn-red btn-remove-favorite" title="Favorilerden Kaldır">
+                                <i class="fa fa-heart"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-md-12 mb20 mt20 ms-col-0">
+            <div class="no-result-found" style="color: #232323;">
+                <i class="fa fa-heart"></i>
+                <h2 class="mt20">Favori Ürününüz Yok!</h2>
+            </div>
+
+            <p class="text-center lead mt20">
+                Ürünleri favorilerinize ekleyerek hızlıca sipariş verebilirsiniz. Bunun için ürünlerin yanında yer alan <i style="color:#000;" class="fa fa-heart"></i> simgesine tıklamanız yeterli. Aynı simgeye tekrar tıklayarak seçtiğiniz ürünü favorilerinizden kolayca çıkarabilirsiniz.
+            </p>
+        </div>
+    }
+</div>
+
+@section header
+{
+    <script src="~/resource/js/Basket/Basket.js"></script>
+    <link href="~/resource/css/productList.css" rel="stylesheet" />
+
+    <style>
+        .favorite-container .filter-panel { display: block; float: left; width: 100%; border-bottom: 1px dashed #ccc; padding-bottom: 15px; margin-bottom: 3px; }
+        .favorite-container .btn { padding: 7px 10px; text-transform: capitalize; font-weight: 400; }
+        .favorite-container .filter-panel .select-store input.txt { border: 2px solid #ddd; padding: 3px 9px; width: 200px; background-position: right 10px center !important; margin-right: 0; }
+        .favorite-container .filter-panel .txt-search-favorite { border: 2px solid #ddd; padding: 3px 9px; width: 200px; background: #fff url('/resource/img/Icons/search.png') no-repeat right 10px center; border-radius: 4px; height: 38px; }
+        .favorite-container .filter-panel .select-store ul, .favorite-container .filter-panel .select-store ul li { width: 220px; }
+        .favorite-container .filter-panel .cbx-header { display: inline; margin-top: 3px; float: left; margin-right: 6px; }
+
+        .favorite-container .product-wrp { display: none; border-bottom: 1px dashed #ccc; margin: 10px 0; padding: 10px 0; height: 200px; }
+        .favorite-container .product-wrp.active {display: block;}
+        .favorite-container .product-wrp .cbx-favorite { position: absolute; top: 14px; }
+        .favorite-container .product-wrp .btn-remove-favorite { display: none; position: absolute; right: 31px; top: 14px; border-radius: 50%; padding: 10px; }
+        .favorite-container .product-wrp:hover .info-wrp .btn-remove-favorite { display: block; }
+
+        .favorite-container .product-wrp .name { font-size: 18px; }
+        .favorite-container .product-wrp .product-img { outline: none;width: 100%;height: 100%; display: inline-block; }
+
+        .favorite-container .product-wrp .store-list ul { width: 252px; background: #fff; bottom: 100%; top: inherit; }
+        .favorite-container .product-wrp .store-list ul li { width: 100%; float: left; margin: 5px 0px; padding: 5px 0; border-bottom: 1px dashed #eee; }
+
+        .favorite-container .product-wrp .store-list .info img { width: 45px; max-height: 45px; float: left; border-radius: 50%; background: #fff; border: 1px solid #eee; padding: 1px; position: absolute; right: 0px; top: -5px; }
+        .favorite-container .product-wrp .store-list .info .sname { font-size: 15px; margin-bottom: 2px; }
+        .favorite-container .product-wrp .slprice { font-size: 13px; text-decoration: line-through;color: #dc143c; }
+        .favorite-container .product-wrp .sprice { font-size: 16px; color: #232323; margin-top: 3px; }
+        .favorite-container .product-wrp .store-list .fa-chevron-up { margin-top: 5px; font-size: 16px; color: #5c5c5c; }
+        .favorite-container .product-wrp .store-list .info .btn-order-favorite { position: absolute; right: 7px; bottom: 7px; }
+        .favorite-container .product-wrp .store-list .info .stock-info { position: absolute; right: 7px; bottom: 7px; }
+
+        @@media screen and (max-width:480px) {
+            .favorite-container .product-wrp { height: auto; text-align: center; }
+            .favorite-container .product-wrp .product-img { max-height: 160px; max-width: 160px; }
+            .favorite-container .product-wrp .info-wrp .btn-remove-favorite { display: block; }
+            .favorite-container .product-wrp .store-list > li { width: 100%; }
+            .favorite-container .product-wrp .store-list > li > a.dropdown-toggle { width: 100%; }
+        }
+    </style>
+}

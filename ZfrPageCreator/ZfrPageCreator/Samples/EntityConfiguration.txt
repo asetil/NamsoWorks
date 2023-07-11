@@ -1,0 +1,16 @@
+﻿using ZFR.BAL.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ZFR.BAL.Model.Entities;
+
+namespace ZFR.BAL.Model.EntityConfiguration
+{
+    public class #Entity#Configurations : IEntityTypeConfiguration<#Entity#>
+    {
+        public void Configure(EntityTypeBuilder<#Entity#> builder)
+        {
+            builder.ToTable("#Entity#").HasKey(p => new { p.Id });
+            //builder.Property(x => x.Adi).IsRequired().HasMaxLength(100);
+        }
+    }
+}

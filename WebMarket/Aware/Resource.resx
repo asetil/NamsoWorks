@@ -1,0 +1,336 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Address_AddressCannotBeDeleted" xml:space="preserve">
+    <value>Adres silinirken bir hata oluştu!</value>
+  </data>
+  <data name="Address_AddressCannotBeEdited" xml:space="preserve">
+    <value>Adres düzenlenirken bir hata oluştu!</value>
+  </data>
+  <data name="Address_MaxAddressCountExceeded" xml:space="preserve">
+    <value>En fazla 5 tane adres ekleyebilirsiniz!</value>
+  </data>
+  <data name="Authority_ValueExists" xml:space="preserve">
+    <value>Eklemeye çalıştığınız yetki zaten tanımlanmış. Lütfeden listeden  seçim yaparak düzenleyin.</value>
+  </data>
+  <data name="Basket_AddFavoritesToBasketFailed" xml:space="preserve">
+    <value>Seçtiğiniz favori ürün/ler sepetinize eklenemedi. Lütfen daha sonra tekrar deneyiniz.</value>
+  </data>
+  <data name="Basket_AddFavoritesToBasketPartiallyFailed" xml:space="preserve">
+    <value>Seçtiğiniz favori ürün/lerden bir kısmı sepetinize eklenemedi.</value>
+  </data>
+  <data name="Basket_AddFavoritesToBasketSuccessfull" xml:space="preserve">
+    <value>Seçtiğiniz favori ürün/ler başarıyla sepetinize eklendi.</value>
+  </data>
+  <data name="Basket_AddToBasketFailed" xml:space="preserve">
+    <value>Ürün sepetinize eklenemedi!</value>
+  </data>
+  <data name="Basket_AddToFavoriteSuccessfull" xml:space="preserve">
+    <value>Ürün başarıyla favorilerinize eklendi.</value>
+  </data>
+  <data name="Basket_ItemCannotBeDeleted" xml:space="preserve">
+    <value>Ürün sepetinizden şuan çıkartılamıyor. Lütfen daha sonra tekrar deneyin!</value>
+  </data>
+  <data name="Basket_ItemDeletedSuccessfully" xml:space="preserve">
+    <value>Ürün sepetinizden başarıyla çıkartıldı.</value>
+  </data>
+  <data name="Basket_ItemNotFound" xml:space="preserve">
+    <value>Ürün bulunamadı!</value>
+  </data>
+  <data name="Basket_NotEnoughStock" xml:space="preserve">
+    <value>Ürün stoğu yeterli olmadığından, ürün sepetinize eklenemedi.</value>
+  </data>
+  <data name="Basket_QuantityLimitExceeded" xml:space="preserve">
+    <value>Sepetinize bu üründen en fazla {0} {1} ekleyebilirsiniz!</value>
+  </data>
+  <data name="Basket_RemoveFromFavoriteFailed" xml:space="preserve">
+    <value>Favorilerden kadırma işlemi başarısız oldu!</value>
+  </data>
+  <data name="Basket_RemoveFromFavoriteSuccessfull" xml:space="preserve">
+    <value>Ürün/ler başarıyla favorilerinizden kaldırıldı!</value>
+  </data>
+  <data name="Basket_SingleStoreAllowed" xml:space="preserve">
+    <value>Sepetinizde yalnızca bir markete ait ürünler yer alabilir. Bu ürünü sepetinize eklemek için öncelikle sepetinizdeki ürünleri çıkartın!</value>
+  </data>
+  <data name="Campaign_CouponCodeAppliedSuccessfully" xml:space="preserve">
+    <value>Kupon kodunuz başarıyla sepetinize uygulandı.</value>
+  </data>
+  <data name="Campaign_CouponCodeIsAlreadyUsed" xml:space="preserve">
+    <value>Bu kupon kodu zaten kullanılmış!</value>
+  </data>
+  <data name="Campaign_CouponCodeIsExpired" xml:space="preserve">
+    <value>Belirttiğiniz kupon kodunun süresi dolmuş!</value>
+  </data>
+  <data name="Campaign_CouponCodeIsNotValid" xml:space="preserve">
+    <value>Geçersiz bir kupon kodu belirttiniz!</value>
+  </data>
+  <data name="Card_InvalidCardNumber" xml:space="preserve">
+    <value>Kart numarası geçerli değil!</value>
+  </data>
+  <data name="Card_InvalidCVC" xml:space="preserve">
+    <value>Güvenlik anahatarı (CVC) geçerli değil!</value>
+  </data>
+  <data name="Card_InvalidExpireDate" xml:space="preserve">
+    <value>Son kullanma tarihi geçerli değil!</value>
+  </data>
+  <data name="Comment_ChangeStatus_Successfull" xml:space="preserve">
+    <value>Yorum durumu başarıyla güncellendi.</value>
+  </data>
+  <data name="Comment_ContentContainsAbusiveWord" xml:space="preserve">
+    <value>Yorum içeriğinde argo/küfür içeren sözcükler tespit edildi. Lütfen kontrol ederek tekrar deneyiniz!</value>
+  </data>
+  <data name="Comment_ContentMinLengthError" xml:space="preserve">
+    <value>Yorum içeriği çok kısa. Beş kelimeden az yazılmış yorumlar onaylanmamaktadır!</value>
+  </data>
+  <data name="Comment_TitleContainsAbusiveWord" xml:space="preserve">
+    <value>Yorum başlığında argo/küfür içeren sözcükler tespit edildi. Lütfen kontrol ederek tekrar deneyiniz!</value>
+  </data>
+  <data name="Favorite_AddToFavoritesFailed" xml:space="preserve">
+    <value>Ürün favorilerinize eklenemedi. Lütfen daha sonra tekrar deneyiniz!</value>
+  </data>
+  <data name="File_NotAvailable" xml:space="preserve">
+    <value>Belirtilen dosya sistemde mevcut değil ya da  işlem başarısız!</value>
+  </data>
+  <data name="General_Error" xml:space="preserve">
+    <value>İşlem başarısız. Lütfen daha sonra tekrar deneyiniz.</value>
+  </data>
+  <data name="General_ExceptionThrowed" xml:space="preserve">
+    <value>İlgili istek işlenirken bir hata oluştu!</value>
+  </data>
+  <data name="General_Success" xml:space="preserve">
+    <value>İşlem başarıyla tamamlandı.</value>
+  </data>
+  <data name="Order_CannotPaidWithCreditCard" xml:space="preserve">
+    <value>Ödeme işlemine devam edilemiyor. Lütfen daha sonra tekrar deneyin!</value>
+  </data>
+  <data name="Order_CannotPaidWithGarantiPay" xml:space="preserve">
+    <value>GarantiPay üzerinden ödeme işlemine devam edilemiyor. Lütfen daha sonra tekrar deneyin!</value>
+  </data>
+  <data name="Order_CompletePaymentFailed" xml:space="preserve">
+    <value>Sipariş ödemesi alındı fakat sistemimize işlenemedi. Lütfen müşteri temsilcimiz ile iletişime geçin!</value>
+  </data>
+  <data name="Order_CompletePaymentFailedSinceOrderNotFound" xml:space="preserve">
+    <value>{0} nolu siparişiniz sistemde bulunamadı! Lütfen müşteri temsilcimiz ile iletişime geçin!</value>
+  </data>
+  <data name="Order_NoBasketNoItem" xml:space="preserve">
+    <value>Sepetinizde henüz ürün yok. Sipariş vermek için sepetinize ürün eklemelisiniz!</value>
+  </data>
+  <data name="Order_OrderCannotBeApproved" xml:space="preserve">
+    <value>Siparişiniz onaylanırken bir hata oluştu!</value>
+  </data>
+  <data name="Order_OrderCannotBeCancelled" xml:space="preserve">
+    <value>Sadece onay bekleyen veya ödemesi yapılmamış siparişlerinizi iptal edebilirsiniz!</value>
+  </data>
+  <data name="Order_OrderCannotBeEdited" xml:space="preserve">
+    <value>Siparişiniz düzenlenirken bir hata oluştu!</value>
+  </data>
+  <data name="Order_PaymentInfoCannotBeSaved" xml:space="preserve">
+    <value>Sipariş ödeme bilgileri kaydedilemedi. Lütfen daha sonra tekrar deneyin!</value>
+  </data>
+  <data name="Order_RemittanceBankNotSelected" xml:space="preserve">
+    <value>Devam etmek için havale yapacağınız bankayı seçmelisiniz!</value>
+  </data>
+  <data name="Order_StoreMinAmountNotPassed" xml:space="preserve">
+    <value>Sepet tutarınız, minimum sipariş tutarı {0}'nin üstünde olmalıdır!</value>
+  </data>
+  <data name="Payment_BankResponseNotReadable" xml:space="preserve">
+    <value>Bankadan dönen cevap okunamadı!</value>
+  </data>
+  <data name="StoreItem_ImportInvalidFile" xml:space="preserve">
+    <value>Ürün aktarımı yapılamıyor. Geçersiz bir dosya ile istek yapıldı!</value>
+  </data>
+  <data name="StoreItem_ImportOperationFailed" xml:space="preserve">
+    <value>Ürün aktarım işlemi başarısız oldu!</value>
+  </data>
+  <data name="StoreItem_ImportOperationSuccessfull" xml:space="preserve">
+    <value>Ürünlerin aktarımı başarıyla tamamlandı.</value>
+  </data>
+  <data name="Store_AlreadyHasItem" xml:space="preserve">
+    <value>Seçtiğiniz ürün bu markete zaten eklenmiş!</value>
+  </data>
+  <data name="User_ActivationCompletedSuccessfully" xml:space="preserve">
+    <value>Üyeliğiniz başarıyla aktive edildi.</value>
+  </data>
+  <data name="User_ActivationLinkExpired" xml:space="preserve">
+    <value>Aktivasyon kodunun süresi bitmiş. Lütfen yenisini talep ediniz!</value>
+  </data>
+  <data name="User_ActivationLinkSend1" xml:space="preserve">
+    <value>Şifrenizi güncelleyebilmeniz için '{0}' e-posta adresine bir aktivasyon maili gönderdik.</value>
+  </data>
+  <data name="User_ActivationLinkSend2" xml:space="preserve">
+    <value>Üyeliğinizi aktifleştirebilmeniz için '{0}' e-posta adresine bir aktivasyon maili gönderdik.</value>
+  </data>
+  <data name="User_ActivationRequired" xml:space="preserve">
+    <value>Üyeliğiniz henüz aktive edilmemiş.</value>
+  </data>
+  <data name="User_AlreadyActivated" xml:space="preserve">
+    <value>Üyelik aktivasyonunuz daha önce zaten yapılmış. Bilgilerinizle üye girişi yapabilirsiniz.</value>
+  </data>
+  <data name="User_ContactUsMailSended" xml:space="preserve">
+    <value>Mesajınız başarıyla yöneticilerimize iletildi. Teşekkürler..</value>
+  </data>
+  <data name="User_CurrentPasswordAndNewPasswordAreSame" xml:space="preserve">
+    <value>Yeni şifreniz mevcut şifreniz ile aynı olamaz!</value>
+  </data>
+  <data name="User_EmailExist" xml:space="preserve">
+    <value>E-posta başka kullanıcıya ait!</value>
+  </data>
+  <data name="User_EmailIsNotValid" xml:space="preserve">
+    <value>E-posta geçerli değil!</value>
+  </data>
+  <data name="User_EmailNotExist" xml:space="preserve">
+    <value>Bu e-postaya sahip bir kullanıcı bulunamadı!</value>
+  </data>
+  <data name="User_InvalidActivationCode" xml:space="preserve">
+    <value>Belirttiğiniz aktivasyon kodu geçerli değildir.</value>
+  </data>
+  <data name="User_InvalidCurrentPassword" xml:space="preserve">
+    <value>Mevcut şifrenizi hatalı belirttiniz!</value>
+  </data>
+  <data name="User_MissignInfo" xml:space="preserve">
+    <value>Bilgileriniz eksik!</value>
+  </data>
+  <data name="User_PasswordRefreshFailed" xml:space="preserve">
+    <value>Şifreniz değiştirilemedi. Lütfen bilgilerinizi kontrol edip tekrar deneyin!</value>
+  </data>
+  <data name="User_SuccessfullyCreated" xml:space="preserve">
+    <value>Kullanıcı başarıyla oluşturuldu.</value>
+  </data>
+  <data name="User_SuccessfullyDeleted" xml:space="preserve">
+    <value>Kullanıcı başarıyla silindi.</value>
+  </data>
+  <data name="User_SuccessfullyUpdated" xml:space="preserve">
+    <value>Kullanıcı bilgileri başarıyla kaydedildi.</value>
+  </data>
+  <data name="User_TicketIsNotValid" xml:space="preserve">
+    <value>Hata! Ticket geçerli değil. Süresi dolmuş olabilir yada hatalı ticket belirtildi.</value>
+  </data>
+  <data name="User_UnAuthorized" xml:space="preserve">
+    <value>403</value>
+  </data>
+  <data name="User_WrongInformation" xml:space="preserve">
+    <value>E-posta ya da şifreniz hatalı! Eğer şifrenizi hatırlamıyorsanız 'Şifremi Unuttum' ekranında, şifre hatırlatma e-postası talebinde bulunabilirsiniz.</value>
+  </data>
+  <data name="Basket_VariantSelectionRequired" xml:space="preserve">
+    <value>Ürün için varyant seçimi yapmalısınız!</value>
+  </data>
+  <data name="RegionDelete_RegionHasSubegions" xml:space="preserve">
+    <value>Bölgenin alt bölgeleri olduğu için bu bölge silinemez!</value>
+  </data>
+</root>

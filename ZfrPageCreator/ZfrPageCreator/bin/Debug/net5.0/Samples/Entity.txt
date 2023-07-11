@@ -1,0 +1,9 @@
+﻿using Aware.Model;
+
+namespace ZFR.BAL.Model.Entities
+{
+    public class #Entity# : BaseEntity
+    {
+        #FIELDS#
+    }
+}

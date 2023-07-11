@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Üye Girişi";
+    ViewBag.HideUserPanel = true;
+    string requestData = ViewBag.RequestData != null ? ViewBag.RequestData.ToString() : string.Empty;
+}
+
+<div class="breadcrumbs_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumb_content">
+                    <h3>@ViewBag.Title</h3>
+                    <ul>
+                        <li><a href="index.html">home</a></li>
+                        <li>Login</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="margin-bottom:100px;">
+    <div class="row page-dialog">
+        <partial name="_LoginPanel" model="6" />
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/user.js"></script>
+}

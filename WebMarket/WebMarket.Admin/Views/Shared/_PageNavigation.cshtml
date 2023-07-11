@@ -1,0 +1,22 @@
+﻿@using Aware.Util.Model
+@{
+    var pageNavigation = (Item)ViewBag.PageNavigation;
+    var operationResult = (Result)ViewBag.SaveResult;
+}
+
+@*<h2 class="card-title">@ViewBag.Title</h2>*@
+@*<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-home"></i> Anasayfa</a></li>
+    @if (pageNavigation != null && !string.IsNullOrEmpty(pageNavigation.Title))
+    {
+        <li><a href="@pageNavigation.Url"><i class="fa @pageNavigation.Value"></i> @pageNavigation.Title</a></li>
+    }
+    <li class="active">@ViewBag.Title</li>
+</ol>*@
+
+@if (operationResult != null && !string.IsNullOrEmpty(operationResult.Message))
+{
+    <div class="alert alert-@(operationResult.OK ? "success" : "error") pnl-operation-result">
+        <i class="fa fa-@(operationResult.OK ? "check" : "exclamation-circle")"></i>&nbsp; @operationResult.Message
+    </div>
+}

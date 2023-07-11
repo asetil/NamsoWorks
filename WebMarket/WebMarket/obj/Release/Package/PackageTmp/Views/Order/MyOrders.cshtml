@@ -1,0 +1,63 @@
+﻿@using Aware.Util
+@using Resource = Resources.Resource
+@model List<Aware.ECommerce.Model.Order>
+@{
+    ViewBag.Title = Resource.Order_Title;
+    ViewBag.ActivePage = 5;
+}
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+<div class="mb20 container my-orders">
+    @if (Model != null && Model.Any())
+    {
+        <p class="text-center lead">
+            Siparişler kampanya bitim tarihini takip eden 7 iş günü içerisinde toplu olarak gönderilir. 7. iş günü olarak belirtilen süreye haftasonu ve resmi tatiller dahil değildir.
+        </p>
+        <hr class="page-divider" />
+
+        foreach (var order in Model)
+        {
+            var orderStatus = Html.GetOrderStatus(order.Status);
+            <div class="col-md-4 col-sm-6">
+                <div class="order-container order-@((int)order.Status)">
+                    <div class="status">
+                        <i class="fa @orderStatus.Value"></i>
+                        <span>@orderStatus.Title</span>
+                    </div>
+                    <div>@order.Description</div>
+                    <div class="order-id"><b>#@order.UniqueID</b></div>
+                    <div><i class="fa fa-clock-o"></i> @order.DateModified.ToString("dd.MM.yyyy hh:mm")</div>
+                    <div class="pricing">
+                        <div class="mb10"><b>İndirim</b></div>
+                        <div class="mb20 price">@order.DiscountTotal.ToPrice()</div>
+                        <div class="mb10"><b>Tutar</b></div>
+                        <div class="mb20 price">@order.GrossTotal.ToPrice()</div>
+                    </div>
+                    <div class="btn-row">
+                        <a href="@Url.Action("Detail", "Order", new {id = order.UniqueID})" class="btn btn-green">Sipariş Detayı</a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="mb20">
+            <div class="no-result-found" style="color: #232323;">
+                <i class="fa fa-cubes"></i>
+                <h2 class="mt20">Henüz siparişiniz yok!</h2>
+                <p class="text-center lead"><a href="/urunler" class="btn btn-green mt20">@Resource.StartPurchase</a></p>
+            </div>
+        </div>
+    }
+</div>
+
+@section header
+{
+    <link href="@Html.CssPath("order.css")" rel="stylesheet" />
+}

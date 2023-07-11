@@ -1,0 +1,70 @@
+﻿@using Aware
+@using Aware.ECommerce.Model
+@using Aware.Util
+@model Aware.ECommerce.Model.OrderViewModel
+@{
+    ViewBag.Title = "Sipariş Bilgileri";
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <div class="container">
+        @Html.Partial("_OrderProcess", 1)
+
+        <div class="col-md-8">
+            <div class="dbfl order-address">
+                <h3>Adres Bilgileri</h3>
+                <span class="dib mt20 mb20">
+                    Siparişiniz için "Teslimat Adresi" ve "Fatura Adresi" seçmelisiniz. Bunun için
+                    adres seçim alanında seçim yapacağınız adresler için sırasıyla <b>"T"</b> ve <b>"F"</b> kutucuklarına tıklamanız yeterli.
+                </span>
+
+                @Html.Partial("~/Views/Address/_AddressSelection.cshtml", Model)
+            </div>
+
+            <div class="dbfl mt20 mb20 order-shipments">
+                @if (Model.Settings.AllowShipping && Model.ShippingMethods.Any())
+                {
+                    ViewBag.SelectedShippingMethod = Model.Order.ShippingMethodID;
+
+                    <h3>Teslimat Şekli</h3>
+                    <div class="shipping-method-container">
+                        @Html.Partial("_ShippingMethods", Model.ShippingMethods)
+                    </div>
+
+                    <span class="mt10 db shipping-message @(Model.ShippingMethod.ID > 0 ? "dn" : "")">
+                        Teslimat yöntemi seçmek için öncelikle teslimat adresi seçmelisiniz!
+                    </span>
+                    <br/>
+                }
+
+                <br/>
+                <label class="mt20 mb10">Sipariş Notu</label>
+                <textarea class="form-control order-note" maxlength="250" placeholder="Sipariş notunuz..">@Model.Order.Note</textarea>
+
+                <div class="mt20 mb20" style="padding-bottom: 150px;">
+                    @Html.ButtonFor("Devam Et", "fr btn-lg btn-continue-order", string.Empty)
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("_OrderSummary",Model)
+        @Html.Hidden("orderID", Model.Order.ID)
+        @Html.Hidden("currency", Common.Currency)
+        @Html.Hidden("HasShipping", Model.Settings.AllowShipping ? 1 : 0)
+    </div>
+}
+
+@section header
+{
+    <link href="@Html.CssPath("order.css")" rel="stylesheet" />
+    <script src="~/resource/js/order.js"></script>
+}

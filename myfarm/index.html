@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Yeni çiftliğim</title>
+
+    <link href="~/resource/img/App/favico.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="TR" http-equiv="content-language" />
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+    <meta content="text/html; charset=windows-1254" http-equiv="content-type" />
+    <meta content="text/html; charset=ISO-8859-9" http-equiv="content-type" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&display=swap"
+        rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="./js/common.js"></script>
+    <script type="text/javascript" src="./js/form.js"></script>
+    <script type="text/javascript" src="./js/game.js"></script>
+    <script type="text/javascript" src="./js/basvuru.js"></script>
+    <script type="text/javascript" src="./js/arazi.js"></script>
+    <script type="text/javascript" src="./js/insa.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+</head>
+
+<body>
+    <div class="game">
+        <div class="dn header">
+            <span>
+                <span class="player-name">&nbsp;</span>
+                <span style="margin-left :20px;color: #61d9b9;">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span class="para">0.00</span>
+                    <i class="fas fa-turkish-lira-sign"></i>
+                </span>
+            </span>
+
+            <ul class="menu dn">
+                <li class="home"><a class='btn-home' href="javascript:void(0)"><i class="fas fa-home"></i></a></li>
+                <li><a href="javascript:void(0)">Ambarım</a></li>
+                <li class="arazi"><a class='btn-arazilerim' href="javascript:void(0)">Arazilerim</a></li>
+                <li><a href="javascript:void(0)">Hayvanlarım</a></li>
+                <li><a href="javascript:void(0)">Ahırlarım</a></li>
+                <li class="basvurularim"><a class='btn-basvurularim' href="javascript:void(0)">Başvurularım</a></li>
+                <li><a class='btn-reset' href="javascript:void(0)">Yeniden Başla</a></li>
+            </ul>
+            <!-- <span><img src="./img/bugday.png" alt="TL" /> 0 Kg</span> -->
+        </div>
+
+        <div class="page-content text-center">
+            <i style="font-size:4em;margin-top: 50px;" class="fa-sharp fa-spin fa-solid fa-spinner"></i>
+        </div>
+
+        <div class="mt20 dn story-1 ">
+            <div class="white-panel">
+                <b>Merhaba,</b><br />
+                Yeni Çiftliğim oyunumuza hoş geldiniz. Kendi çifliğinizi kurun, geliştirin, büyütün. <br />Hayalinizdeki
+                çiftliği gerçeğe yakın olarak adım adım inşa edin.<br />
+                Oyunda satış yaparak, hibe veya banka kredilerine başvurarak para kazanabilir ve kazandığınız
+                paralarla yeni yatırımlar yapabilir çiftliğinizin ihtiyaçlarını karşılayabilirsiniz.<br />
+                <button class="mt20 mr10 btn-start">Oyuna Başla</button>
+            </div>
+        </div>
+
+        <div class="mt20 dn story-3">
+            <div class="more-white-panel">
+                <h3>Arazi Satın Al</h3>
+                Şimdi üretmeye başlamak için işe bir arazi satın alarak başlayabiliriz;<br />
+                <div class="mt20 arazi-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup popup-confirm">
+        <div class="popup-container text-center">
+            <div class="close-popup"><button class="btn-close-popup"><i class="fas fa-remove"></i></button></div>
+            <div class="icon dn"><i class="fas fa-check"></i></div>
+            <div class="title">Krediye Başvur</div>
+            <div class="content">
+                İşleme devam edilsin mi?
+            </div>
+            <div class="actions mt20">
+                <button class="mr10 btn-default btn-close-popup">İptal</button>
+                <button class="btn-success btn-ok">Onayla</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup popup-info">
+        <div class="popup-container text-center">
+            <div class="close-popup"><button class="btn-close-popup"><i class="fas fa-remove"></i></button></div>
+            <div class="icon dn"><i class="fas fa-check"></i></div>
+            <div class="title">Krediye Başvur</div>
+            <div class="content">
+                İşleme devam edilsin mi?
+            </div>
+            <div class="actions mt20">
+                <button class="mr10 btn-success btn-close-popup">Tamam</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dn template-arazi">
+        <div class="imarsiz-arazi">
+            <!-- <img src="./img/arazi_imarsiz.svg"> -->
+            <div class="actions">
+                <p>Satın aldığınız arazi üzerinde yatırım yapmak veya üretime başlamak için öncelikle arazinin
+                    temizlenmesi gerekiyor.</p>
+                <button class="btn-text btn-temizle-arazi" data-arazi-id="#ARAZI_ID#">Temizle</button>
+            </div>
+            <div>
+                <span class="konum">#KONUM#</span>
+                <span class="buyukluk">(#M2#)</span>
+                <span class="statu etiket etiket-success">#STATU#</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="islem-list"></div>
+
+    <div class="dn eylem-alani"></div>
+
+    <div class="dn news-band">
+        <div class="left">
+            <span class="date-info">&nbsp;</span>
+        </div>
+        <div class="right">
+            <marquee style="color:#232323;vertical-align: middle;">&nbsp;</marquee>
+        </div>
+    </div>
+</body>
+
+</html>

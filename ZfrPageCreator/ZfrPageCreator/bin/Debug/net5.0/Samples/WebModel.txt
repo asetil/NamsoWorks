@@ -1,0 +1,5 @@
+﻿import { BaseItemDto } from './base.model';
+
+export class #Entity#ItemDto extends BaseItemDto{
+  #WEB_FIELDS#
+}

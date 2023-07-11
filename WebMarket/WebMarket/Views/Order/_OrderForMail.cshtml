@@ -1,0 +1,157 @@
+﻿@using Aware.ECommerce.Model
+@using Aware.Util
+@model Aware.ECommerce.Model.OrderViewModel
+
+@if (Model != null && Model.Order != null && Model.Basket != null)
+{
+    var payment = Model.Settings.PaymentTypes.FirstOrDefault(i => i.SubType == (int)Model.Order.PaymentType) ?? new SimpleItem();
+    
+    <h3 style="color:#ad2131;">Sipariş Bilgileri</h3>
+    <table width="100%" style="background-color: #eee;padding: 10px 20px;">
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;width:140px;">
+                <b>Sipariş No</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                @Model.Order.UniqueID
+            </td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;">
+                <b>Sipariş Tarihi</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                @Model.Order.DateCreated
+            </td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;">
+                <b>Sipariş Durumu</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <span class='status-desc'>@Html.GetOrderStatus(Model.Order.Status)</span>
+            </td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;">
+                <b>Ödeme Şekli</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                @payment.Title
+            </td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;">
+                <b>Kargo Seçimi</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                @Model.ShippingMethod.Description
+            </td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;">
+                <b>Sipariş Notu</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                @(string.IsNullOrEmpty(Model.Order.Note) ? "Belirtilmemiş" : Model.Order.Note)
+            </td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;">
+                <b>Teslimat Adresi</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                @Html.Raw(Model.ShippingAddress.DisplayText)
+            </td>
+        </tr>
+        <tr style="vertical-align: top;">
+            <td style="border-bottom:1px solid #fff;">
+                <b>Fatura Adresi</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                <b>:</b>
+            </td>
+            <td style="border-bottom:1px solid #fff;">
+                @Html.Raw(Model.BillingAddress.DisplayText)
+            </td>
+        </tr>
+    </table>
+
+    <h3 style="color:#ad2131;">Sipariş Tutarı</h3>
+    <table width="100%" style="background-color: #eee;padding: 10px 20px;">
+        <tr>
+            <td style="border-bottom:1px solid #fff;width:140px;"><b>Sepet Tutarı</b></td>
+            <td style="border-bottom:1px solid #fff;width:10px;"><b>:</b></td>
+            <td style="border-bottom:1px solid #fff;">@Model.Order.BasketTotal.ToPrice()</td>
+        </tr>
+        <tr>
+            <td style="border-bottom:1px solid #fff;"><b>İndirim Tutarı</b></td>
+            <td style="border-bottom:1px solid #fff;"><b>:</b></td>
+            <td style="border-bottom:1px solid #fff;">@Model.Order.DiscountTotal.ToPrice()</td>
+        </tr>
+        <tr>
+            <td style="border-bottom:1px solid #fff;"><b>Kargo Tutarı</b></td>
+            <td style="border-bottom:1px solid #fff;"><b>:</b></td>
+            <td style="border-bottom:1px solid #fff;">@Model.Order.ShipmentCost.ToPrice()</td>
+        </tr>
+        <tr>
+            <td style="border-bottom:1px solid #fff;"><b>Sipariş Tutarı</b></td>
+            <td style="border-bottom:1px solid #fff;"><b>:</b></td>
+            <td style="border-bottom:1px solid #fff;">@Model.Order.GrossTotal.ToPrice()</td>
+        </tr>
+    </table>
+
+    <h3 style="color:#ad2131;">Sepet Detayı</h3>
+    <table width="100%" style="background-color: #eee;padding: 10px 20px;">
+        <tr style="font-weight: bold;">
+            <td colspan="2" style="width: 300px;border-bottom: 1px solid #fff;padding: 3px 5px;">Ürün</td>
+            <td style="width: 80px;border-bottom: 1px solid #fff;padding: 3px 5px;">Miktar</td>
+            <td style="width: 100px;border-bottom: 1px solid #fff;padding: 3px 5px;">Satış Fiyatı</td>
+            <td style="width: 120px;border-bottom: 1px solid #fff;padding: 3px 5px;">Tutar</td>
+        </tr>
+
+        @foreach (var item in Model.Basket.Items)
+        {
+            <tr>
+                <td style="width: 60px;border-bottom: 1px solid #fff;padding: 3px 5px;">
+                    <img style="max-width: 50px;max-height: 50px;" src='@Config.DomainUrl/resource/img/@item.Product.DefaultImage.Path' />
+                </td>
+                <td style="width: 240px;border-bottom: 1px solid #fff;padding: 3px 5px;">@item.Product.Name</td>
+                <td style="width: 80px;border-bottom: 1px solid #fff;padding: 3px 5px;">@item.QuantityDescription</td>
+                <td style="width: 100px;border-bottom: 1px solid #fff;padding: 3px 5px;">@item.Price.ToPrice()</td>
+                <td style="width: 120px;border-bottom: 1px solid #fff;padding: 3px 5px;">@item.GrossTotal.ToPrice()</td>
+            </tr>
+        }
+
+        @foreach (var discount in Model.Basket.Discounts)
+        {
+            <tr>
+                <td style="width: 60px;border-bottom: 1px solid #fff;padding: 3px 5px;">&nbsp;</td>
+                <td style="width: 240px;border-bottom: 1px solid #fff;padding: 3px 5px;">@discount.Name</td>
+                <td colspan="2" style="width: 180px;border-bottom: 1px solid #fff;padding: 3px 5px;">@discount.Description</td>
+                <td style="width: 120px;border-bottom: 1px solid #fff;padding: 3px 5px;">@(discount.Total > 0 ? discount.Total.ToPrice() : "-")</td>
+            </tr>
+        }
+    </table>
+}

@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Galeri Yönetimi";
+    TempData["ActivePage"] = 35;
+}
+
+<section class="container-fluid gallery-browser">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-icon">
+                    <i class="fa fa-table"></i>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                    </h2>
+
+                    <div class="gallery-placeholder">
+                        @Html.Hidden("CurrentPath", (string)ViewBag.CurrentPath);
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader{
+    <script src="~/resource/js/gallery-browser.js"></script>
+
+    <style>
+        .path-hierarchy { background: #eee; margin-bottom: 20px; display: block; float: left; width: 100%; border-radius: 5px; }
+        .path-hierarchy ul { list-style: none; }
+        .path-hierarchy ul li { float: left; margin-right: 10px; cursor: pointer; padding: 10px 0px; font-size: 18px; }
+        .path-hierarchy ul li:hover { color: #dc143c; }
+        .path-hierarchy .action-panel { margin-right: 18px; }
+        .path-hierarchy .action-panel i { cursor: pointer; color: #556080; font-size: 18px; padding: 3px; background: transparent; border-radius: 3px; margin: 0 0px; padding: 4px 7px; }
+        .path-hierarchy .action-panel i.active, .list-view .path-hierarchy .action-panel i[data-mode='1'] { background: #556080; color: #fff; }
+
+        div.directory-item { display: block; float: left; width: 72px; height: 92px; margin-right: 20px; margin-bottom: 20px; text-align: center; cursor: pointer; position: relative; }
+        div.directory-item img { width: 64px; height: 64px; margin: 0 auto; }
+        .new-directory-panel { position: absolute; background: #556080; padding: 10px; width: 60px; bottom: 10px; left: 4px; opacity: 0; transition: all 0.2s ease-in-out; }
+        div.directory-item:hover .new-directory-panel { opacity: 1; width: 171px; }
+        .new-directory-panel input[type='text'] { display: inline-block; padding-right: 35px; }
+        .new-directory-panel i { position: absolute; top: 18px; right: 20px; color: #3bca81; font-size: 24px; }
+
+        .list-view .directory-item { width: 100%; border-bottom: 1px solid #eee; height: auto; padding-bottom: 10px; text-align: left; margin-bottom: 10px; }
+        .list-view .directory-item img { margin: 0; width: 24px; height: 24px; float: left; }
+        .list-view .directory-item span { float: left; display: inline-block; margin-left: 14px; }
+
+        .file-item { position: relative; display: block; float: left; width: 200px; height: 250px; margin-right: 20px; margin-bottom: 20px; padding: 5px; border: 1px solid #ddd; text-align: center; cursor: pointer; }
+        .file-item img { width: 190px; height: 190px; margin: 0 auto; }
+        .file-item .create-date { display: none !important; }
+        .file-item .file-actions { opacity: 0; transition: all 0.4s ease-in-out; width: 50px; height: 10px; background: #5560808c; position: absolute; left: 0; top: 40%; width: 100%; height: 50px; color: #fff; }
+        .file-item:hover .file-actions { opacity: 1; top: 0; height: 100%; padding-top: 91px; }
+        .file-item .file-actions i { margin: 5px; font-size: 20px; background: #556080; padding: 12px; border-radius: 5px; }
+        .file-item .file-actions i:hover { background: #25a2a2; }
+
+        .list-view .file-item { border: 0 none; width: 100%; border-bottom: 1px solid #eee; height: auto; padding-bottom: 10px; text-align: left; margin-bottom: 10px; }
+        .list-view .file-item img { margin: 0; width: 24px; height: 24px; float: left; }
+        .list-view .file-item span { float: left; display: inline-block; margin-left: 14px; }
+        .list-view .file-item .create-date { display: inline-block !important; float: right; }
+        .list-view .file-item .file-actions { background: transparent; left: 200px; left: 200px; top: 0; width: 130px; height: 40px; padding:0;margin:0;}
+        .list-view .file-item:hover .file-actions { background: transparent; opacity: 1; left: 200px; top: 0; width: 130px; height: 40px; }
+        .list-view .file-item .file-actions i { margin: 2px; font-size: 13px; background: #556080; padding: 10px; border-radius: 5px;  }
+        .list-view .file-item .file-actions i:hover { background: #25a2a2; }
+
+        .upload-panel { border: 2px solid #71c386; padding: 21px; margin-bottom: 20px; display: block; float: left; width: 100%; border-radius: 5px; font-size: 18px; }
+        .upload-panel .selections { max-height: 250px; overflow-y: scroll; margin-top: 15px; }
+        .upload-panel .selections div { padding: 4px 0; border-top: 1px solid #eee; }
+        .upload-panel .info { font-style: italic; }
+    </style>
+}

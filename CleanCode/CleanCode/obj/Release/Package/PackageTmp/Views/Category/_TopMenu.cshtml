@@ -1,0 +1,33 @@
+﻿@using Aware.Util
+@using CleanCode.Helper
+@model List<Aware.ECommerce.Model.Category>
+@{
+    var activeMenu = 0;// TempData["ActiveMenu"] != null ? (int)TempData["ActiveMenu"] : 0;
+}
+
+<div class="mb20 top-menu" id="topMenu">
+    <nav class="">
+        <h3 class="left-menu-title">KATEGORİLER</h3>
+        <a href="#topMenu" data-toggle="collapse" class="visible-xs btn-close-menu">
+            <i class="fa fa-remove"></i>
+        </a>
+        <ul class="left-menu">
+            @foreach (var category in Model)
+            {
+                <li data-id="@category.ID" class="@(activeMenu == category.ID ? "active" : "") category-@(category.ParentID)">
+                    <a href="@Url.RouteUrl(RouteNames.CategoryDetail, new { name = category.Name.ToSeoUrl(true), categoryID = category.ID })">@category.Name</a>
+                </li>
+
+                if (category.SubCategories != null && category.SubCategories.Any())
+                {
+                    foreach (var sub in category.SubCategories)
+                    {
+                        <li data-id="@sub.ID" class="@(activeMenu == sub.ID ? "active" : "")">
+                            <a href="@Url.RouteUrl(RouteNames.CategoryDetail, new { name=sub.Name.ToSeoUrl(true),categoryID=sub.ID})">@sub.Name</a>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+    </nav>
+</div>

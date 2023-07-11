@@ -1,0 +1,17 @@
+﻿@model List<Aware.Language.Model.Language>
+
+@if (Model != null && Model.Any())
+{
+    <div class="language-list">
+        <ul>
+            @foreach (var language in Model)
+            {
+                <li>
+                    <a href="@Url.RouteUrl(RouteNames.ChangeLanguage, new { lang = language.Abbreviate })">
+                        @Html.ImageFor("Lang", language.ImageInfo, language.Name)
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+}

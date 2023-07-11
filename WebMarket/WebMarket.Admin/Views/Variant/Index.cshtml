@@ -1,0 +1,88 @@
+﻿@using Aware.Util
+@using WebMarket.Admin.Helper;
+@model Aware.ECommerce.Model.VariantListModel
+@{
+    ViewBag.Title = "Varyant Özellikler";
+    TempData["ActivePage"] = 11;
+    var count = Model != null && Model.VariantProperties != null ? Model.VariantProperties.Count : 0;
+}
+
+<section class="content-header variant-properties">
+    <div class="row">
+        <div class="col-md-9 col-sm-12">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        @if (ViewBag.IsSuper)
+                        {
+                            <a href="@Url.Action("Detail", new { name = "yeni-özellik", id = 0 })" class="btn btn-info btn-round btn-fab btn-fab-mini ml20" title="Yeni Ekle"><i class="fa fa-plus"></i></a>
+                        }
+                    </h2>
+
+                    @if (count>0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#ID</th>
+                                        <th width="22%">Özellik</th>
+                                        <th width="12%">Zorunlu Mu?</th>
+                                        <th width="12%">Stok Takibi?</th>
+                                        <th width="15%">Gösterim Şekli</th>
+                                        <th width="5%">Sıra</th>
+                                        <th width="10%">Durumu</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var property in Model.VariantProperties)
+                                    {
+                                        <tr>
+                                            <td>@property.ID</td>
+                                            <td class="td-name">@property.Name</td>
+                                            <td class="text-center"><i class="fa @(property.IsRequired ? "text-green fa-check" : "text-red fa-remove")"></i></td>
+                                            <td class="text-center"><i class="fa @(property.TrackStock ? "text-green fa-check" : "text-red fa-remove")"></i></td>
+                                            <td>@Html.LookupValue(Model.PropertyDisplayModes, (int)property.DisplayMode)</td>
+                                            <td class="text-center">@property.SortOrder</td>
+                                            <td class="text-center">
+                                                @Html.StatusFor(property.Status)
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Detail", new {name = property.Name.ToSeoUrl(), id = property.ID})" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Güncelle</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Listelenecek Özellik Bulunamadı</h4>
+                            @if (ViewBag.IsSuper)
+                            {
+                                <p class="description"><b>Yeni Ekle</b> butonunu kullanarak yeni bir varyant tanımıyapabilirsiniz.</p>
+                            }
+                            else
+                            {
+                                <p class="description">Tanımlı varyant özellik olduğunda bu alanda listelenecektir.</p>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader{
+    <style>
+        .variant-properties td i.fa { font-size: 20px;}
+    </style>
+}

@@ -1,0 +1,42 @@
+﻿@using WebMarket.Models
+@model Aware.Model.Result
+@{
+    ViewBag.Title = "Aktivasyon";
+    var operation = new OperationResult(5, "Aktivasyon İşlemi Başarısız", "fa-times-circle failed", "");
+}
+
+@if (Model.ResultCode == 1)
+{
+    operation = new OperationResult(3, "E-posta Adresinizi Doğrulayın", "fa-check success", "Üyeliğiniz sistemde başarıyla oluşturuldu. Üyeliğinizi tamamlamak ve hizmetlerimizden faydalanmak için e-posta adresinizi doğrulamanız gerekiyor.");
+}
+else if (Model.ResultCode == 2)
+{
+    operation = new OperationResult(4, "E-posta Doğrulaması Bekleniyor", "fa-times-circle failed", "Değerli üyemiz, üye girişi yapmak ve hesabınıza erişmek için e-posta adresinizi doğrulamanız gerekiyor.");
+}
+else if (Model.ResultCode == 3)
+{
+    operation = new OperationResult(5, "Yeni Aktivasyon Kodu Al", "fa-repeat info", string.Empty);
+}
+else if (Model.ResultCode == 4)
+{
+    operation = new OperationResult(6, "Hesabınız Zaten Aktif", "fa-check-circle success", " Değerli üyemiz, e-posta doğrulama işlemi daha önce gerçekleşmiş. Üye girişi yapmak ve hesabınıza erişmek için tıklayınız.");
+}
+else if (Model.ResultCode == 5)
+{
+    operation = new OperationResult(3, "Aktivasyon Kodu Gönderildi", "fa-check success", "");
+}
+else if (Model.OK)
+{
+    operation = new OperationResult(6, "E-posta Doğrulaması Tamamlandı", "fa-check-circle success", " Değerli üyemiz, e-posta doğrulama işlemi başarıyla gerçekleşti. Artık üye girişi yapabilir ve hesabınıza erişebilirsiniz.");
+}
+else if (!string.IsNullOrEmpty(Model.Message))
+{
+    operation.Content = Model.Message;
+}
+@Html.Partial("_OperationResult", operation)
+
+
+@section header
+{
+    <script src="~/resource/js/user.js"></script>
+}

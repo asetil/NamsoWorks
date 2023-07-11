@@ -1,0 +1,13 @@
+﻿import { Injectable, Injector } from "@angular/core";
+import { BaseApiService } from './base.service';
+import { HttpClient } from '@angular/common/http';
+import { #Entity#ItemDto } from "../models/#EntityLower#.model";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class #Entity#Service extends BaseApiService<#Entity#ItemDto> {
+  constructor(httpClient: HttpClient, injector: Injector) {
+    super(httpClient, injector, "#EntityLower#");
+  }
+}

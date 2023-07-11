@@ -1,0 +1,68 @@
+﻿@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.ECommerce.Model.ShippingMethod
+@{
+    ViewBag.Title = Model != null ? (Model.ID == 0 ? "Yeni Kargo" : Model.Name) : "Kargo Detay";
+    ViewBag.PageNavigation = new Item(0, "Kargo Yönetimi", "fa-th", "/kargo-yonetimi");
+    TempData["ActivePage"] = 27;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shipping-method-dialog">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model == null)
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Kargo Yöntemi Bulunamadı!</h4>
+                            <p class="description">Böyle bir kargo yöntemi bulunamadı ya da görüntüleme yetkiniz yok!</p>
+                        </div>
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("ShippingMethod", "Order", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                        {
+                            var fieldInfo = new FieldHelper(FieldDirection.Horizantal);
+                            fieldInfo.Label("ID", Model.ID.ToString(), "viewable");
+                            fieldInfo.Text("Name", "İsim", Model.Name, "validate", 100);
+                            fieldInfo.TxtArea("Description", "Açıklama", Model.Description, "", 300);
+                            fieldInfo.Number("Price", "Fiyat", Model.Price.ToString("F"), "validate dec-pnumber", 5);
+
+                            fieldInfo.Select("Semt Seçimi", "RegionInfo", ViewBag.RegionList, Model.RegionInfo, "cols-2 region-selector validate sbx-check", string.Empty, true);
+                            fieldInfo.Select("Durum", "Status", Html.GetStatusList(), (int)Model.Status, "status-selector", string.Empty);
+
+                            <div class="box-body">
+                                @Html.HiddenFor(m => m.ID)
+                                @Html.Partial("_FieldHelper", fieldInfo)
+                            </div>
+
+                            <hr />
+                            <div class="text-right">
+                                <a href="@Url.RouteUrl(RouteNames.ShippingMethodsRoute)" class="mr10 btn btn-info"><i class="fa fa-chevron-left"></i> Geri</a>
+                                @Html.ButtonFor("Kaydet", "btn-success btn-save-shipping")
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".region-selector").selecto({ type: 'multi', allowSearch: true, display: "checkbox" });
+            $(document).on("click", ".btn-save-shipping", {}, function () { return aware.validate(".shipping-method-dialog"); });
+        });
+    </script>
+}

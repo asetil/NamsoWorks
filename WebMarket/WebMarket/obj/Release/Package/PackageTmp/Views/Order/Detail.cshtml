@@ -1,0 +1,162 @@
+﻿@using Aware.ECommerce.Application
+@using Aware.ECommerce
+@using Aware.ECommerce.Model
+@using Aware.Util
+@using Resources
+@using WebMarket.Models
+@model Aware.ECommerce.Model.OrderViewModel
+@{
+    ViewBag.Title = "Sipariş Detay";
+}
+
+@if (Model != null && Model.Order != null && Model.Basket != null)
+{
+    var orderStatus = Html.GetOrderStatus(Model.Order.Status);
+    var payment = Model.Settings.GetPayment((Enums.PaymentType)Model.Order.PaymentType) ?? new SimpleItem();
+
+    <section class="page-section breadcrumbs">
+        <div class="container">
+            <div class="page-header">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </section>
+
+    <div class="container order-detail">
+        @if (payment.SubType == (int)Enums.PaymentType.Remittance)
+        {
+            var bank = Model.Settings.BankList.FirstOrDefault(i => i.ID == Model.Order.SubPaymentType);
+            <div class="col-md-12 mb20 ">
+                <div class="remittance-message">
+                    <p class="mt10 mb10 lead">
+                        Sipariş Numarası : <b>@Model.Order.UniqueID</b>
+                    </p>
+                    <p class="mb20">
+                        Siparişinizin işleme alınabilmesi için 3 gün içeresinde ödemeyi tamamlamalısınız.
+                        Lütfen <b>Havale/EFT</b> yaparken açıklama kısmında sipariş numaranızı belirtmeyi unutmayın!
+                        Havale/EFT yapacağınız banka bilgileri :
+                    </p>
+
+                    @if (bank != null)
+                    {
+                    <table class="table no-border">
+                        <tr>
+                            <td>
+                                <p>
+                                    <img src="/resource/img/Bank/@bank.ImageUrl" class="bank-image" style="max-width: 120px;">
+                                </p>
+                            </td>
+                            <td class="text-left detail">
+                                <p>
+                                    <b>@bank.Name, @bank.BranchName</b>
+                                </p>
+                                <p>IBAN : @bank.IBAN</p>
+                                <p>Hesap No : @bank.AccountNumber</p>
+                            </td>
+                        </tr>
+                    </table>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="mb20 col-md-2 col-xs-12 order-status text-center">
+            <div class="process chart @(orderStatus.OK ? "success" : "fail")" data-percent="@orderStatus.ID" data-barcolor="@(orderStatus.OK ? "yellowgreen" : "#ff3562")" data-trackcolor="#EEEEEE" data-scalecolor="transparent" data-linewidth="10" data-linecap="square" data-size="180">
+                <i class="fa @orderStatus.Value"></i>
+                <span>@orderStatus.Title</span>
+            </div>
+        </div>
+
+        <div class="mb20 col-md-6 order-summary">
+            <div class="info-row">
+                <div class="title">Sipariş No</div>
+                <div class="value">@Model.Order.UniqueID</div>
+            </div>
+
+            <div class="info-row">
+                <div class="title">Sipariş Tarihi</div>
+                <div class="value">@Model.Order.DateCreated</div>
+            </div>
+
+            <div class="info-row">
+                <div class="title">Kargo Seçimi</div>
+                <div class="value">
+                    <div>
+                        <span class="name">@Model.ShippingMethod.Name</span>
+                        <span class="price text-bold"> (@Model.ShippingMethod.Price.ToPrice())</span>
+                    </div>
+
+                    <div class="description">
+                        @if (!string.IsNullOrEmpty(Model.ShippingMethod.DiscountInfo))
+                        {
+                            <p style="font-size: 13px;"><i>@Model.ShippingMethod.DiscountInfo</i></p>
+                        }
+                        @if (!string.IsNullOrEmpty(Model.ShippingMethod.Description))
+                        {
+                            <p style="font-size: 13px;"><i>@Model.ShippingMethod.Description</i></p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <div class="title">Ödeme Şekli</div>
+                <div class="value">@payment.Title</div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Order.Note))
+            {
+                <div class="info-row">
+                    <div class="title">Sipariş Notu</div>
+                    <div class="value">@Model.Order.Note</div>
+                </div>
+            }
+
+            <div class="info-row">
+                <div class="title">Teslimat Adresi</div>
+                <div class="value">@Html.Raw(Model.ShippingAddress.DisplayText)</div>
+            </div>
+
+            <div class="mb20 info-row">
+                <div class="title">Fatura Adresi</div>
+                <div class="value">@Html.Raw(Model.BillingAddress.DisplayText)</div>
+            </div>
+
+            @if (Model.Order.Status == Enums.OrderStatus.WaitingPayment)
+            {
+                <a href="@Url.RouteUrl(RouteNames.OrderPaymentRoute, new {id=Model.Order.UniqueID})" class="mt10 mb20 mr10 btn btn-green">Ödemeyi Tamamla</a>
+            }
+
+            @if (Model.Order.Status == Enums.OrderStatus.WaitingPayment || Model.Order.Status == Enums.OrderStatus.WaitingApproval)
+            {
+                @Html.ButtonFor("Siparişi İptal Et", "mt10 mb20 btn btn-red btn-cancel-order", string.Empty, "data-order-id='" + Model.Order.ID + "' data-role='cancel-order'")
+            }
+        </div>
+
+        @Html.Partial("_OrderSummary", Model)
+    </div>
+}
+else
+{
+    <section class="page-section breadcrumbs">
+        <div class="container">
+            <div class="page-header">
+                <h1>Sipariş Detay</h1>
+            </div>
+        </div>
+    </section>
+
+    <div class="mb20">
+        <div class="no-result-found">
+            <i class="fa fa-cubes"></i>
+            <h3 class="mt20">Böyle bir sipariş bulunamadı!</h3>
+        </div>
+    </div>
+}
+
+@section header
+{
+    <link href="@Html.CssPath("order.css")" rel="stylesheet" />
+    <script src="~/resource/js/easyPieChart.js"></script>
+    <script src="~/resource/js/order.js"></script>
+}

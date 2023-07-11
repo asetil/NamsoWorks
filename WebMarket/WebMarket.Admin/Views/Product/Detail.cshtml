@@ -1,0 +1,140 @@
+﻿@using Aware.File.Model
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+
+@model WebMarket.Admin.Models.ProductViewModel
+@{
+    ViewBag.Title = "Ürün Detayı";
+    TempData["ActivePage"] = 7;
+
+    if (Model != null && Model.Product != null)
+    {
+        ViewBag.Title = Model.Product.ID > 0 ? Model.Product.Name : "Yeni Ürün";
+    }
+}
+
+<section class="container-fluid product-detail">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model != null && Model.Product != null)
+                    {
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab_general" data-toggle="tab" aria-expanded="false">ÜRÜN BİLGİLERİ</a></li>
+                                <li class=""><a href="#tab_properties" data-toggle="tab" aria-expanded="false">ÖZELLİKLER</a></li>
+                                <li class=""><a href="#tab_images" data-toggle="tab" aria-expanded="false">RESİMLER</a></li>
+
+                                @if (Model.HasMultiLanguage)
+                                {
+                                    <li class=""><a href="#tab_language" data-toggle="tab" aria-expanded="false">ÇOKLU DİL</a></li>
+                                }
+                            </ul>
+                            <div class="tab-content">
+                                <div class="row tab-pane active product-detail-dialog" id="tab_general">
+                                    <div class="col-md-12">
+                                        @Html.Hidden("ProductID", Model.Product.ID)
+                                        @using (Html.BeginForm("Detail", "Product", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                                        {
+                                            var productFields = new FieldHelper(FieldDirection.Horizantal);
+                                            productFields.Label("#ID", Model.Product.ID.ToString(), "viewable");
+
+                                            var dataSource = Model.CategoryList.Select(i => new Item(i.ID, i.Name)).ToList();
+                                            var brandData = Model.BrandList.Select(i => new Item(i.ID, i.Name)).ToList();
+
+                                            productFields.Text("Product.Name", "Ürün Adı", Model.Product.Name, "validate", 100);
+                                            productFields.Text("Product.Barcode", "Barkod", Model.Product.Barcode, "validate", 30);
+                                            productFields.Select("Kategori", "Product.CategoryID", dataSource, Model.Product.CategoryID, "validate sbx-check category-selector");
+                                            productFields.Select("Marka", "Product.Brand", brandData, Model.SelectedBrand.ID, "brand-selector");
+                                            productFields.BtnGroup("Birim", "Product.Unit", Model.MeasureUnits, ((int)Model.Product.Unit).ToString());
+                                            productFields.BtnGroup("Durum", "Product.Status", Model.StatusList, ((int)Model.Product.Status).ToString());
+
+                                            var descriptionFields = new FieldHelper(FieldDirection.Vertical);
+                                            descriptionFields.TxtArea("Product.ShortDescription", "Kısa Açıklama", Model.Product.ShortDescription, string.Empty, 600);
+                                            descriptionFields.TxtArea("Product.Description", "Açıklama", Model.Product.Description, string.Empty, 24000);
+
+                                            <div class="col-md-6 mt20">
+                                                @Html.HiddenFor(model => model.Product.ID)
+                                                @Html.Partial("_FieldHelper", productFields)
+                                            </div>
+
+                                            <div class="col-md-6 mt20">
+                                                @Html.Partial("_FieldHelper", descriptionFields)
+                                            </div>
+
+                                            <div class="box-footer col-md-12">
+                                                @Html.ButtonFor("Kaydet", "fr btn-success btn-save-product")
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="tab_properties">
+                                    @if (Model.Product.ID > 0)
+                                    {
+                                        <div class="product-property-panel">
+                                            @Html.ImageFor("Icons", "ajax-loading.gif", "Yükleniyor..")
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="lead text-red ml10 mt10">
+                                            <i class="fa fa-exclamation-triangle"></i> Ürün özelliklerini düzenlemek için önce ürün bilgilerini kaydedin!
+                                        </div>
+                                    }
+                                </div>
+                                <div id="tab_images" class="tab-pane">
+                                    @if (Model.Product.ID > 0)
+                                    {
+                                        <div class="product-image-panel" id="ProductImages">
+                                            <div class="file-gallery">
+                                                @Html.ImageFor("Icons", "ajax-loader.gif", "Yükleniyor..")
+                                                <p class="mt20 mb20 dn lead text-danger load-error">
+                                                    <i class="fa fa-exclamation-triangle"></i> Ürün görselleri yüklenemedi!
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        @Html.Partial("_FileGallery", FileGalleryModel.ModalInstance())
+                                    }
+                                    else
+                                    {
+                                        <div class="lead text-red ml10 mt10">
+                                            <i class="fa fa-exclamation-triangle"></i> Ürün görsellerini düzenlemek için önce ürün bilgilerini kaydedin!
+                                        </div>
+                                    }
+                                </div>
+
+                                @if (Model.HasMultiLanguage)
+                                {
+                                    <div id="tab_language" class="row tab-pane">
+                                        @Html.Action("LanguageValue", "Management", new { relationID = Model.Product.ID, relationType = RelationTypes.Product })
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Ürün Bulunamadı!</h4>
+                            <p class="description">Böyle bir ürün yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader{
+    <script src="//cdn.tinymce.com/4/tinymce.min.js" type="text/javascript"></script>
+    @Scripts.Render("/resource/js/productjs")
+}

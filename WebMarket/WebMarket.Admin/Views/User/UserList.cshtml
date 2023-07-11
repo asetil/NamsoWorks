@@ -1,0 +1,95 @@
+﻿@using Aware.ECommerce.Enums
+@using Aware.Util
+@using WebMarket.Admin.Helper
+@model Aware.Authenticate.Model.ManagerListModel
+@{
+    ViewBag.Title = "Kullanıcılar";
+    TempData["ActivePage"] = 2;
+    var count = Model != null && Model.ManagerList != null ? Model.ManagerList.Count : 0;
+    var customerID = Model != null ? Model.CustomerID : 0;
+}
+
+<section class="container-fluid user-list">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-table"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        <a href="@Url.RouteUrl(RouteNames.UserDetail, new {userID = 0,customerID=customerID})" class="btn btn-info btn-round btn-fab btn-fab-mini ml20" title="Yeni Ekle"><i class="fa fa-plus"></i></a>
+                    </h2>
+
+                    @if (count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="4%">#ID</th>
+                                        <th width="15%">İsim</th>
+                                        <th width="10%">E-posta</th>
+                                        <th width="10%">Rol</th>
+                                        @if (Model.CustomerID > 0)
+                                        {
+                                            <th width="10%">Ünvan</th>
+                                        }
+                                        <th width="8%">Durum</th>
+                                        <th width="15%">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var manager in Model.ManagerList)
+                                    {
+                                        <tr>
+                                            <td>@manager.ID</td>
+                                            <td class="td-name">@manager.Name</td>
+                                            <td>@manager.Email</td>
+                                            <td>
+                                                @if (manager.Role == UserRole.SuperUser)
+                                                {
+                                                    <span style="color: #e12d6c;">Sistem Yöneticisi</span>
+                                                }
+                                                else if (manager.Role == UserRole.AdminUser)
+                                                {
+                                                    <span style="color: #4FB151;">AdminUser</span>
+                                                }
+                                                else if (manager.Role == UserRole.ServiceUser)
+                                                {
+                                                    <span style="color: #4FB151;">Servis Kullanıcısı</span>
+                                                }
+                                            </td>
+                                            @if (Model.CustomerID > 0)
+                                            {
+                                                <td width="10%">@Html.LookupValue(Model.TitleList, manager.TitleID,"Belirtilmemiş")</td>
+                                            }
+                                            <td class="text-center">
+                                                @Html.StatusFor(manager.Status.GetValueOrDefault())
+                                            </td>
+                                            <td>
+                                                <a href="@Url.RouteUrl(RouteNames.UserDetail, new {userID = manager.ID})" class="btn btn-sm btn-success" title="Düzenle"><i class="fa fa-eye"></i></a>
+                                                @if (Model.IsSuper && manager.Role == UserRole.AdminUser)
+                                                {
+                                                    <a href="@Url.Action("Logout", "User", new {newUserID = manager.ID})" target="_blank" class="btn btn-sm btn-danger" title="Giriş Yap"><i class="fa fa-user"></i></a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Listelenecek Kullanıcı Bulunamadı!</h4>
+                            <p class="description"><b>Yeni Ekle</b> butonunu kullanarak yeni kullanıcı ekleyebilirsiniz.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

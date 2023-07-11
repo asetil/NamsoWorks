@@ -1,0 +1,28 @@
+﻿@using Aware.Payment.Model
+@using Aware.Util
+@using Resources
+@model Aware.Util.Model.Result
+
+@if (Model != null)
+{
+    var payment = Model.ValueAs<OnlineSales>() ?? new OnlineSales();
+    var success = Model.OK && (Model.ResultCode == -1 || payment.IsSuccess);
+
+    <div class="secure-payment-result @(success ? "" : "has-error")">
+        @if (Model.ResultCode != -1)
+        {
+            if (success)
+            {
+                <h2 class="mb20">@Resource.Order_ApprovedMessage</h2>
+                <i class="mb20 mt20 fa fa-check"></i>
+                <p><b>Sipariş tutarı @payment.Amount.ToPrice() @(payment.Installment <= 1 ? "tek çekimle" : payment.Installment + " taksitle") kredi kartınızdan başarıyla çekildi.</b></p>
+            }
+            else
+            {
+                <i class="mb20 fa fa-remove"></i>
+                <h2 class="mb20 mt20">Ödeme İşlemi Başarısız</h2>
+                <p><b>@Html.Raw(Model.Message.Trim('-').Trim())</b></p>
+            }
+        }
+    </div>
+}

@@ -1,0 +1,34 @@
+﻿@using Resources
+@model WebMarket.Models.SiteHeaderModel
+<div class="dbfl hidden-xs membership @(Model.IsLoggedIn ? "account-menu" : "logout")">
+    @if (!Model.IsLoggedIn)
+    {
+        <a href='#loginModal' data-toggle="modal" class="btn login"><i class="fa fa-user"></i></a>
+        <input type="hidden" id="isLoggedIn" value="false" />
+    }
+    else
+    {
+        <input type="hidden" id="isLoggedIn" value="true" />
+        <a href='#' data-toggle="modal" class="btn login"><i class="fa fa-user"></i></a>
+        <ul>
+            <li class="user">
+                <span>@Resource.Hello <br>@Model.UserInfo</span>
+            </li>
+            <li>
+                <a href='@Url.Action("Detail", "Account")'><i class="fa fa-user"></i> @Resource.Account_MyInfo</a>
+            </li>
+            <li>
+                <a href='@Url.Action("Index", "Basket")'><i class="fa fa-shopping-cart"></i> @Resource.Basket_Title</a>
+            </li>
+            <li>
+                <a href='@Url.Action("MyOrders", "Order")'><i class="fa fa-bars"></i> @Resource.Order_Title</a>
+            </li>
+            <li>
+                <a href='@Url.Action("Index", "Favorite")'><i class="fa fa-heart"></i> @Resource.Basket_MyFavorites</a>
+            </li>
+            <li>
+                <a href='@Url.Action("Logout", "Account")'><i class="fa fa-power-off"></i> @Resource.Account_Logout</a>
+            </li>
+        </ul>
+    }
+</div>

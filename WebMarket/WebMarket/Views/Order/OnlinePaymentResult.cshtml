@@ -1,0 +1,13 @@
+﻿@model Aware.Util.Model.Result
+@{
+    ViewBag.Title = "Online Ödeme Sonucu";
+}
+
+<div class="page-section container">
+    @Html.Partial("_PaymentResult", Model)
+</div>
+
+@section header
+{
+    <link href="@Html.CssPath("order.css")" rel="stylesheet" />
+}

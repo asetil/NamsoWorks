@@ -1,0 +1,389 @@
+22:21:03:903|SQL : select category0_.ID as ID8_,
+	 category0_.Name as Name8_,
+	 category0_.ImageInfo as ImageInfo8_,
+	 category0_.ParentID as ParentID8_,
+	 category0_.SortOrder as SortOrder8_,
+	 category0_.Status as Status8_ from [Category] category0_ where category0_.ID>? order by category0_.SortOrder asc
+22:21:03:966|-----------------------------------------------------------------------------
+
+22:21:04:436|SQL : select simpleitem0_.ID as ID29_,
+	 simpleitem0_.Title as Title29_,
+	 simpleitem0_.Value as Value29_,
+	 simpleitem0_.Url as Url29_,
+	 simpleitem0_.SubType as SubType29_,
+	 simpleitem0_.Cost as Cost29_,
+	 simpleitem0_.SortOrder as SortOrder29_,
+	 simpleitem0_.Type as Type29_,
+	 simpleitem0_.Status as Status29_ from [SimpleItem] simpleitem0_ where simpleitem0_.Type = ? order by simpleitem0_.SortOrder asc
+22:21:04:436|-----------------------------------------------------------------------------
+
+22:21:04:472|SQL : select language0_.ID as ID16_,
+	 language0_.Name as Name16_,
+	 language0_.Abbreviate as Abbreviate16_,
+	 language0_.ImageInfo as ImageInfo16_,
+	 language0_.SortOrder as SortOrder16_,
+	 language0_.IsDefault as IsDefault16_,
+	 language0_.Status as Status16_ from [Language] language0_ where language0_.Status = ?
+22:21:04:472|-----------------------------------------------------------------------------
+
+22:21:04:626|SQL : select languageva0_.ID as ID17_,
+	 languageva0_.LangID as LangID17_,
+	 languageva0_.RelationID as RelationID17_,
+	 languageva0_.FieldName as FieldName17_,
+	 languageva0_.Content as Content17_,
+	 languageva0_.RelationType as Relation6_17_ from [LanguageValue] languageva0_ where languageva0_.RelationType = ? and languageva0_.LangID = ? and (languageva0_.RelationID in (? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ?))
+22:21:04:626|-----------------------------------------------------------------------------
+
+22:21:04:655|SQL : select region0_.ID as ID27_,
+	 region0_.Name as Name27_,
+	 region0_.ParentID as ParentID27_,
+	 region0_.SortOrder as SortOrder27_,
+	 region0_.Type as Type27_,
+	 region0_.Status as Status27_ from [Region] region0_ where region0_.Status = ?
+22:21:04:655|-----------------------------------------------------------------------------
+
+22:21:14:976|SQL : select region0_.ID as ID27_,
+	 region0_.Name as Name27_,
+	 region0_.ParentID as ParentID27_,
+	 region0_.SortOrder as SortOrder27_,
+	 region0_.Type as Type27_,
+	 region0_.Status as Status27_ from [Region] region0_ where region0_.ID>? and region0_.Type = ?
+22:21:14:976|-----------------------------------------------------------------------------
+
+22:21:25:572|SQL : select slideritem0_.ID as ID30_,
+	 slideritem0_.Title as Title30_,
+	 slideritem0_.SubTitle as SubTitle30_,
+	 slideritem0_.ImagePath as ImagePath30_,
+	 slideritem0_.Url as Url30_,
+	 slideritem0_.SortOrder as SortOrder30_,
+	 slideritem0_.Type as Type30_,
+	 slideritem0_.Status as Status30_ from [SliderItem] slideritem0_ where slideritem0_.Type = ? and slideritem0_.Status = ? order by slideritem0_.SortOrder asc
+22:21:25:572|-----------------------------------------------------------------------------
+
+22:21:28:333|SQL : exec GetOpportunityItems 8,
+	24
+22:21:28:333|-----------------------------------------------------------------------------
+
+22:21:28:378|SQL : exec GetHomeCategoryItems 8
+22:21:28:378|-----------------------------------------------------------------------------
+
+22:21:28:721|SQL : exec GetStores 8
+22:21:28:721|-----------------------------------------------------------------------------
+
+22:21:28:745|SQL : select storeitem0_.ID as ID31_,
+	 storeitem0_.SalesPrice as SalesPrice31_,
+	 storeitem0_.ListPrice as ListPrice31_,
+	 storeitem0_.Stock as Stock31_,
+	 storeitem0_.StoreID as StoreID31_,
+	 storeitem0_.ProductID as ProductID31_,
+	 storeitem0_.DateModified as DateModi7_31_,
+	 storeitem0_.IsForSale as IsForSale31_,
+	 storeitem0_.HasVariant as HasVariant31_,
+	 storeitem0_.Status as Status31_ from [StoreItem] storeitem0_ where (storeitem0_.ProductID in (? ,
+	 ?)) and (storeitem0_.StoreID in (?))
+22:21:28:745|-----------------------------------------------------------------------------
+
+22:21:38:221|SQL : WITH FilteredProductInfo 	AS ( 
+ SELECT
+	 P.ID,
+	 MIN(SI.SalesPrice) 	AS SR_0 
+FROM
+	 Product (NOLOCK) P 
+	INNER JOIN StoreItem (NOLOCK)  SI
+		ON SI.ProductID = P.ID 
+
+WHERE
+	 P.Status = 1 AND
+	 SI.Status = 1 AND
+	 SI.IsForSale = 1 
+AND P.CategoryID IN (8)  
+GROUP	 BY P.ID) 
+SELECT
+	 TOP 36 PP.* 
+FROM
+	 (  SELECT
+	 FPI.ID,
+	 ROW_NUMBER() OVER (
+ORDER	 BY FPI.SR_0 	ASC) 	AS ROW_NUM   
+FROM
+	 FilteredProductInfo 	AS FPI	 
+) 	AS TT 
+	INNER JOIN Product (NOLOCK) PP
+		ON PP.ID = TT.ID 
+WHERE
+	 TT.ROW_NUM>0
+22:21:38:221|-----------------------------------------------------------------------------
+
+22:21:38:262|SQL : SELECT
+	 SI.* 
+FROM
+	 Product (NOLOCK) P 
+	INNER JOIN StoreItem (NOLOCK)  SI
+		ON SI.ProductID = P.ID 
+
+WHERE
+	 P.Status = 1 AND
+	 SI.Status = 1 AND
+	 SI.IsForSale = 1 
+AND P.CategoryID IN (8) AND
+	 SI.ProductID IN (155) 
+22:21:38:262|-----------------------------------------------------------------------------
+
+22:21:38:283|SQL : SELECT
+	 COUNT(DISTINCT P.ID) 
+FROM
+	 Product (NOLOCK) P 
+	INNER JOIN StoreItem (NOLOCK)  SI
+		ON SI.ProductID = P.ID 
+
+WHERE
+	 P.Status = 1 AND
+	 SI.Status = 1 AND
+	 SI.IsForSale = 1 
+AND P.CategoryID IN (8) 
+22:21:38:283|-----------------------------------------------------------------------------
+
+22:21:38:335|SQL : select languageva0_.ID as ID17_,
+	 languageva0_.LangID as LangID17_,
+	 languageva0_.RelationID as RelationID17_,
+	 languageva0_.FieldName as FieldName17_,
+	 languageva0_.Content as Content17_,
+	 languageva0_.RelationType as Relation6_17_ from [LanguageValue] languageva0_ where languageva0_.RelationType = ? and languageva0_.LangID = ? and (languageva0_.RelationID in (?))
+22:21:38:335|-----------------------------------------------------------------------------
+
+22:21:46:532|SQL : select simpleitem0_.ID as ID29_,
+	 simpleitem0_.Title as Title29_,
+	 simpleitem0_.Value as Value29_,
+	 simpleitem0_.Url as Url29_,
+	 simpleitem0_.SubType as SubType29_,
+	 simpleitem0_.Cost as Cost29_,
+	 simpleitem0_.SortOrder as SortOrder29_,
+	 simpleitem0_.Type as Type29_,
+	 simpleitem0_.Status as Status29_ from [SimpleItem] simpleitem0_ where simpleitem0_.Type = ? and simpleitem0_.Status = ? order by simpleitem0_.SortOrder asc
+22:21:46:532|-----------------------------------------------------------------------------
+
+22:22:49:997|SQL : select campaign0_.ID as ID7_,
+	 campaign0_.Name as Name7_,
+	 campaign0_.Description as Descript3_7_,
+	 campaign0_.ImageInfo as ImageInfo7_,
+	 campaign0_.Scope as Scope7_,
+	 campaign0_.ItemScope as ItemScope7_,
+	 campaign0_.DiscountType as Discount7_7_,
+	 campaign0_.Discount as Discount7_,
+	 campaign0_.MinimumAmount as MinimumA9_7_,
+	 campaign0_.MinimumQuantity as Minimum10_7_,
+	 campaign0_.OwnerID as OwnerID7_,
+	 campaign0_.FilterInfo as FilterInfo7_,
+	 campaign0_.PublishDate as Publish13_7_,
+	 campaign0_.ExpireDays as ExpireDays7_,
+	 campaign0_.DateCreated as DateCre15_7_,
+	 campaign0_.DateModified as DateMod16_7_,
+	 campaign0_.Status as Status7_ from [Campaign] campaign0_ where campaign0_.Status = ? and campaign0_.PublishDate< = ?
+22:22:49:997|-----------------------------------------------------------------------------
+
+22:23:07:139|SQL : WITH FilteredProductInfo 	AS ( 
+ SELECT
+	 P.ID,
+	 MIN(SI.SalesPrice) 	AS SR_0 
+FROM
+	 Product (NOLOCK) P 
+	INNER JOIN StoreItem (NOLOCK)  SI
+		ON SI.ProductID = P.ID 
+
+WHERE
+	 P.Status = 1 AND
+	 SI.Status = 1 AND
+	 SI.IsForSale = 1 
+AND P.CategoryID IN (11,
+	14,
+	15,
+	16)  
+GROUP	 BY P.ID) 
+SELECT
+	 TOP 36 PP.* 
+FROM
+	 (  SELECT
+	 FPI.ID,
+	 ROW_NUMBER() OVER (
+ORDER	 BY FPI.SR_0 	ASC) 	AS ROW_NUM   
+FROM
+	 FilteredProductInfo 	AS FPI	 
+) 	AS TT 
+	INNER JOIN Product (NOLOCK) PP
+		ON PP.ID = TT.ID 
+WHERE
+	 TT.ROW_NUM>0
+22:23:07:139|-----------------------------------------------------------------------------
+
+22:23:07:182|SQL : SELECT
+	 SI.* 
+FROM
+	 Product (NOLOCK) P 
+	INNER JOIN StoreItem (NOLOCK)  SI
+		ON SI.ProductID = P.ID 
+
+WHERE
+	 P.Status = 1 AND
+	 SI.Status = 1 AND
+	 SI.IsForSale = 1 
+AND P.CategoryID IN (11,
+	14,
+	15,
+	16) AND
+	 SI.ProductID IN (312,
+	314,
+	313,
+	330,
+	333,
+	323,
+	302,
+	303,
+	308,
+	309,
+	324,
+	319,
+	326,
+	327,
+	335,
+	332,
+	305,
+	311,
+	306,
+	304,
+	320,
+	331,
+	334,
+	310,
+	322,
+	315,
+	318,
+	321,
+	316,
+	307,
+	317,
+	328,
+	325,
+	329,
+	14,
+	12) 
+22:23:07:182|-----------------------------------------------------------------------------
+
+22:23:07:223|SQL : SELECT
+	 COUNT(DISTINCT P.ID) 
+FROM
+	 Product (NOLOCK) P 
+	INNER JOIN StoreItem (NOLOCK)  SI
+		ON SI.ProductID = P.ID 
+
+WHERE
+	 P.Status = 1 AND
+	 SI.Status = 1 AND
+	 SI.IsForSale = 1 
+AND P.CategoryID IN (11,
+	14,
+	15,
+	16) 
+22:23:07:223|-----------------------------------------------------------------------------
+
+22:23:07:271|SQL : select languageva0_.ID as ID17_,
+	 languageva0_.LangID as LangID17_,
+	 languageva0_.RelationID as RelationID17_,
+	 languageva0_.FieldName as FieldName17_,
+	 languageva0_.Content as Content17_,
+	 languageva0_.RelationType as Relation6_17_ from [LanguageValue] languageva0_ where languageva0_.RelationType = ? and languageva0_.LangID = ? and (languageva0_.RelationID in (? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ? ,
+	 ?))
+22:23:07:271|-----------------------------------------------------------------------------
+
+22:23:34:815|SQL : WITH FilteredProductInfo 	AS ( 
+ SELECT
+	 P.ID,
+	 MIN(SI.SalesPrice) 	AS SORT_ROW 
+FROM
+	 Product (NOLOCK) P 
+	INNER JOIN StoreItem (NOLOCK)  SI
+		ON SI.ProductID = P.ID 
+
+WHERE
+	 P.Status = 1 AND
+	 SI.Status = 1 AND
+	 SI.IsForSale = 1 
+AND P.ID IN (333,
+	303) AND
+	 SI.StoreID IN (7)  
+GROUP	 BY P.ID) 
+SELECT
+	 TOP 2 PP.* 
+FROM
+	 (  SELECT
+	 FPI.ID,
+	 ROW_NUMBER() OVER (
+ORDER	 BY FPI.SORT_ROW 	ASC) 	AS ROW_NUM   
+FROM
+	 FilteredProductInfo 	AS FPI	 
+) 	AS TT 
+	INNER JOIN Product (NOLOCK) PP
+		ON PP.ID = TT.ID 
+WHERE
+	 TT.ROW_NUM>0
+22:23:34:815|-----------------------------------------------------------------------------
+
+22:23:34:856|SQL : select propertyva0_.ID as ID26_,
+	 propertyva0_.Name as Name26_,
+	 propertyva0_.ParentID as ParentID26_,
+	 propertyva0_.SortOrder as SortOrder26_,
+	 propertyva0_.Type as Type26_,
+	 propertyva0_.Status as Status26_ from [PropertyValue] propertyva0_ where propertyva0_.Type<>? and propertyva0_.Type<>?
+22:23:34:857|-----------------------------------------------------------------------------
+

@@ -1,0 +1,72 @@
+﻿@using CleanCode.Helper
+@model IEnumerable<object>
+@{
+    ViewBag.Title = "Cache Yönetimi";
+    TempData["ActivePage"] = 3;
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="wrapper-box active cache-list">
+    <div class="content-box">
+        <div class="col-md-12">
+            <h2 class="mb20">
+                Cache Yönetimi
+            </h2>
+        </div>
+
+        <div class="mb20 col-md-9">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Cache Tipi</th>
+                        <th>İşlem</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="td-name">@item.ToString()</td>
+                            <td>
+                                <button class="btn btn-sm btn-info btn-clear-cache" data-cache-key="@item"><i class="fa fa-trash"></i> <span class="hidden-xs">Temizle</span></button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="panel-warn">
+                    <p><i class="fa fa-4x fa-info-circle"></i></p>
+                    <h2>Listelenecek Öğe Bulunamadı!</h2>
+                    <p class="lead">Cachlenen öğeler buarada listelenecektir.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(document).on("click", ".btn-clear-cache", {}, function() {
+                var btn = $(this);
+                $.post("/Home/ClearCache", { cacheKey: $(this).data('cache-key') }, function (result) {
+                    if (result.isSuccess == 1) {
+                        $(btn).parents('tr:eq(0)').addClass('ok');
+                        aware.showToastr("İşlem başarıyla tamamlandı.", "success");
+                    }
+                    else {
+                        $(btn).parents('tr:eq(0)').addClass('fail');
+                        aware.showToastr("İşlem başarısız. Lütfen daha sonra tekrar deneyin!", 'error');
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}

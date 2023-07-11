@@ -1,0 +1,84 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@using WebMarket.Admin.Models
+@model StoreViewModel
+@{
+    TempData["ActivePage"] = 3;
+    ViewBag.PageNavigation = new Item(0, "Marketler", "fa-th", "/market-yonetimi");
+    ViewBag.Title = Model != null ? Model.GetTitle() : "Market Detay";
+}
+
+<section class="container-fluid store-detail">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-tv"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+                    @Html.Partial("_PageNavigation")
+
+                    @if (Model != null && Model.Store != null)
+                    {
+                        <div class="box box-info store-detail-dialog">
+                            @using (Html.BeginForm("Detail", "Store", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                            {
+                                var imagePath = string.Format("{0}?r={1}", Model.Store.ImageInfo, new Random().Next());
+                                var fields = new FieldHelper(FieldDirection.Horizantal);
+                                fields.Label("#ID", Model.Store.ID.ToString(), "viewable");
+                                fields.Label("Firma", Model.Customer.Name, "viewable");
+
+                                fields.Text("Store.Name", "İsim", Model.Store.Name, "validate", 30);
+                                fields.Text("Store.DisplayName", "Görünen İsim", Model.Store.DisplayName, "validate", 30);
+                                fields.Image("storeImage", "Görsel", Model.Store.DisplayName, imagePath, "validate validate-file").SetAttr("data-extensions='jpg,jpeg,gif,png'");
+                                fields.TxtArea("Store.Description", "Açıklama", Model.Store.Description, string.Empty, 800);
+                                fields.Number("Store.MinOrderAmount", "Minimum Sipariş Tutarı", Model.Store.MinOrderAmount.ToString("#"), "validate pnumber", 5);
+
+                                var regionCss = string.Format("region-selector {0}", Model.AllowRegionSelection ? "validate sbx-check" : "disabled");
+                                fields.Select("Semt Seçimi", "RegionInfo", Model.RegionList, Model.Store.RegionInfo, regionCss, string.Empty, true);
+                                fields.BtnGroup("Durum", "Store.Status", Model.StatusList, ((int)Model.Store.Status).ToString(), string.Empty);
+
+                                @Html.HiddenFor(model => model.Store.ID)
+                                @Html.HiddenFor(model => model.Store.CustomerID,Model.Customer.ID)
+                                @Html.Partial("_FieldHelper", fields)
+
+                                <hr />
+                                <div class="text-right">
+                                    @if (Model.Store.ID > 0)
+                                    {
+                                        <a href="@Url.RouteUrl(RouteNames.StoreItemsRoute, new { storename = Model.Store.DisplayName.ToSeoUrl(), storeID = Model.Store.ID })" class="btn btn-info"><i class="fa fa-eye"></i> Ürünler</a>
+                                        <a href="#workTimesModal" data-toggle="modal" class="ml10 mr10 btn btn-primary"><i class="fa fa-edit"></i> Çalışma Saatleri</a>
+                                    }
+                                    @Html.ButtonFor("Kaydet", "btn-success btn-save-store")
+                                </div>
+                            }
+
+                            @if (Model.Store.ID > 0)
+                            {
+                                var workTimeInfo = Model.Store.WorkTimeInfo ?? string.Empty;
+                                Html.RenderPartial("_WorkTimeInfo", workTimeInfo);
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="callout callout-danger">
+                            <h4><i class="icon fa fa-warning"></i> Market Bulunamadı</h4>
+                            <p>Böyle bir market yok ya da işlem yapma/görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader
+{
+    <link rel="stylesheet" href="~/resource/css/jquery-ui.css">
+    <script src="~/resource/js/jquery-ui.js"></script>
+    <script src="~/resource/js/store.js"></script>
+}
+

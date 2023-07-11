@@ -1,0 +1,104 @@
+﻿@using Aware.Util
+@using Aware.View
+@model Aware.ECommerce.Model.Custom.CommentViewModel
+
+@if (Model != null)
+{
+    if (Model.CommentCount > 0)
+    {
+        <div class="mb20 col-md-12 rating gutter-0">
+            <div class="ratings-container">
+                <span class="rating-desc">Ortalama</span>
+                <span class="rating-star">
+                    <span class="rating-star" style="width: @(Model.RatingAverage*20)%;">0</span>
+                </span>
+                <span class="rating-avg">@Model.RatingAverage</span>
+
+                <span class="rating-count r1">@Model.Stats[1]</span>
+                <span class="rating-count r2" style="left: 98px;">@Model.Stats[2]</span>
+                <span class="rating-count r3" style="left: 144px;">@Model.Stats[3]</span>
+                <span class="rating-count r4" style="left: 190px;">@Model.Stats[4]</span>
+                <span class="rating-count r5" style="left: 233px;">@Model.Stats[5]</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h4 class="mb20 no-comment">Bu ürüne henüz yorum yapılmamış.</h4>
+    }
+
+    if (Model.IsPartial && Model.AllowNewComment)
+    {
+        var fields = new FieldHelper();
+        fields.Text("Title", "Başlık", string.Empty, "validate", 100);
+        fields.TxtArea("Value", "İçerik", string.Empty, "validate", 300);
+        
+        <div class="mb20 row col-md-6 col-xs-12">
+            <h4 class="btn btn-new-comment">Yorum Yap</h4>
+            <div class="fade hide comment-success">
+                <p><i class="fa fa-check"></i> Teşekkürler, yorumunuz kaydedildi.</p>
+                <p style="margin-top: 10px;font-size: 15px; color: #232323;">Yorumunuz, onaylanması durumunda bu alanda listelenecektir. </p>
+            </div>
+            <form class="comment-form">
+                <div class="rating-panel">
+                    <label>Puan Verin</label>
+                    <span>
+                        <i class="fa fa-star rt" style="left: 100px;" data-rating="5"></i>
+                        <i class="fa fa-star rt" style="left: 75px;" data-rating="4"></i>
+                        <i class="fa fa-star rt" style="left: 50px;" data-rating="3"></i>
+                        <i class="fa fa-star rt " style="left: 25px;" data-rating="2"></i>
+                        <i class="fa fa-star rt" data-rating="1"></i>
+                    </span>
+                </div>
+
+                @Html.Partial("_FieldHelper", fields)
+                <div class="mt10 field-row">
+                    <a href="#" class="mt10" data-toggle="modal" data-target="#commentPublishTips"><i class="fa fa-question-circle"></i> Yorum yayınlama kriterleri</a>
+                    @Html.ButtonFor("Gönder", "fr btn btn-warn btn-send-comment", "comment")
+                </div>
+            </form>
+        </div>
+
+        <div class="modal fade" id="commentPublishTips">
+            <div class="modal-dialog">
+                <div class="modal-body wrapper-box free">
+                    <div class="inner">
+                        <button type="button" class="pa close" style="right: 20px;" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="mb20">
+                            <i class="fa fa-comments"></i> Yorum Yayınlama Kriterleri
+                        </h3>
+                        <ul>
+                            <li><i class="fa fa-caret-right"></i> Eğer bu ürünü satın aldıysanız ya da kullandıysanız diğer müşterilerimizi bilgilendirmek için ürünün performansı ya da özellikleri ile ilgili yorumlarınızı yazabilirsiniz.</li>
+                            <li><i class="fa fa-caret-right"></i> Sitemizde yayına alınmakta olan tüm ürün yorumları, siz değerli müşterilerimizin ürün seçimlerini daha sağlıklı şekilde yapabilmelerini kolaylaştırmak amacıyla ekibimiz tarafından dikkatle incelenmekte olup, aşağıdaki kriterlere uygunsa yayınlanmaktadır. Yorumlarınızda ürüne ait eksi ya da artı özellikleri, kullanım esnasında yaşadığınız sorunları yazabilir, ürün hakkındaki memnuniyetinizi ya da memnuniyetsizliğinizi dile getirebilirsiniz.</li>
+                            <li><i class="fa fa-caret-right"></i> 5 kelimeden kısa yazılmış yorumlar, hakaret veya argo içeren yorumlar, fiyat bilgisi verilen, markaları kiyaslayan, tedarik ile ilgili sorunların belirtildiği, soru sorulan, link bilgisi verilen yorumlar onaylanmamaktadır.</li>
+                            <li><i class="fa fa-caret-right"></i> Bu kriterlerin dışında kalan tüm yorumlar kısa süreli bir değerlendirme sürecinin ardından yayınlanmaktadır. Bu sebeple yorumların değerlendirilip yayınlanma süresi, gelen yorumların yoğunluğuna ve geliş sıralamasına göre değişkenlik gösterebilir.</li>
+                        </ul>
+
+                        <div class="mt20 text-center">
+                            <a class="btn btn-black" data-dismiss="modal">KAPAT</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    if (Model.CommentCount > 0)
+    {
+        <div class="row col-md-12 comments">
+            @foreach (var comment in Model.Comments)
+            {
+                <div class="comment">
+                    <label>@comment.Title @Html.GetCommentRating(comment.Rating)</label>
+                    <div>@comment.Value</div>
+                    <div class="mt10"><i class="fa fa-user"></i> <i>@comment.OwnerName @comment.DateCreated.ToShortDateString()</i></div>
+                </div>
+            }
+
+            @if (Model.IsPartial && Model.CommentCount > 10)
+            {
+                <a href="@Url.RouteUrl(RouteNames.ProductCommentsRoute, new { name = Model.Title.ToSeoUrl(), id = Model.RelationID })" target="_blank" class="btn btn-warn"><i class="fa fa-comment"></i> Tüm Yorumlar</a>
+            }
+        </div>
+    }
+}

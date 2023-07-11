@@ -1,0 +1,49 @@
+﻿@using WebMarket.Admin.Helper
+@model WebMarket.Admin.Models.ProductViewModel
+@{
+    ViewBag.Title = "Ürün Detayı";
+    TempData["ActivePage"] = 7;
+}
+
+<section class="container-fluid product-detail">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        <a href="@Url.RouteUrl(RouteNames.ProductListRoute)" class="btn btn-sm btn-info">Geri Git</a>
+                    </h2>
+
+                    @if (Model != null && Model.Product != null)
+                    {
+                        var category = Model.CategoryList.FirstOrDefault(i => i.ID == Model.Product.CategoryID);
+                        ViewBag.Title = Model.Product.Name;
+
+                        <div class="mb20 col-md-6">
+                            <div style="border: 1px solid #eee;">
+                                @Html.ImageFor("", Model.Product.DefaultImage.Path, Model.Product.Name, "img-responsive")
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h1>@Model.Product.Name</h1>
+                            <p>@category.Name</p>
+                            <p>@Model.Product.ShortDescription</p>
+                            <p>Barkod:@Model.Product.Barcode</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Ürün Bulunamadı!</h4>
+                            <p class="description">Böyle bir ürün yok ya da görüntüleme yetkiniz bulunmuyor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

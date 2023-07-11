@@ -1,0 +1,208 @@
+﻿@using Aware.Util
+@using Aware.View
+@using Resources
+
+@model YBSelectorDisplayModel
+@{
+    ViewBag.Title = "Selector";
+}
+
+<section class="page-section breadcrumbs">
+    <div class="container">
+        <div class="page-header">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</section>
+
+<div class="page-section container contact-us">
+    <div class="mb20 col-md-6 form-wrapper">
+        <h3 class="block-title"><span>İlan Bilgileri</span></h3>
+        <p>
+            Size daha iyi hizmet verebilmemiz için lütfen iletmek istediklerinizi aşağıdaki forma yazıp bize gönderin.
+            İlgili arkadaşlarımız size en kısa sürede geri dönüş yapacaktır.
+        </p>
+        <p class="mt20">
+            @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+            {
+                <div class="form-group mb20">
+                    <label>Pozisyon</label>
+                    @Html.Partial("_Selector", Model.Positions)
+                </div>
+
+                <div class="form-group mb20">
+                    <label>Sektör</label>
+                    @Html.Partial("_Selector", Model.Sectors)
+                </div>
+
+                <div class="form-group mb20">
+                    <label>Görev Yeri</label>
+                    @Html.Partial("_Selector", Model.Locations)
+                </div>
+            }
+        </p>
+    </div>
+</div>
+
+<style>
+    .selections { border: 1px solid #eee; padding: 5px 10px; padding-right: 5px; border-radius: 5px; height: 43px; margin-top: 6px;cursor:pointer; }
+    .selections span { background: #149adc; color: #fff; border-radius: 3px; margin: 2px; padding: 2px 5px; }
+
+    .selector-modal .modal-dialog { width: 720px; }
+    .selector-modal .modal-body { display: table; }
+    .selector-modal h4 { font-weight: bold; }
+    .selector-modal span.description { color: #545454; font-size: 9px; }
+
+    .selector-modal .left-side .txt-search { background: #E6ECF2; border-radius: 0; border: 0 none; color: #B0B9C1; outline: none !important; box-shadow: none !important; }
+    .selector-modal .left-side .txt-search:focus { outline: none; box-shadow: none !important; }
+
+    .selector-modal .left-side .item-list { border: 1px solid #E4EAF0; padding: 0; cursor: pointer; height: 217px; overflow-y: scroll; }
+    .selector-modal .left-side .item-list div { border-bottom: 1px solid #eee; background: #f5f5f5; padding: 5px 10px; margin: 0; color: #b7b7b7; font-size: 12.4px; font-weight: 600; }
+    .selector-modal .left-side .item-list div:hover { background: #fff; color: #0094ff; cursor: move; }
+    .selector-modal .left-side .item-list div.active { background: #fff; color: #0094ff; font-weight: 600; }
+
+    .selector-modal .left-side .item-list div i { cursor: pointer; }
+    .selector-modal .left-side .item-list div i:before { content: '\f096 '; font-family: 'FontAwesome'; font-style: normal; font-size: 14px; }
+    .selector-modal .left-side .item-list div.active i:before { content: '\f14a '; }
+
+    .selector-modal .right-side .item-list { background: #E4EAF0; border: 1px solid #E4EAF0; height: 250px; overflow-y: scroll; cursor: pointer; }
+    .selector-modal .right-side .item-list div { border-bottom: 1px solid #eee; background: #fff; padding: 5px 10px; margin: 0; color: #BDC2C7; font-size: 12.4px; font-weight: 600; }
+    .selector-modal .right-side .item-list div:hover { background: #F7F9FB; color: #5c5c5c; }
+
+    .drag-helper { display: block; width: 200px; height: 30px; background: #fff !important; color: #232323 !important; z-index: 999; position: absolute; border: 1px solid #ddd !important; }
+    .drag-helper.remove { background: #dc143c !important; color: #fff !important; }
+</style>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+<script type="text/javascript">
+    var dragging = false;
+    var selectedElement = undefined;
+
+    $(document).ready(function () {
+        $('.drag-helper').hide();
+        $(initDragger);
+        $(document).on('mousedown', '.drag-elem', {}, function () {
+            selectedElement = $(this);
+        });
+
+        $(document).on('click', '.selector-modal .item-list.left div i', {}, function () {
+            var parent = $(this).parent();
+            var modal = $(this).parents(".selector-modal:eq(0)");
+
+            var itemID = $(parent).data("id");
+            if ($(parent).hasClass("active")) {
+                $(parent).removeClass("active");
+                $(modal).find(".item-list.right div[data-id='" + itemID + "']").remove();
+            }
+            else {
+                $(parent).addClass("active");
+                $(modal).find(".item-list.right").append("<div data-id='" + itemID + "' class='drag-elem'>" + $(parent).text() + " <i class='fr fa fa-remove'></i></div>");
+                $(initDragger);
+            }
+        });
+
+        $(document).on('click', '.selector-modal .item-list.right div i', {}, function () {
+            var parent = $(this).parent();
+            var modal = $(this).parents(".selector-modal:eq(0)");
+            var itemID = $(parent).data("id");
+
+            $(modal).find(".item-list.left div[data-id='" + itemID + "']").removeClass("active");
+            $(parent).remove();
+        });
+
+        $(document).on('keyup', '.selector-modal .txt-search', {}, function () {
+            var value = $(this).val();
+            var modal = $(this).parents(".selector-modal:eq(0)");
+
+            if (value.length < 3) {
+                $(modal).find(".item-list.left div").removeClass("dn");
+            }
+            else {
+                $(modal).find(".item-list.left div").each(function () {
+                    var name = $(this).text().toLowerCase();
+                    if (name.indexOf(value.toLowerCase()) > -1) {
+                        $(this).removeClass("dn");
+                    }
+                    else {
+                        $(this).addClass("dn");
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '.selections span i', {}, function () {
+            var parent = $(this).parent();
+            var control = $(parent).parent().find("input[type='hidden']");
+            var itemID = $(parent).data("id");
+            var modalID = "#" + control.attr("id") + "SelectorModal";
+
+            $(modalID).find(".item-list.left div[data-id='" + itemID + "']").removeClass("active");
+            $(modalID).find(".item-list.right div[data-id='" + itemID + "']").remove();
+            $(parent).remove();
+
+            var selections = "";
+            $(modalID).find(".item-list.right div").each(function () {
+                selections += $(this).data("id") + ",";
+            });
+            $(control).val(selections);
+        });
+    });
+
+    function initDragger() {
+        $('.drag-elem').draggable({
+            start: function (e, ui) {
+                selectedElement = $(this);
+                dragging = true;
+                //$('.drop-elem-wrapper').fadeIn(1000);
+                //$(".drop-elem-wrapper").position({
+                //    my: "right top",
+                //    at: "left top",
+                //    of: this // or $("#otherdiv)
+                //    //collision: "fit"
+                //});
+            },
+            drag: function (event, ui) {
+                $('.drag-helper').show();
+                $(this).css("cursor", "move !important");
+            },
+            cursor: 'normal',
+            cursorAt: { left: 37, top: 37 },
+            revert: true,
+            helper: function (event) {
+                var isLeft = $(selectedElement).parents(".item-list:eq(0)").hasClass("left");
+                if (isLeft) {
+                    return "<div class='drag-helper'><i class='fa fa-plus'></i> " + $(selectedElement).text() + "</div>";
+                }
+                return "<div class='drag-helper remove'><i class='fa fa-remove'></i> " + $(selectedElement).text() + "</div>";
+            },
+            containment: 'document',
+            stop: function () {
+                selectedElement = undefined;
+                dragging = false;
+            }
+        });
+
+        $('.drop-elem').droppable({
+            drop: function (event, ui) {
+                dragging = false;
+                $('.drag-helper').hide();
+
+                var itemID = $(selectedElement).data("id");
+                if ($(this).hasClass("right") && !$(selectedElement).parent().hasClass("right")) {
+                    var add = $(this).find("div[data-id='" + itemID + "']").length == 0;
+                    if (add) {
+                        $(this).append("<div data-id='" + itemID + "' class='drag-elem'>" + $(selectedElement).text() + " <i class='fr fa fa-remove'></i></div>");
+                        $(selectedElement).addClass("active");
+                    }
+                }
+                else if ($(this).hasClass("left") && !$(selectedElement).parent().hasClass("left")) {
+                    $(this).find(".drag-elem[data-id='" + itemID + "']").removeClass("active");
+                    $(selectedElement).remove();
+                }
+
+                //setTimeout(function() { ui.draggable.remove(); }, 1); // yes, even 1ms is enough
+                $(initDragger);
+            }
+        });
+    }
+</script>

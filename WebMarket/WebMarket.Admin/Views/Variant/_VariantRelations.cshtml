@@ -1,0 +1,57 @@
+﻿@using WebMarket.Admin.Helper
+@model Aware.ECommerce.Model.VariantRelationViewModel
+
+<div class="variant-relations">
+    <input type="hidden" id="RelationID" ng-init="relationID=@Model.RelationID" ng-value="{{relationID}}" />
+    <input type="hidden" id="RelationType" ng-init="relationType=@((int)Model.RelationType)" ng-value="{{relationType}}" />
+
+    <p ng-show="variantRelations.length==0" class="text-red text-bold mb20">
+        Henüz eklediğiniz bir varyant özellik yok!
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th width="5%">#ID</th>
+                <th width="15%">Özellik</th>
+                <th width="15%">Değer</th>
+                <th width="15%">Fiyat (<i class="fa fa-turkish-lira"></i>)</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="relation in variantRelations | orderBy:'VariantID'">
+                <td>{{relation.ID}}</td>
+                <td>{{getName(relation,'P')}}</td>
+                <td>{{getName(relation,'O')}}</td>
+                <td>
+                    <input type="text" class="form-control text-right" name="Price" ng-model="relation.Price" maxlength="6" />
+                </td>
+                <td>
+                    @Html.ButtonFor("Güncelle", "btn-sm btn-success", "check", "ng-click='saveRelation(relation)'")
+                    @Html.ButtonFor("Sil", "btn-sm btn-danger", "remove", "ng-click='removeRelation(relation)'")
+                </td>
+            </tr>
+
+            <tr>
+                <td>{{newRelation.ID}}</td>
+                <td>
+                    <select ng-model="newRelation.VariantID" class="form-control" ng-class="{error:newRelation.VariantID==0 && onSave}" required>
+                        <option value="0">Seçiniz</option>
+                        <option ng-repeat="property in variantProperties" ng-value="property.ID">{{property.Name}}</option>
+                    </select>
+                </td>
+                <td>
+                    <select ng-model="newRelation.VariantValue" class="form-control" ng-class="{error:newRelation.VariantValue==0 && onSave}" required>
+                        <option value="0">Tümü</option>
+                        <option ng-repeat="opt in getOptionList(newRelation.VariantID)" ng-value="opt.ID">{{opt.Name}}</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control text-right" name="Price" ng-model="newRelation.Price" maxlength="6" /></td>
+                <td>
+                    @Html.ButtonFor("Ekle", "btn-sm btn-info", "plus", "ng-click='saveRelation(newRelation)'")
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

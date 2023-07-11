@@ -1,0 +1,64 @@
+﻿@model List<Aware.Payment.Model.BankInfo>
+@{
+    ViewBag.Title = "Banka Yönetimi";
+    TempData["ActivePage"] = 27;
+}
+
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-th"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">@ViewBag.Title</h2>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        <p class="mt20 lead error-panel">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            Bankalar üzerinde işlem yapma yetkiniz yok!
+                        </p>
+
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#ID</th>
+                                        <th width="20%" colspan="2">Banka</th>
+                                        <th>Şube</th>
+                                        <th>IBAN</th>
+                                        <th>Hesap Numarası</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var bank in Model)
+                                    {
+                                        <tr>
+                                            <td>@bank.ID</td>
+                                            <td>
+                                                <img class="bank-image" src="/resource/img/Bank/@(bank.ImageUrl)" />
+                                            </td>
+                                            <td>@bank.Name</td>
+                                            <td>@bank.BranchName</td>
+                                            <td>@bank.IBAN</td>
+                                            <td>@bank.AccountNumber</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Sistemde tanımlı banka bulunamadı!</h4>
+                            <p class="description"></p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

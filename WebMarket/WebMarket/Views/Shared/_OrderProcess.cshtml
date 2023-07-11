@@ -1,0 +1,31 @@
+﻿@model int
+<div class="col-md-12 order-processes mt20 mb10">
+    <table>
+        <tr>
+            <td>
+                <a href="/Basket" class="active"><i class="fa fa-shopping-basket"></i><span class="hidden-xs"> Sepetim</span><i class="hidden-xs sep fa  fa-angle-right"></i></a>
+            </td>
+            <td>
+                <a href="@(Model > 0 ? Url.Action("Index","Order") : "javascript:void(0);")" class="@(Model > 0 ? "active" : "")"><i class="fa fa-th-list"></i><span class="hidden-xs"> Sipariş Bilgileri</span><i class="hidden-xs sep fa  fa-angle-right"></i></a>
+            </td>
+            @*<td>
+                <a href="@(Model == 2 ? "/Order/Approval" : "javascript:void(0);")" class="@(Model > 1 ? "active" : "")"><i class="hidden-sm fa fa-check"></i><span class="hidden-xs"> Sipariş Onay</span><i class="hidden-xs sep fa  fa-angle-right"></i></a>
+            </td>*@
+            <td>
+                <a href="@(Model == 2 ? Url.Action("Payment", "Order") : "javascript:void(0);")" class="@(Model > 1 ? "active" : "")"><i class="hidden-sm fa fa-credit-card"></i><span class="hidden-xs"> Ödeme</span><i class="hidden-xs sep fa  fa-angle-right"></i></a>
+            </td>
+            <td>
+                <a href="javascript:void(0);"><i></i><i class="fa fa-cubes"></i><span class="hidden-xs"> Sipariş Özeti</span></a>
+            </td>
+        </tr>
+    </table>
+</div>
+<hr class="page-divider">
+
+<style>
+    .order-processes table { margin: 10px auto;width: 100%;max-width: 800px; }
+    .order-processes td { text-align: center;}
+    .order-processes a { display: block;font-size: 22px;color: #ccc;cursor:default; }
+    .order-processes a.active { color: #000; cursor:pointer;}
+    .order-processes a i.sep { font-size: 20pt; margin-left: 29px; }
+</style>

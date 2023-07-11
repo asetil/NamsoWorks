@@ -1,0 +1,63 @@
+﻿@using Aware.Util.Enums
+@using Aware.Util.Model
+@using Aware.Util.View
+@using CleanCode.Helper;
+
+@model Aware.Authenticate.Model.User
+@{
+    ViewBag.Title = "Yazar Bilgileri";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.ActiveMenu = 4;
+}
+
+<div class="mt20 wrapper-box author-panel">
+    <div class="content-box">
+        <div class="col-md-12">
+            <h2 class="mb20">Yazar Bilgileri</h2>
+        </div>
+
+        @if (Model != null)
+        {
+            <div class="col-md-6">
+                @using (Html.BeginForm("Detail", "Author", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+                {
+                    var fields = new FieldHelper(FieldDirection.Horizantal);
+                    fields.Label("#ID", Model.ID.ToString(), "viewable");
+                    fields.Text("Name", "İsim", Model.Name, "validate", 150);
+                    fields.Text("Email", "E-posta", Model.Email, "validate email-check", 30);
+                    fields.Pasword("Password", "Şifre", Model.Password, "validate ", 30);
+
+                    @Html.Hidden("ID", Model.ID)
+                    @Html.Partial("_FieldHelper", fields)
+
+                    <hr />
+                    <div class="mb20 text-right">
+                        @*@if (Model.ID > 0)
+                        {
+                            @Html.ButtonFor("Sil", "mr10 btn-danger btn-delete", "remove")
+                        }*@
+                        @Html.ButtonFor("Kaydet", "btn-blue btn-save-author", "check", "type='submit'")
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="panel-warn">
+                <p><i class="fa fa-4x fa-search"></i></p>
+                <h2>Erişmeye çalıştığınız yazar bulunamadı!</h2>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(document).on("click", ".btn-save-author", {}, function() {
+                return aware.validate(".author-panel");
+            });
+        });
+    </script>
+}

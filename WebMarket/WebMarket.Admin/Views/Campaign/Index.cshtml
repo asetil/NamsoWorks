@@ -1,0 +1,75 @@
+﻿@using Aware.Util
+@using WebMarket.Admin.Helper
+
+@model Aware.ECommerce.Model.Custom.CampaignListModel
+@{
+    ViewBag.Title = "Kampanyalar";
+    TempData["ActivePage"] = 5;
+    var count = Model != null && Model.CampaignList != null ? Model.CampaignList.Count() : 0;
+}
+
+<section class="container-fluid campaign-list">
+    <div class="row">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header card-header-icon"><i class="fa fa-table"></i></div>
+                <div class="card-content">
+                    <h2 class="card-title">
+                        @ViewBag.Title
+                        <a href="@Url.Action("Detail", new {name = "kampanya-tanimla", id = 0})" class="btn btn-info btn-round btn-fab btn-fab-mini ml20" title="Yeni Kampanya Tanımla"><i class="fa fa-plus"></i></a>
+                    </h2>
+                    @Html.Partial("_PageNavigation")
+
+                    @if (count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="4%">#ID</th>
+                                        <th width="20%">Kampanya Adı</th>
+                                        <th width="15%">İndirim Şekli</th>
+                                        <th width="12%">İndirim</th>
+                                        <th width="8%">Başlama Tarihi</th>
+                                        <th width="8%">Bitiş Tarihi</th>
+                                        <th width="6%">Durum</th>
+                                        <th width="15%">İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var campaign in Model.CampaignList)
+                                    {
+                                        <tr>
+                                            <td>@campaign.ID</td>
+                                            <td class="td-name">@campaign.Name</td>
+                                            <td>@Html.LookupValue(Model.ScopeList, (int)campaign.Scope)</td>
+                                            <td>
+                                                @Html.LookupValue(Model.DiscountTypeList, (int)campaign.DiscountType) -
+                                                @campaign.Discount.Formatted() @Html.DiscountSuffix(campaign.DiscountType)
+                                            </td>
+                                            <td>@campaign.PublishDate.ToShortDateString()</td>
+                                            <td>@campaign.PublishDate.AddDays(campaign.ExpireDays).ToShortDateString()</td>
+                                            <td class="text-center">@Html.StatusFor(campaign.Status)</td>
+                                            <td>
+                                                <a href="@Url.Action("Detail", new {name = @campaign.Name.ToSeoUrl(), id = @campaign.ID})" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Görüntüle</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <hr />
+                        <div class="no-result-found">
+                            <i class="fa fa-warning"></i>
+                            <h4>Tanımlı kampanya bulunamadı!</h4>
+                            <p class="description"><b>Yeni Ekle</b> butonunu kullanarak yeni bir kampanya tanımlayabilirsiniz.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,33 @@
+﻿@model Aware.ECommerce.Model.Custom.CommentViewModel
+@{
+    ViewBag.Title = string.IsNullOrEmpty(Model.Title) ? "Yorumlar": Model.Title + " Yorumları";
+}
+
+<section class="mt20 mb20 ">
+    <div class="container">
+        <h3 class="comments-title">@ViewBag.Title</h3>
+    </div>
+</section>
+
+<div class="container comments-container">
+    <div class="col-md-12 gutter-0" style="margin: 0 auto;">
+        @Html.Partial("_ProductCommentView", Model)
+
+        @if (Model.CommentCount > 10)
+        {
+            <div class="mb20 comments-pager"></div>
+        }
+    </div>
+</div>
+
+@section header
+{
+    @Scripts.Render(Constants.ProductScripts)
+    <link href="@Html.CssPath("product.css")" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            setPager('.comments-pager', '10', '@Model.CommentCount');
+        });
+    </script>
+}

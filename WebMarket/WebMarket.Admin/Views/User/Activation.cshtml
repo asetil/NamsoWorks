@@ -1,0 +1,39 @@
+﻿@using Aware.Util
+@using Aware.Util.Enums
+@using Aware.Util.View
+@using WebMarket.Admin.Helper
+@model Aware.Util.Model.Result
+@{
+    ViewBag.Title = "Üyelik Aktivasyonu";
+}
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary activation-dialog">
+                <div class="box-body text-center">
+                    @if (Model != null && Model.OK)
+                    {
+                        <h4><i class="fa fa-2x fa-check"></i><br />@Model.Message</h4>
+                        <a href="@Url.Action("Index", "User")" class="mt20 btn btn-info">Üye Girişi</a>
+                    }
+                    else
+                    {
+                        var fieldInfo = new FieldHelper(FieldDirection.Inline);
+                        fieldInfo.Text("Email", "E-posta", string.Empty, "validate email-check",30).SetAffix(string.Empty, "<i class='fa fa-envelope'></i>");
+
+                        <h3 style="color: #dc143c;"><i class="fa fa-2x fa-remove"></i><br />@Model.Message</h3>
+                        <h4 class="mt20 mb20">Dilerseniz e-posta adresinizi belirterek yeni bir aktivasyon kodu talep edebilirsiniz.</h4>
+
+                        @Html.Partial("_FieldHelper", fieldInfo)
+                        @Html.ButtonFor("Aktivasyon Kodu Gönder", "mt20 btn-info btn-new-activation")
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section pageheader{
+    <script src="~/resource/js/user.js"></script>  
+}

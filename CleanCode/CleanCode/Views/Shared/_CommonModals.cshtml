@@ -1,0 +1,42 @@
+﻿@using CleanCode.Helper;
+
+<div class="message-dialog">
+    <h2 class="title">İşlem Başarılı</h2>
+    <img src="/res/img/processing.gif" class="mt10 process" alt="Yükleniyor..">
+    <div class="md mt10 message-content"></div>
+    <p>@Html.ButtonFor("Tamam", "md mt20 btn btn-red btn-close-dialog", string.Empty)</p>
+</div>
+
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog">
+        <div class="modal-body">
+            <div class="mt20 mb10 title"><i class="fa fa-exclamation-circle"></i> <span>Lütfen Onaylayın</span></div>
+            <p class="lead mb10 message msg"></p>
+
+            <div class="button-row">
+                @Html.ButtonFor("Evet", "md btn btn-red btn-yes", string.Empty)
+                @Html.ButtonFor("Hayır", "ml10 md btn btn-gray btn-no", string.Empty, "data-dismiss='modal'")
+            </div>
+        </div>
+    </div>
+</div>
+
+<div onclick="aware.hidePopup('zoomImage');" class="PopupFade" id="zoomImageFade"></div>
+<div id="zoomImage" class="Popup" tabindex="1">
+    <img src="~/res/img/app/folder.png" />
+    <div class="buttons">
+        <i class="fa fa-angle-left btn-prev" title="Önceki"></i>
+        <i class="fa fa-angle-right btn-next" title="Sonraki"></i>
+    </div>
+    <span><i class="fa fa-info-circle"></i> Klavye sağ/sol tuşları ile ileri geri gezinebilirsiniz.</span>
+</div>
+
+<div class="aware-toastr"></div>
+
+@*<div onclick="return false;" class="PopupFade" id="progressPopupFade"></div>
+<div id="progressPopup" class="Popup">
+    <div class="wait-info">
+        <span class="message">@Resource.PleaseWait</span>
+        @Html.ImageFor("Icons", "bar-loading.gif")
+    </div>
+</div>*@

@@ -1,0 +1,48 @@
+﻿@using Aware.Util
+@using Resources
+@model WebMarket.Models.BasketSummaryModel
+
+@if (Model != null && !Model.HasItems)
+{
+    <div class="text-center mt20 mb20">
+        <i class="fa fa-2x fa-shopping-bag"></i>
+        <h2 class="mt10 mb10">Sepetiniz Boş</h2>
+        <p>Sepetinizde henüz ürün yok.</p>
+    </div>
+}
+else
+{
+    var items = Model.Basket.Items;
+    <ul>
+        @Html.Hidden("BasketID",Model.Basket.ID)
+        @foreach (var item in items)
+        {
+            var product = item.Product;
+            <li data-id="@item.ID">
+                <a href="@Url.StoreItemDetail(item.StoreID, string.Empty, product.ID, product.Name)">
+                    @Html.ImageFor("", product.DefaultImage.Path, product.Name)
+                    <i class="fa fa-remove close btn-remove-item"></i>
+                    <span class="info">
+                        <span class="label">@product.Name.Short(30)</span>
+                        @if (item.VariantCode > 0 && !string.IsNullOrEmpty(item.VariantDescription))
+                        {
+                            <span class="variant" title="@item.VariantDescription">(@item.VariantDescription.Short(50))</span>
+                        }
+                        <span class="desc">@product.Brand</span>
+                        <span class="price">@item.Quantity.ToString("N0") x <b>@item.Price.ToPrice()</b></span>
+                    </span>
+                </a>
+            </li>
+        }
+    </ul>
+
+    <div class="totals">
+        <span class="text">Sepet toplamı:</span>
+        <span class="new-price"> @Model.Basket.GrossTotal.ToPrice()</span>
+    </div>
+    
+    <div class="buttons">
+        <a href="@Url.Action("Index", "Order")" class="fr btn btn-sm btn-green-border ml10">@Resource.Basket_CompletePurchasing</a>
+        <a href="@Url.Action("Index", "Basket")" class="fr btn btn-sm btn-green">@Resource.Basket_GoToBasket</a>
+    </div>
+}
